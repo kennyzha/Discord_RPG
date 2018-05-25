@@ -24,4 +24,4 @@ hs_err_pid*
 
 *.iml
 *.idea
-config.ApplicationConstants.java
+ApplicationConstants.java
