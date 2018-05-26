@@ -18,6 +18,7 @@ public class DynamoClient {
     private String awsSecretKey = ApplicationConstants.AWS_SECRET_ACCESS_KEY;
 
     private String playerTableName = ApplicationConstants.PLAYER_TABLE_NAME;
+    private String staminaTableName = ApplicationConstants.STAMINA_TABLE_NAME;
 
     public DynamoClient(){
         awsCredentialsProvider = new AWSStaticCredentialsProvider(new AWSCredentials() {
@@ -53,5 +54,9 @@ public class DynamoClient {
 
     public String getPlayerTableName(){
         return playerTableName;
+    }
+
+    public String getStaminaTableName(){
+        return staminaTableName;
     }
 }

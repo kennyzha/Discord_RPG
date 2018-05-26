@@ -3,6 +3,7 @@ package listeners;
 import config.ApplicationConstants;
 import database.PlayerDatabase;
 import models.Player;
+import models.Stamina;
 import net.dv8tion.jda.core.entities.ChannelType;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.MessageChannel;
@@ -29,7 +30,6 @@ public class MessageListener extends ListenerAdapter {
             return;
         }
 
-
         handleCommand(event);
     }
 
@@ -52,33 +52,72 @@ public class MessageListener extends ListenerAdapter {
             Player newPlayer = new Player(author.getId());
             playerDatabase.insertPlayer(newPlayer);
             player = newPlayer;
+
+            Stamina stamina = new Stamina(author.getId());
+            System.out.println("new stamina. the time is " + stamina.getTimeSinceUpdated());
+            playerDatabase.insertPlayerStamina(stamina);
         }
 
         switch(msgArr[0]){
             case "!profile":
-                channel.sendMessage(player.toString()).queue();
+                if(player.getIntelligence() < 100){
+                    channel.sendMessage(player.toString() + "\n\n lol nice int dumas").queue();
+                } else{
+                    channel.sendMessage(player.toString()).queue();
+                }
                 break;
             case "!help":
                 channel.sendMessage(ApplicationConstants.ALL_COMMANDS).queue();
                 break;
             case "!train":
-                if(msgArr.length < 2){
+                if(msgArr.length < 3){
                     channel.sendMessage(ApplicationConstants.ALL_COMMANDS).queue();
                 }else{
                     String arg2 = msgArr[1].toLowerCase();
                     System.out.println("Training " + arg2);
 
-                    if(arg2.equals("attack")){
+                    Stamina curStamina = playerDatabase.retreivePlayerStamina(author.getId());
+                    curStamina.updateStamina();
+                    int numStamina = curStamina.getStamina();
+
+                    System.out.println("num stamina is " + numStamina);
+                    if(numStamina < 5){
+                        channel.sendMessage("You are too tired with only " + numStamina + " stamina. Each training session requires 5 stamina and you gain 5 stamina every 10 minutes.").queue();
+                    }else if(arg2.equals("attack")){
                         System.out.println("attack");
+
+                        player.incAttack(1);
+                        playerDatabase.insertPlayer(player);
+                        curStamina.setStamina(numStamina - 5);
+                        playerDatabase.insertPlayerStamina(curStamina);
+
+                        channel.sendMessage("Successfully trained " + arg2 + ". You have " + curStamina.getStamina() + " stamina left.").queue();
                     }else if(arg2.equals("strength")){
                         System.out.println("strength");
 
+                        player.incStrength(1);
+                        playerDatabase.insertPlayer(player);
+                        curStamina.setStamina(numStamina - 5);
+                        playerDatabase.insertPlayerStamina(curStamina);
+
+                        channel.sendMessage("Successfully trained " + arg2 + ". You have " + curStamina.getStamina() + " stamina left.").queue();
+
                     }else if(arg2.equals("defense")){
                         System.out.println("defense");
+
+                        player.incDefense(1);
+                        playerDatabase.insertPlayer(player);
+                        curStamina.setStamina(numStamina - 5);
+                        playerDatabase.insertPlayerStamina(curStamina);
+
+                        channel.sendMessage("Successfully trained " + arg2 + ". You have " + curStamina.getStamina() + " stamina left.").queue();
+
+                    } else{
+                        channel.sendMessage("Failed to train: " + arg2 + "\n" + ApplicationConstants.ALL_COMMANDS).queue();
                     }
                 }
-
                 break;
+
             default:
                 channel.sendMessage("Invalid input: " + message.getContentDisplay() + "\n" + ApplicationConstants.ALL_COMMANDS).queue();
         }

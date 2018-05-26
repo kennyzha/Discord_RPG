@@ -5,12 +5,12 @@ import config.ApplicationConstants;
 public class Stamina {
     private String playerId;
     private int stamina;
-    private long timeSinceUsed;
+    private long timeSinceUpdated;
 
     public Stamina(String playerId){
         this.playerId = playerId;
         this.stamina = 100;
-        timeSinceUsed = System.currentTimeMillis();
+        timeSinceUpdated = System.currentTimeMillis();
     }
 
     public String getPlayerId() {
@@ -29,22 +29,31 @@ public class Stamina {
         this.stamina = stamina;
     }
 
-    public long getTimeSinceUsed() {
-        return timeSinceUsed;
+    public long getTimeSinceUpdated() {
+        return timeSinceUpdated;
     }
 
-    public void setTimeSinceUsed(long timeSinceUsed) {
-        this.timeSinceUsed = timeSinceUsed;
+    public void setTimeSinceUpdated(long timeSinceUpdated) {
+        this.timeSinceUpdated = timeSinceUpdated;
     }
 
     public int updateStamina(){
         long curTime = System.currentTimeMillis();
-        long timeElapsed = curTime - timeSinceUsed;
-        int baseStaminaGained = (int) (timeElapsed % ApplicationConstants.STAMINA_REFRESH_RATE);
+        System.out.println("cur time " + curTime);
+        System.out.println("time since updated " + timeSinceUpdated);
+        long timeElapsed = curTime - timeSinceUpdated;
+        System.out.println("time elapsed " + timeElapsed);
+        int baseStaminaGained = (int) (timeElapsed / ApplicationConstants.STAMINA_REFRESH_RATE);
+        System.out.println("based stamina gained " + baseStaminaGained);
+
         int staminaGained = baseStaminaGained * ApplicationConstants.STAMINA_GAINED_PER_REFRESH;
 
-        timeSinceUsed = curTime;
-        return Math.min(ApplicationConstants.MAX_STAMINA, stamina + staminaGained);
+        System.out.println("stamina gained" + staminaGained);
 
+        if(staminaGained > 0){
+            Long leftOverTime = timeElapsed % ApplicationConstants.STAMINA_REFRESH_RATE;
+            setTimeSinceUpdated(curTime - leftOverTime);
+        }
+        return Math.min(ApplicationConstants.MAX_STAMINA, stamina + staminaGained);
     }
 }
