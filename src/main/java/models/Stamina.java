@@ -37,7 +37,7 @@ public class Stamina {
         this.timeSinceUpdated = timeSinceUpdated;
     }
 
-    public int updateStamina(){
+    public void updateStamina(){
         long curTime = System.currentTimeMillis();
         System.out.println("cur time " + curTime);
         System.out.println("time since updated " + timeSinceUpdated);
@@ -54,6 +54,6 @@ public class Stamina {
             Long leftOverTime = timeElapsed % ApplicationConstants.STAMINA_REFRESH_RATE;
             setTimeSinceUpdated(curTime - leftOverTime);
         }
-        return Math.min(ApplicationConstants.MAX_STAMINA, stamina + staminaGained);
+        setStamina(Math.min(ApplicationConstants.MAX_STAMINA, stamina + staminaGained));
     }
 }

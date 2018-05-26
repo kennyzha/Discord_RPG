@@ -48,13 +48,11 @@ public class MessageListener extends ListenerAdapter {
         PlayerDatabase playerDatabase = new PlayerDatabase();
         Player player = playerDatabase.selectPlayer(author.getId());
         if(player == null){
-            System.out.println("Adding new player to database with id " + author.getId());
             Player newPlayer = new Player(author.getId());
             playerDatabase.insertPlayer(newPlayer);
             player = newPlayer;
 
             Stamina stamina = new Stamina(author.getId());
-            System.out.println("new stamina. the time is " + stamina.getTimeSinceUpdated());
             playerDatabase.insertPlayerStamina(stamina);
         }
 
@@ -76,48 +74,63 @@ public class MessageListener extends ListenerAdapter {
                     String arg2 = msgArr[1].toLowerCase();
                     System.out.println("Training " + arg2);
 
-                    Stamina curStamina = playerDatabase.retreivePlayerStamina(author.getId());
-                    curStamina.updateStamina();
-                    int numStamina = curStamina.getStamina();
+                    try{
+                        int arg3 = Integer.parseInt(msgArr[2]);
 
-                    System.out.println("num stamina is " + numStamina);
-                    if(numStamina < 5){
-                        channel.sendMessage("You are too tired with only " + numStamina + " stamina. Each training session requires 5 stamina and you gain 5 stamina every 10 minutes.").queue();
-                    }else if(arg2.equals("attack")){
-                        System.out.println("attack");
+                        if((arg3 % 5) != 0){
+                            channel.sendMessage("You can only train in intervals of 5 stamina.").queue();
+                        } else if(arg3 < 5 || arg3 > 100){
+                            channel.sendMessage("Please type in a number between 5 and 100.").queue();
+                        } else{
+                            Stamina curStamina = playerDatabase.retreivePlayerStamina(author.getId());
+                            curStamina.updateStamina();
+                            int numStamina = curStamina.getStamina();
+                            int numTimesToTrain = arg3 / 5;
 
-                        player.incAttack(1);
-                        playerDatabase.insertPlayer(player);
-                        curStamina.setStamina(numStamina - 5);
-                        playerDatabase.insertPlayerStamina(curStamina);
+                            System.out.println("num stamina is " + numStamina);
+                            if(numStamina < arg3){
+                                channel.sendMessage("You are too tired with only " + numStamina + " stamina. You gain 5 stamina every 5 minutes.").queue();
+                            }else if(arg2.equals("attack")){
+                                System.out.println("attack");
 
-                        channel.sendMessage("Successfully trained " + arg2 + ". You have " + curStamina.getStamina() + " stamina left.").queue();
-                    }else if(arg2.equals("strength")){
-                        System.out.println("strength");
+                                player.incAttack(numTimesToTrain);
+                                playerDatabase.insertPlayer(player);
+                                curStamina.setStamina(numStamina - arg3);
+                                playerDatabase.insertPlayerStamina(curStamina);
 
-                        player.incStrength(1);
-                        playerDatabase.insertPlayer(player);
-                        curStamina.setStamina(numStamina - 5);
-                        playerDatabase.insertPlayerStamina(curStamina);
+                                channel.sendMessage("Successfully trained " + arg2 + ". You have " + curStamina.getStamina() + " stamina left.").queue();
+                            }else if(arg2.equals("strength")){
+                                System.out.println("strength");
 
-                        channel.sendMessage("Successfully trained " + arg2 + ". You have " + curStamina.getStamina() + " stamina left.").queue();
+                                player.incStrength(numTimesToTrain);
+                                playerDatabase.insertPlayer(player);
+                                curStamina.setStamina(numStamina - arg3);
+                                playerDatabase.insertPlayerStamina(curStamina);
 
-                    }else if(arg2.equals("defense")){
-                        System.out.println("defense");
+                                channel.sendMessage("Successfully trained " + arg2 + ". You have " + curStamina.getStamina() + " stamina left.").queue();
 
-                        player.incDefense(1);
-                        playerDatabase.insertPlayer(player);
-                        curStamina.setStamina(numStamina - 5);
-                        playerDatabase.insertPlayerStamina(curStamina);
+                            }else if(arg2.equals("defense")){
+                                System.out.println("defense");
 
-                        channel.sendMessage("Successfully trained " + arg2 + ". You have " + curStamina.getStamina() + " stamina left.").queue();
+                                player.incDefense(numTimesToTrain);
+                                playerDatabase.insertPlayer(player);
+                                curStamina.setStamina(numStamina - arg3);
+                                playerDatabase.insertPlayerStamina(curStamina);
 
-                    } else{
-                        channel.sendMessage("Failed to train: " + arg2 + "\n" + ApplicationConstants.ALL_COMMANDS).queue();
+                                channel.sendMessage("Successfully trained " + arg2 + ". You have " + curStamina.getStamina() + " stamina left.").queue();
+
+                            } else{
+                                channel.sendMessage("Failed to train: " + arg2 + "\n" + ApplicationConstants.ALL_COMMANDS).queue();
+                            }
+                        }
+                    } catch(Exception e){
+                        channel.sendMessage("Please type in a number in intervals of 5.").queue();
                     }
                 }
                 break;
+            case "!fight":
 
+                break;
             default:
                 channel.sendMessage("Invalid input: " + message.getContentDisplay() + "\n" + ApplicationConstants.ALL_COMMANDS).queue();
         }

@@ -123,6 +123,9 @@ public class Player {
         setHealth(getHealth() + amt);
     }
 
+    public int getTotalStats(){
+        return getAttack() + getStrength() + getDefense();
+    }
     @Override
     public String toString() {
         return "Level: " + getLevel() + " Health: " + getHealth() + " Intelligence: " + getIntelligence() + "\n"
