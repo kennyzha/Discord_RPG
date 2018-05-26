@@ -1,15 +1,20 @@
-package model;
+package models;
 
 public class Player {
-    private int level, attack, defense, strength, woodcutting;
+    private String id;
+
+    private int level, attack, defense, strength, health, woodcutting, money;
     private int levelExp, attackExp, defenseExp, strengthExp, woodCuttingExp;
 
-    public Player() {
+    public Player(String id) {
+        this.id = id;
         this.level = 1;
         this.attack = 1;
         this.defense = 1;
         this.strength = 1;
+        this.health = 100;
         this.woodcutting = 1;
+        this.money = 0;
         this.levelExp = 0;
         this.attackExp = 0;
         this.defenseExp = 0;
@@ -95,5 +100,29 @@ public class Player {
 
     public void setWoodCuttingExp(int woodCuttingExp) {
         this.woodCuttingExp = woodCuttingExp;
+    }
+
+    public int getHealth() {
+        return health;
+    }
+
+    public void setHealth(int health) {
+        this.health = health;
+    }
+
+    public int getMoney() {
+        return money;
+    }
+
+    public void setMoney(int money) {
+        this.money = money;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 }

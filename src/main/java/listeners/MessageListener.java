@@ -1,5 +1,7 @@
-package listener;
+package listeners;
 
+import database.PlayerDatabase;
+import models.Player;
 import net.dv8tion.jda.core.entities.ChannelType;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.MessageChannel;
@@ -38,6 +40,15 @@ public class MessageListener extends ListenerAdapter {
 
         channel.sendMessage(msg).queue();
         handleCommand(msgArr);
+
+        PlayerDatabase db = new PlayerDatabase();
+        Player player = new Player(author.getId());
+
+
+        db.insertPlayer(player);
+        Player retrievedPlayer = db.selectPlayer(player.getId());
+        System.out.println(retrievedPlayer.getLevel());
+
     }
 
     public void handleCommand(String[] msgArr){

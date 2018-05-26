@@ -1,5 +1,5 @@
 import config.ApplicationConstants;
-import listener.MessageListener;
+import listeners.MessageListener;
 import net.dv8tion.jda.core.AccountType;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.JDABuilder;
