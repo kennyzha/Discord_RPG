@@ -2,13 +2,13 @@ package database;
 
 import com.amazonaws.services.dynamodbv2.document.*;
 import com.google.gson.Gson;
+import config.ApplicationConstants;
 import models.Player;
 
 public class PlayerDatabase {
     private DynamoClient dynamoClient;
     private DynamoDB dynamoDB;
     private Table playerTable;
-    public static final String PLAYER_PRIMARY_KEY = "id";
 
     private Gson gson;
 
@@ -29,12 +29,16 @@ public class PlayerDatabase {
 
     public Player selectPlayer(String id){
         System.out.println("Attempting to find: " + id);
-        Item item = playerTable.getItem(PLAYER_PRIMARY_KEY, id);
+        Item item = playerTable.getItem(ApplicationConstants.PLAYER_PRIMARY_KEY, id);
 
         if(item == null)
             return null;
 
         System.out.println(item.toJSON());
         return gson.fromJson(item.toJSON(), Player.class);
+    }
+
+    public void updatePlayer(Player player){
+
     }
 }

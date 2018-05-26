@@ -3,8 +3,8 @@ package models;
 public class Player {
     private String id;
 
-    private int level, attack, defense, strength, health, woodcutting, money;
-    private int levelExp, attackExp, defenseExp, strengthExp, woodCuttingExp;
+    private int level, attack, defense, strength, health, intelligence, woodcutting, money;
+    private int levelExp, woodCuttingExp;
 
     public Player(String id) {
         this.id = id;
@@ -16,9 +16,6 @@ public class Player {
         this.woodcutting = 1;
         this.money = 0;
         this.levelExp = 0;
-        this.attackExp = 0;
-        this.defenseExp = 0;
-        this.strengthExp = 0;
         this.woodCuttingExp = 0;
     }
 
@@ -54,6 +51,14 @@ public class Player {
         this.strength = strength;
     }
 
+    public int getIntelligence() {
+        return intelligence;
+    }
+
+    public void setIntelligence(int intelligence) {
+        this.intelligence = intelligence;
+    }
+
     public int getWoodcutting() {
         return woodcutting;
     }
@@ -68,30 +73,6 @@ public class Player {
 
     public void setLevelExp(int levelExp) {
         this.levelExp = levelExp;
-    }
-
-    public int getAttackExp() {
-        return attackExp;
-    }
-
-    public void setAttackExp(int attackExp) {
-        this.attackExp = attackExp;
-    }
-
-    public int getDefenseExp() {
-        return defenseExp;
-    }
-
-    public void setDefenseExp(int defenseExp) {
-        this.defenseExp = defenseExp;
-    }
-
-    public int getStrengthExp() {
-        return strengthExp;
-    }
-
-    public void setStrengthExp(int strengthExp) {
-        this.strengthExp = strengthExp;
     }
 
     public int getWoodCuttingExp() {
@@ -124,5 +105,28 @@ public class Player {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public void incAttack(int amt){
+        setAttack(getAttack() + amt);
+    }
+
+    public void incStrength(int amt){
+        setStrength(getStrength() + amt);
+    }
+
+    public void incDefense(int amt){
+        setDefense(getDefense() + amt);
+    }
+
+    public void incHealth(int amt){
+        setHealth(getHealth() + amt);
+    }
+
+    @Override
+    public String toString() {
+        return "Level: " + getLevel() + " Health: " + getHealth() + " Intelligence: " + getIntelligence() + "\n"
+                + "Attack: " + getAttack() + " Strength: " + getStrength() + " Defense: " + getDefense() + "\n" +
+                "Cash: " + getMoney();
     }
 }

@@ -10,7 +10,7 @@
 
     <repositories>
         <repository>
-            <id>jcenter</id>
+            <playerId>jcenter</playerId>
             <name>jcenter-bintray</name>
             <url>http://jcenter.bintray.com</url>
         </repository>
