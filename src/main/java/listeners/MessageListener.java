@@ -72,7 +72,7 @@ public class MessageListener extends ListenerAdapter {
                 if(msgArr.length < 3){
                     channel.sendMessage(ApplicationConstants.ALL_COMMANDS).queue();
                 }else{
-                    String arg2 = msgArr[1].toLowerCase();
+                    String arg2 = msgArr[1];
 
                     try{
                         int numTimesToTrain = Integer.parseInt(msgArr[2]);
@@ -81,19 +81,14 @@ public class MessageListener extends ListenerAdapter {
                             channel.sendMessage("Please type in a number between 1 and 20.").queue();
                         } else{
                             Stamina curStamina = playerDatabase.retreivePlayerStamina(author.getId());
-                            curStamina.updateStamina();
-                            int numStamina = curStamina.getStamina();
 
                             TrainingHandler trainingHandler = new TrainingHandler(player, curStamina, channel, playerDatabase);
 
                             if(arg2.equals("attack")){
-                                System.out.println("Training attack");
                                 trainingHandler.trainAttack(numTimesToTrain);
                             }else if(arg2.equals("Training strength")){
-                                System.out.println("strength");
                                 trainingHandler.trainStrength(numTimesToTrain);
                             }else if(arg2.equals("defense")){
-                                System.out.println("Training defense");
                                 trainingHandler.trainDefense(numTimesToTrain);
                             } else{
                                 channel.sendMessage("Invalid argument. Failed to train: " + arg2 + "\n" + ApplicationConstants.ALL_COMMANDS).queue();
@@ -105,7 +100,12 @@ public class MessageListener extends ListenerAdapter {
                 }
                 break;
             case "!fight":
-                channel.sendMessage("You lost.").queue();
+                double rand = Math.random() * 2;
+                System.out.println(rand);
+                if(rand >= 1)
+                    channel.sendMessage("You win.").queue();
+                else
+                    channel.sendMessage("You lost.").queue();
                 break;
             default:
                 channel.sendMessage("Invalid input: " + message.getContentDisplay() + "\n" + ApplicationConstants.ALL_COMMANDS).queue();

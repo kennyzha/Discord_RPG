@@ -30,11 +30,10 @@ public class TrainingHandler {
         player.incAttack(numTimesToTrain);
         playerDatabase.insertPlayer(player);
 
-        int oldStamina = stamina.getStamina();
         int newStamina = stamina.getStamina() - numTimesToTrain;
         updateStamina(newStamina);
 
-        sendTrainMessage("attack", newStamina, oldStamina);
+        sendTrainMessage("attack", newStamina, numTimesToTrain);
 
     }
 
@@ -49,11 +48,10 @@ public class TrainingHandler {
         player.incStrength(numTimesToTrain);
         playerDatabase.insertPlayer(player);
 
-        int oldStamina = stamina.getStamina();
         int newStamina = stamina.getStamina() - numTimesToTrain;
         updateStamina(newStamina);
 
-        sendTrainMessage("strength", newStamina, oldStamina);
+        sendTrainMessage("strength", newStamina, numTimesToTrain);
     }
 
     public void trainDefense(int numTimesToTrain){
@@ -67,11 +65,10 @@ public class TrainingHandler {
         player.incDefense(numTimesToTrain);
         playerDatabase.insertPlayer(player);
 
-        int oldStamina = stamina.getStamina();
         int newStamina = stamina.getStamina() - numTimesToTrain;
         updateStamina(newStamina);
 
-        sendTrainMessage("defense", newStamina, oldStamina);
+        sendTrainMessage("defense", newStamina, numTimesToTrain);
     }
 
     public boolean hasEnoughStamina(Stamina stamina, int staminaUsage){
@@ -85,8 +82,8 @@ public class TrainingHandler {
         playerDatabase.insertPlayerStamina(curStamina);
     }
 
-    public void sendTrainMessage(String statType, int stamina, int oldStamina){
-        channel.sendMessage("Successfully trained " + statType + ". You used up " + oldStamina + " and now have " + stamina + " stamina left.").queue();
+    public void sendTrainMessage(String statType, int stamina, int staminaUsed){
+        channel.sendMessage("Successfully trained " + statType + ". You used " + staminaUsed + " stamina and now have " + stamina + " stamina left.").queue();
     }
 
     public void sendNoStaminaMessage(){
