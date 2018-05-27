@@ -2,6 +2,7 @@ package listeners;
 
 import config.ApplicationConstants;
 import database.PlayerDatabase;
+import handlers.TrainingHandler;
 import models.Player;
 import models.Stamina;
 import net.dv8tion.jda.core.entities.ChannelType;
@@ -72,64 +73,39 @@ public class MessageListener extends ListenerAdapter {
                     channel.sendMessage(ApplicationConstants.ALL_COMMANDS).queue();
                 }else{
                     String arg2 = msgArr[1].toLowerCase();
-                    System.out.println("Training " + arg2);
 
                     try{
-                        int arg3 = Integer.parseInt(msgArr[2]);
+                        int numTimesToTrain = Integer.parseInt(msgArr[2]);
 
-                        if((arg3 % 5) != 0){
-                            channel.sendMessage("You can only train in intervals of 5 stamina.").queue();
-                        } else if(arg3 < 5 || arg3 > 100){
-                            channel.sendMessage("Please type in a number between 5 and 100.").queue();
+                        if(numTimesToTrain < 1 || numTimesToTrain > 20){
+                            channel.sendMessage("Please type in a number between 1 and 20.").queue();
                         } else{
                             Stamina curStamina = playerDatabase.retreivePlayerStamina(author.getId());
                             curStamina.updateStamina();
                             int numStamina = curStamina.getStamina();
-                            int numTimesToTrain = arg3 / 5;
 
-                            System.out.println("num stamina is " + numStamina);
-                            if(numStamina < arg3){
-                                channel.sendMessage("You are too tired with only " + numStamina + " stamina. You gain 5 stamina every 5 minutes.").queue();
-                            }else if(arg2.equals("attack")){
-                                System.out.println("attack");
+                            TrainingHandler trainingHandler = new TrainingHandler(player, curStamina, channel, playerDatabase);
 
-                                player.incAttack(numTimesToTrain);
-                                playerDatabase.insertPlayer(player);
-                                curStamina.setStamina(numStamina - arg3);
-                                playerDatabase.insertPlayerStamina(curStamina);
-
-                                channel.sendMessage("Successfully trained " + arg2 + ". You have " + curStamina.getStamina() + " stamina left.").queue();
-                            }else if(arg2.equals("strength")){
+                            if(arg2.equals("attack")){
+                                System.out.println("Training attack");
+                                trainingHandler.trainAttack(numTimesToTrain);
+                            }else if(arg2.equals("Training strength")){
                                 System.out.println("strength");
-
-                                player.incStrength(numTimesToTrain);
-                                playerDatabase.insertPlayer(player);
-                                curStamina.setStamina(numStamina - arg3);
-                                playerDatabase.insertPlayerStamina(curStamina);
-
-                                channel.sendMessage("Successfully trained " + arg2 + ". You have " + curStamina.getStamina() + " stamina left.").queue();
-
+                                trainingHandler.trainStrength(numTimesToTrain);
                             }else if(arg2.equals("defense")){
-                                System.out.println("defense");
-
-                                player.incDefense(numTimesToTrain);
-                                playerDatabase.insertPlayer(player);
-                                curStamina.setStamina(numStamina - arg3);
-                                playerDatabase.insertPlayerStamina(curStamina);
-
-                                channel.sendMessage("Successfully trained " + arg2 + ". You have " + curStamina.getStamina() + " stamina left.").queue();
-
+                                System.out.println("Training defense");
+                                trainingHandler.trainDefense(numTimesToTrain);
                             } else{
-                                channel.sendMessage("Failed to train: " + arg2 + "\n" + ApplicationConstants.ALL_COMMANDS).queue();
+                                channel.sendMessage("Invalid argument. Failed to train: " + arg2 + "\n" + ApplicationConstants.ALL_COMMANDS).queue();
                             }
-                        }
+                    }
                     } catch(Exception e){
-                        channel.sendMessage("Please type in a number in intervals of 5.").queue();
+                        channel.sendMessage("Please type in a number between 1 and 20.").queue();
                     }
                 }
                 break;
             case "!fight":
-
+                channel.sendMessage("You lost.").queue();
                 break;
             default:
                 channel.sendMessage("Invalid input: " + message.getContentDisplay() + "\n" + ApplicationConstants.ALL_COMMANDS).queue();

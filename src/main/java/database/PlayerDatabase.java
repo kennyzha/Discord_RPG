@@ -49,7 +49,14 @@ public class PlayerDatabase {
         if(item == null)
             return null;
 
-        return gson.fromJson(item.toJSON(), Stamina.class);
+        Stamina stamina = gson.fromJson(item.toJSON(), Stamina.class);
+
+        if(stamina == null)
+            return null;
+
+        stamina.updateStamina();
+
+        return stamina;
     }
 
     public void insertPlayerStamina(Stamina stamina){
