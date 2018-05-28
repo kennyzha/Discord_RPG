@@ -3,14 +3,15 @@ package models;
 public class Player {
     private String id;
 
-    private int level, attack, defense, strength, health, intelligence, woodcutting, money;
+    private int level, money;
+    private double speed, power, strength, health, intelligence, woodcutting;
     private int levelExp, woodCuttingExp;
 
     public Player(String id) {
         this.id = id;
         this.level = 1;
-        this.attack = 1;
-        this.defense = 1;
+        this.speed = 1;
+        this.power = 1;
         this.strength = 1;
         this.health = 100;
         this.woodcutting = 1;
@@ -27,43 +28,55 @@ public class Player {
         this.level = level;
     }
 
-    public int getAttack() {
-        return attack;
+    public int getMoney() {
+        return money;
     }
 
-    public void setAttack(int attack) {
-        this.attack = attack;
+    public double getSpeed() {
+        return speed;
     }
 
-    public int getDefense() {
-        return defense;
+    public void setSpeed(double speed) {
+        this.speed = speed;
     }
 
-    public void setDefense(int defense) {
-        this.defense = defense;
+    public double getPower() {
+        return power;
     }
 
-    public int getStrength() {
+    public void setPower(double defense) {
+        this.power = defense;
+    }
+
+    public double getStrength() {
         return strength;
     }
 
-    public void setStrength(int strength) {
+    public void setStrength(double strength) {
         this.strength = strength;
     }
 
-    public int getIntelligence() {
+    public double getHealth() {
+        return health;
+    }
+
+    public void setHealth(double health) {
+        this.health = health;
+    }
+
+    public double getIntelligence() {
         return intelligence;
     }
 
-    public void setIntelligence(int intelligence) {
+    public void setIntelligence(double intelligence) {
         this.intelligence = intelligence;
     }
 
-    public int getWoodcutting() {
+    public double getWoodcutting() {
         return woodcutting;
     }
 
-    public void setWoodcutting(int woodcutting) {
+    public void setWoodcutting(double woodcutting) {
         this.woodcutting = woodcutting;
     }
 
@@ -83,18 +96,6 @@ public class Player {
         this.woodCuttingExp = woodCuttingExp;
     }
 
-    public int getHealth() {
-        return health;
-    }
-
-    public void setHealth(int health) {
-        this.health = health;
-    }
-
-    public int getMoney() {
-        return money;
-    }
-
     public void setMoney(int money) {
         this.money = money;
     }
@@ -107,29 +108,30 @@ public class Player {
         this.id = id;
     }
 
-    public void incAttack(int amt){
-        setAttack(getAttack() + amt);
+    public void incSpeed(int amt){
+        setSpeed(getSpeed() + amt);
     }
 
     public void incStrength(int amt){
         setStrength(getStrength() + amt);
     }
 
-    public void incDefense(int amt){
-        setDefense(getDefense() + amt);
+    public void incPower(int amt){
+        setPower(getPower() + amt);
     }
 
     public void incHealth(int amt){
         setHealth(getHealth() + amt);
     }
 
-    public int getTotalStats(){
-        return getAttack() + getStrength() + getDefense();
+    public double getTotalStats(){
+        return getSpeed() + getPower() + getStrength();
     }
+
     @Override
     public String toString() {
-        return "Level: " + getLevel() + " Health: " + getHealth() + " Intelligence: " + getIntelligence() + "\n"
-                + "Attack: " + getAttack() + " Strength: " + getStrength() + " Defense: " + getDefense() + "\n" +
+        return "Level: " + getLevel() + " Health: " + getHealth() + "\n"
+                + "Power: " + getPower() + " Speed: " + getSpeed() + " Strength: " + getStrength()+ "\n" +
                 "Cash: " + getMoney();
     }
 }

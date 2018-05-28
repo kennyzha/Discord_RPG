@@ -19,7 +19,7 @@ public class TrainingHandler {
         this.playerDatabase = playerDatabase;
     }
 
-    public void trainAttack(int numTimesToTrain){
+    public void trainSpeed(int numTimesToTrain){
         int curStamina = stamina.getStamina();
         if(curStamina == 0){
             sendNoStaminaMessage();
@@ -27,14 +27,31 @@ public class TrainingHandler {
         } else if(!hasEnoughStamina(stamina, numTimesToTrain)) {
             numTimesToTrain = curStamina;
         }
-        player.incAttack(numTimesToTrain);
+        player.incSpeed(numTimesToTrain);
         playerDatabase.insertPlayer(player);
 
         int newStamina = stamina.getStamina() - numTimesToTrain;
         updateStamina(newStamina);
 
-        sendTrainMessage("attack", newStamina, numTimesToTrain);
+        sendTrainMessage("speed", newStamina, numTimesToTrain);
 
+    }
+
+    public void trainPower(int numTimesToTrain){
+        int curStamina = stamina.getStamina();
+        if(curStamina == 0){
+            sendNoStaminaMessage();
+            return;
+        } else if(!hasEnoughStamina(stamina, numTimesToTrain)) {
+            numTimesToTrain = curStamina;
+        }
+        player.incPower(numTimesToTrain);
+        playerDatabase.insertPlayer(player);
+
+        int newStamina = stamina.getStamina() - numTimesToTrain;
+        updateStamina(newStamina);
+
+        sendTrainMessage("power", newStamina, numTimesToTrain);
     }
 
     public void trainStrength(int numTimesToTrain){
@@ -52,23 +69,6 @@ public class TrainingHandler {
         updateStamina(newStamina);
 
         sendTrainMessage("strength", newStamina, numTimesToTrain);
-    }
-
-    public void trainDefense(int numTimesToTrain){
-        int curStamina = stamina.getStamina();
-        if(curStamina == 0){
-            sendNoStaminaMessage();
-            return;
-        } else if(!hasEnoughStamina(stamina, numTimesToTrain)) {
-            numTimesToTrain = curStamina;
-        }
-        player.incDefense(numTimesToTrain);
-        playerDatabase.insertPlayer(player);
-
-        int newStamina = stamina.getStamina() - numTimesToTrain;
-        updateStamina(newStamina);
-
-        sendTrainMessage("defense", newStamina, numTimesToTrain);
     }
 
     public boolean hasEnoughStamina(Stamina stamina, int staminaUsage){

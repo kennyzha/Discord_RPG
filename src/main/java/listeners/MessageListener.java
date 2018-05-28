@@ -57,8 +57,6 @@ public class MessageListener extends ListenerAdapter {
             case "!profile":
                 if(player.getIntelligence() < 100){
                     channel.sendMessage(author.getName() + "'s profile: \n" + player.toString()).queue();
-                } else{
-                    channel.sendMessage(player.toString()).queue();
                 }
                 break;
             case "!help":
@@ -78,12 +76,12 @@ public class MessageListener extends ListenerAdapter {
                             Stamina curStamina = playerDatabase.retreivePlayerStamina(author.getId());
                             TrainingHandler trainingHandler = new TrainingHandler(player, curStamina, channel, playerDatabase);
 
-                            if(arg2.equals("attack")){
-                                trainingHandler.trainAttack(numTimesToTrain);
+                            if(arg2.equals("speed")){
+                                trainingHandler.trainSpeed(numTimesToTrain);
+                            }else if(arg2.equals("power")){
+                                trainingHandler.trainPower(numTimesToTrain);
                             }else if(arg2.equals("strength")){
                                 trainingHandler.trainStrength(numTimesToTrain);
-                            }else if(arg2.equals("defense")){
-                                trainingHandler.trainDefense(numTimesToTrain);
                             } else{
                                 channel.sendMessage(author.getName() + ", invalid argument. Failed to train: " + arg2 + "\n" + ApplicationConstants.ALL_COMMANDS).queue();
                             }
