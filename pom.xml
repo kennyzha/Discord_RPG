@@ -10,7 +10,7 @@
 
     <repositories>
         <repository>
-            <playerId>jcenter</playerId>
+            <id>jcenter</id>
             <name>jcenter-bintray</name>
             <url>http://jcenter.bintray.com</url>
         </repository>
@@ -49,6 +49,12 @@
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
             <version>2.8.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.github.kennedyoliveira</groupId>
+            <artifactId>pastebin4j</artifactId>
+            <version>1.0.0</version>
         </dependency>
 
     </dependencies>

@@ -1,5 +1,7 @@
 package handlers;
 
+import com.github.kennedyoliveira.pastebin4j.*;
+import config.ApplicationConstants;
 import models.Player;
 import net.dv8tion.jda.core.entities.MessageChannel;
 
@@ -14,19 +16,24 @@ public class CombatHandler {
         double lowSpeed2 = calcLowSpeed(p2.getSpeed());
         double highSpeed2 = p2.getSpeed();
 
+        PasteBinHandler pasteBinHandler = new PasteBinHandler();
+        StringBuilder content = new StringBuilder();
+
         for(int i = 0; i < 20; i++){
             double speedRoll = generateRoll(lowSpeed, highSpeed);
             double speedRoll2 = generateRoll(lowSpeed2, highSpeed2);
 
             if(speedRoll > speedRoll2){
                 System.out.print("[1]");
-                calcHitDamage(p1, p2, 0,0);
+                double hitDmg = calcHitDamage(p1, p2, 0,0);
+                content.append(String.format("Player attacked and did %s damage\n", hitDmg));
             } else{
                 System.out.print("[2]");
                 calcHitDamage(p2, p1, 0,0);
             }
         }
 
+        channel.sendMessage(pasteBinHandler.postContentAsGuest("Discord RPG Fight", content.toString())).queue();
         return p1;
     }
 
