@@ -15,13 +15,11 @@ import net.dv8tion.jda.core.hooks.ListenerAdapter;
 public class MessageListener extends ListenerAdapter {
     @Override
     public void onMessageReceived(MessageReceivedEvent event) {
-        if (event.isFromType(ChannelType.PRIVATE))
-        {
+        if (event.isFromType(ChannelType.PRIVATE)) {
             System.out.printf("[PM] %s: %s\n", event.getAuthor().getName(),
                     event.getMessage().getContentDisplay());
         }
-        else
-        {
+        else {
             System.out.printf("[%s][%s] %s: %s\n", event.getGuild().getName(),
                     event.getTextChannel().getName(), event.getMember().getEffectiveName(),
                     event.getMessage().getContentDisplay());
@@ -30,7 +28,6 @@ public class MessageListener extends ListenerAdapter {
         if(event.getAuthor().isBot()){
             return;
         }
-
         handleCommand(event);
     }
 
@@ -44,7 +41,6 @@ public class MessageListener extends ListenerAdapter {
 
         if(msgArr.length == 0 || !msgArr[0].startsWith("!"))
             return;
-
 
         PlayerDatabase playerDatabase = new PlayerDatabase();
         Player player = playerDatabase.selectPlayer(author.getId());
@@ -60,7 +56,7 @@ public class MessageListener extends ListenerAdapter {
         switch(msgArr[0]){
             case "!profile":
                 if(player.getIntelligence() < 100){
-                    channel.sendMessage(player.toString() + "\n\n lol nice int dumas").queue();
+                    channel.sendMessage(author.getName() + "'s profile: \n" + player.toString()).queue();
                 } else{
                     channel.sendMessage(player.toString()).queue();
                 }
@@ -73,42 +69,44 @@ public class MessageListener extends ListenerAdapter {
                     channel.sendMessage(ApplicationConstants.ALL_COMMANDS).queue();
                 }else{
                     String arg2 = msgArr[1];
-
                     try{
                         int numTimesToTrain = Integer.parseInt(msgArr[2]);
 
                         if(numTimesToTrain < 1 || numTimesToTrain > 20){
-                            channel.sendMessage("Please type in a number between 1 and 20.").queue();
+                            channel.sendMessage(author.getName() + ", please type in a number between 1 and 20.").queue();
                         } else{
                             Stamina curStamina = playerDatabase.retreivePlayerStamina(author.getId());
-
                             TrainingHandler trainingHandler = new TrainingHandler(player, curStamina, channel, playerDatabase);
 
                             if(arg2.equals("attack")){
                                 trainingHandler.trainAttack(numTimesToTrain);
-                            }else if(arg2.equals("Training strength")){
+                            }else if(arg2.equals("strength")){
                                 trainingHandler.trainStrength(numTimesToTrain);
                             }else if(arg2.equals("defense")){
                                 trainingHandler.trainDefense(numTimesToTrain);
                             } else{
-                                channel.sendMessage("Invalid argument. Failed to train: " + arg2 + "\n" + ApplicationConstants.ALL_COMMANDS).queue();
+                                channel.sendMessage(author.getName() + ", invalid argument. Failed to train: " + arg2 + "\n" + ApplicationConstants.ALL_COMMANDS).queue();
                             }
                     }
                     } catch(Exception e){
-                        channel.sendMessage("Please type in a number between 1 and 20.").queue();
+                        channel.sendMessage(author.getName() + ", please type in a number between 1 and 20.").queue();
                     }
                 }
+                break;
+            case "!stamina":
+                Stamina stamina = playerDatabase.retreivePlayerStamina(author.getId());
+                channel.sendMessage(author.getName() + ", you currently have " + stamina.getStamina() + " stamina.").queue();
                 break;
             case "!fight":
                 double rand = Math.random() * 2;
                 System.out.println(rand);
                 if(rand >= 1)
-                    channel.sendMessage("You win.").queue();
+                    channel.sendMessage(author.getName() + ", you win.").queue();
                 else
-                    channel.sendMessage("You lost.").queue();
+                    channel.sendMessage(author.getName() + ", you lost.").queue();
                 break;
             default:
-                channel.sendMessage("Invalid input: " + message.getContentDisplay() + "\n" + ApplicationConstants.ALL_COMMANDS).queue();
+                channel.sendMessage(author.getName() + ", invalid input: " + message.getContentDisplay() + "\n" + ApplicationConstants.ALL_COMMANDS).queue();
         }
     }
 
