@@ -2,6 +2,7 @@ package listeners;
 
 import config.ApplicationConstants;
 import database.PlayerDatabase;
+import handlers.CombatHandler;
 import handlers.TrainingHandler;
 import models.Player;
 import models.Stamina;
@@ -96,13 +97,30 @@ public class MessageListener extends ListenerAdapter {
                 channel.sendMessage(author.getName() + ", you currently have " + stamina.getStamina() + " stamina.").queue();
                 break;
             case "!fight":
+                CombatHandler combatHandler = new CombatHandler();
+
+                Player p1 = new Player("kenny");
+                p1.setSpeed(5000);
+                p1.setPower(3000);
+                p1.setStrength(2000);
+                Player p2 = new Player("bobby");
+                p2.setSpeed(3000);
+                p2.setPower(3000);
+                p2.setStrength(4000);
+
+                combatHandler.simulateCombat(p1, p2, channel);
+
                 double rand = Math.random() * 2;
                 System.out.println(rand);
-                if(rand >= 1)
+
+               /*
+               if(rand >= 1)
                     channel.sendMessage(author.getName() + ", you win.").queue();
                 else
                     channel.sendMessage(author.getName() + ", you lost.").queue();
+                */
                 break;
+
             default:
                 channel.sendMessage(author.getName() + ", invalid input: " + message.getContentDisplay() + "\n" + ApplicationConstants.ALL_COMMANDS).queue();
         }

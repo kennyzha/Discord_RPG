@@ -3,8 +3,8 @@ package models;
 public class Player {
     private String id;
 
-    private int level, money;
-    private double speed, power, strength, health, intelligence, woodcutting;
+    private int level, money, health;
+    private double speed, power, strength, intelligence, woodcutting;
     private int levelExp, woodCuttingExp;
 
     public Player(String id) {
@@ -56,11 +56,11 @@ public class Player {
         this.strength = strength;
     }
 
-    public double getHealth() {
+    public int getHealth() {
         return health;
     }
 
-    public void setHealth(double health) {
+    public void setHealth(int health) {
         this.health = health;
     }
 
