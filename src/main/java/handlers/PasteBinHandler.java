@@ -16,7 +16,7 @@ public class PasteBinHandler {
         guestPaste.setContent(content.toString());
         guestPaste.setTitle(title);
         guestPaste.setExpiration(PasteExpiration.NEVER);
-        guestPaste.setVisibility(PasteVisibility.UNLISTED);
+        guestPaste.setVisibility(PasteVisibility.PUBLIC);
 
         return pasteBin.createPaste(guestPaste);
     }

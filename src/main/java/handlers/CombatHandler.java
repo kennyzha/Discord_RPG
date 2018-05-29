@@ -7,9 +7,9 @@ import net.dv8tion.jda.core.entities.MessageChannel;
 
 public class CombatHandler {
 
-    public Player simulateCombat(Player p1, Player p2, MessageChannel channel){
-        int startingHealth = p1.getHealth();
-        int startingHealth2 = p2.getHealth();
+    public void simulateCombat(Player p1, Player p2, MessageChannel channel){
+        int curHealth = p1.getHealth();
+        int curHealth2 = p2.getHealth();
 
         double lowSpeed = calcLowSpeed(p1.getSpeed());
         double highSpeed = p1.getSpeed();
@@ -19,25 +19,36 @@ public class CombatHandler {
         PasteBinHandler pasteBinHandler = new PasteBinHandler();
         StringBuilder content = new StringBuilder();
 
-        for(int i = 0; i < 20; i++){
+        for(int i = 1; i < 201; i++){
+            if(curHealth <= 0){
+                content.append(String.format("\n Player 2 has won the fight with %s health left.", curHealth2));
+                break;
+            } else if(curHealth2 <= 0){
+                content.append(String.format("\n Player 1 has won the fight with %s health left.", curHealth));
+                break;
+            }
+
             double speedRoll = generateRoll(lowSpeed, highSpeed);
             double speedRoll2 = generateRoll(lowSpeed2, highSpeed2);
 
             if(speedRoll > speedRoll2){
                 System.out.print("[1]");
-                double hitDmg = calcHitDamage(p1, p2, 0,0);
-                content.append(String.format("Player attacked and did %s damage\n", hitDmg));
+                int hitDmg = calcHitDamage(p1, p2, 0,0);
+                curHealth2 = curHealth2 - hitDmg > 0 ? (curHealth2 - hitDmg) : 0;
+                content.append(String.format(i + ". Player 1 attacked and did %s damage (%s health remaining)\n", hitDmg, curHealth2));
             } else{
                 System.out.print("[2]");
-                calcHitDamage(p2, p1, 0,0);
+                int hitDmg = calcHitDamage(p2, p1, 0,0);
+                curHealth = (curHealth - hitDmg) > 0 ? (curHealth - hitDmg) : 0;
+                content.append(String.format(i + ". Player 2 attacked and did %s damage (%s health remaining)\n", hitDmg, curHealth));
+
             }
         }
 
-        channel.sendMessage(pasteBinHandler.postContentAsGuest("Discord RPG Fight", content.toString())).queue();
-        return p1;
+//        channel.sendMessage(pasteBinHandler.postContentAsGuest("Discord RPG Fight", content.toString())).queue();
     }
 
-    public double calcHitDamage(Player p1, Player p2, double wep, double arm){
+    public int calcHitDamage(Player p1, Player p2, double wep, double arm){
         double lowDmg = calcLowDamage(p1.getStrength(), p1.getPower(), 0);
         double highDmg = calcHighDamage(p1.getStrength(), p1.getPower(), 0);
 
@@ -50,8 +61,8 @@ public class CombatHandler {
 
         double hitDmg = Math.max(0, dmgRoll - defRoll);
 
-        System.out.printf("Player attacked and did %s damage (dmg roll: %s def roll: %s)\n", hitDmg, dmgRoll, defRoll);
-        return hitDmg;
+//        System.out.printf("Player attacked and did %s damage (dmg roll: %s def roll: %s)\n", hitDmg, dmgRoll, defRoll);
+        return (int) Math.ceil(hitDmg);
     }
 
     public double calcLowDamage(double str, double pow, double wep){
