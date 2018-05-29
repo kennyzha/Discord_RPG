@@ -6,12 +6,12 @@ import handlers.CombatHandler;
 import handlers.TrainingHandler;
 import models.Player;
 import models.Stamina;
-import net.dv8tion.jda.core.entities.ChannelType;
-import net.dv8tion.jda.core.entities.Message;
-import net.dv8tion.jda.core.entities.MessageChannel;
-import net.dv8tion.jda.core.entities.User;
+import net.dv8tion.jda.core.entities.*;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MessageListener extends ListenerAdapter {
     @Override
@@ -98,8 +98,20 @@ public class MessageListener extends ListenerAdapter {
                 break;
             case "!fight":
                 CombatHandler combatHandler = new CombatHandler();
+                List<User> mentionedList = message.getMentionedUsers();
+                if(msgArr.length < 2 || mentionedList.size() != 1){
+                    channel.sendMessage(author.getName() + ", Please mention the name of the user you wish to fight with !fight @name").queue();
+                } else{
+                    User userMentioned = mentionedList.get(0);
+                    Player mentionedPlayer = playerDatabase.selectPlayer(userMentioned.getId());
 
-                Player p1 = new Player("kenny");
+                    if(mentionedPlayer == null){
+                        channel.sendMessage(author.getName() + ", the mentioned user does not play this awesome game. You should get that person to play.").queue();
+                    } else{
+                        combatHandler.simulateCombat(player, mentionedPlayer, channel);
+                    }
+                }
+/*                Player p1 = new Player("kenny");
                 p1.setSpeed(5000);
                 p1.setPower(3000);
                 p1.setStrength(2000);
@@ -109,18 +121,7 @@ public class MessageListener extends ListenerAdapter {
                 p2.setPower(3000);
                 p2.setStrength(5000);
                 p2.setHealth(10000);
-
-                combatHandler.simulateCombat(p1, p2, channel);
-
-                double rand = Math.random() * 2;
-                System.out.println(rand);
-
-               /*
-               if(rand >= 1)
-                    channel.sendMessage(author.getName() + ", you win.").queue();
-                else
-                    channel.sendMessage(author.getName() + ", you lost.").queue();
-                */
+                combatHandler.simulateCombat(p1, p2, channel);*/
                 break;
 
             default:

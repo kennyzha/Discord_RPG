@@ -13,7 +13,7 @@ public class Player {
         this.speed = 1;
         this.power = 1;
         this.strength = 1;
-        this.health = 100;
+        this.health = 200;
         this.woodcutting = 1;
         this.money = 0;
         this.levelExp = 0;
