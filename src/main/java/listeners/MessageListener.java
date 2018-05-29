@@ -10,7 +10,6 @@ import net.dv8tion.jda.core.entities.*;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class MessageListener extends ListenerAdapter {
@@ -44,21 +43,23 @@ public class MessageListener extends ListenerAdapter {
             return;
 
         PlayerDatabase playerDatabase = new PlayerDatabase();
-        Player player = playerDatabase.selectPlayer(author.getId());
-        if(player == null){
-            Player newPlayer = new Player(author.getId());
-            playerDatabase.insertPlayer(newPlayer);
-            player = newPlayer;
-
-            Stamina stamina = new Stamina(author.getId());
-            playerDatabase.insertPlayerStamina(stamina);
-        }
+        Player player;
 
         switch(msgArr[0]){
             case "!profile":
-                if(player.getIntelligence() < 100){
-                    channel.sendMessage(author.getName() + "'s profile: \n" + player.toString()).queue();
+                if(msgArr.length == 1){
+                    player = grabPlayer(playerDatabase, author.getId());
+                    if(player.getIntelligence() < 100){
+                        channel.sendMessage(author.getName() + "'s profile: \n" + player.toString()).queue();
+                    }
+                } else{
+                    Player mentionedPlayer = grabMentionedPlayer(playerDatabase, message, channel, "profile");
+
+                    if(mentionedPlayer != null){
+                        channel.sendMessage(mentionedPlayer.toString()).queue();
+                    }
                 }
+
                 break;
             case "!help":
                 channel.sendMessage(ApplicationConstants.ALL_COMMANDS).queue();
@@ -74,6 +75,7 @@ public class MessageListener extends ListenerAdapter {
                         if(numTimesToTrain < 1 || numTimesToTrain > 20){
                             channel.sendMessage(author.getName() + ", please type in a number between 1 and 20.").queue();
                         } else{
+                            player = grabPlayer(playerDatabase, author.getId());
                             Stamina curStamina = playerDatabase.retreivePlayerStamina(author.getId());
                             TrainingHandler trainingHandler = new TrainingHandler(player, curStamina, channel, playerDatabase);
 
@@ -98,20 +100,18 @@ public class MessageListener extends ListenerAdapter {
                 break;
             case "!fight":
                 CombatHandler combatHandler = new CombatHandler();
-                List<User> mentionedList = message.getMentionedUsers();
-                if(msgArr.length < 2 || mentionedList.size() != 1){
+                if(msgArr.length < 2){
                     channel.sendMessage(author.getName() + ", Please mention the name of the user you wish to fight with !fight @name").queue();
                 } else{
-                    User userMentioned = mentionedList.get(0);
-                    Player mentionedPlayer = playerDatabase.selectPlayer(userMentioned.getId());
+                    Player mentionedPlayer = grabMentionedPlayer(playerDatabase, message, channel, "fight");
 
-                    if(mentionedPlayer == null){
-                        channel.sendMessage(author.getName() + ", the mentioned user does not play this awesome game. You should get that person to play.").queue();
-                    } else{
+                    if(mentionedPlayer != null){
+                        player = grabPlayer(playerDatabase, author.getId());
                         combatHandler.simulateCombat(player, mentionedPlayer, channel);
                     }
                 }
-/*                Player p1 = new Player("kenny");
+/*
+                Player p1 = new Player("kenny");
                 p1.setSpeed(5000);
                 p1.setPower(3000);
                 p1.setStrength(2000);
@@ -121,12 +121,44 @@ public class MessageListener extends ListenerAdapter {
                 p2.setPower(3000);
                 p2.setStrength(5000);
                 p2.setHealth(10000);
-                combatHandler.simulateCombat(p1, p2, channel);*/
+                combatHandler.simulateCombat(p1, p2, channel);
+*/
                 break;
 
             default:
                 channel.sendMessage(author.getName() + ", invalid input: " + message.getContentDisplay() + "\n" + ApplicationConstants.ALL_COMMANDS).queue();
         }
+    }
+
+    public Player grabPlayer(PlayerDatabase playerDatabase, String id){
+        Player player = playerDatabase.selectPlayer(id);
+        if(player == null){
+            Player newPlayer = new Player(id);
+            playerDatabase.insertPlayer(newPlayer);
+            player = newPlayer;
+
+            Stamina stamina = new Stamina(id);
+            playerDatabase.insertPlayerStamina(stamina);
+        }
+
+        return player;
+    }
+
+    public Player grabMentionedPlayer(PlayerDatabase playerDatabase, Message message, MessageChannel channel, String command){
+        List<User> mentionedList = message.getMentionedUsers();
+        if(mentionedList.size() != 1){
+            channel.sendMessage(String.format("%s, please mention the name of the user you wish to interact with !%s @name", message.getAuthor().getName(), command )).queue();
+            return null;
+        }
+
+        User userMentioned = mentionedList.get(0);
+        Player player = playerDatabase.selectPlayer(userMentioned.getId());
+
+        if(player == null){
+            channel.sendMessage(message.getAuthor().getName() + ", the mentioned user does not play this awesome game. You should get that person to play.").queue();
+            return null;
+        }
+        return player;
     }
 
 }

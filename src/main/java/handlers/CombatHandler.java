@@ -21,10 +21,20 @@ public class CombatHandler {
 
         for(int i = 1; i < 201; i++){
             if(curHealth <= 0){
-                content.append(String.format("\n The enemy won the fight with %s health left.", curHealth2));
+                if(content.length() > 1900)
+                {
+                    content = new StringBuilder(String.format("The fight lasted too long to be displayed. Trust me, the enemy won the fight with %s health left.", curHealth2));
+                } else{
+                    content.append(String.format("\n The enemy won the fight with %s health left.", curHealth2));
+                }
                 break;
             } else if(curHealth2 <= 0){
-                content.append(String.format("\n You won the fight with %s health left.", curHealth));
+                if(content.length() > 1900)
+                {
+                    content = new StringBuilder((String.format("The fight lasted too long to be displayed. Trust me, you won the fight with %s health left.", curHealth)));
+                } else {
+                    content.append(String.format("\n You won the fight with %s health left.", curHealth));
+                }
                 break;
             }
 
@@ -32,15 +42,13 @@ public class CombatHandler {
             double speedRoll2 = generateRoll(lowSpeed2, highSpeed2);
 
             if(speedRoll > speedRoll2){
-//                System.out.print("[1]");
                 int hitDmg = calcHitDamage(p1, p2, 0,0);
                 curHealth2 = curHealth2 - hitDmg > 0 ? (curHealth2 - hitDmg) : 0;
-                content.append(String.format(i + ". You did %s damage (%s health left)\n", hitDmg, curHealth2));
+                content.append(String.format(i + ". You did %s damage (%s left)\n", hitDmg, curHealth2));
             } else{
-//                System.out.print("[2]");
                 int hitDmg = calcHitDamage(p2, p1, 0,0);
                 curHealth = (curHealth - hitDmg) > 0 ? (curHealth - hitDmg) : 0;
-                content.append(String.format(i + ". The enemy did %s damage (%s health left)\n", hitDmg, curHealth));
+                content.append(String.format(i + ". The enemy did %s damage (%s left)\n", hitDmg, curHealth));
 
             }
         }
