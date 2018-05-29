@@ -52,10 +52,15 @@ public class CombatHandler {
 
             }
         }
-            System.out.println(content);
-//        channel.sendMessage(pasteBinHandler.postContentAsGuest("Discord RPG Fight", content.toString())).queue();
+
+
+        if(curHealth > 0 && curHealth2 > 0){
+            content = new StringBuilder(String.format("The fight ended with a draw because 200 rounds have gone by. You had %s health remaining while the enemy had %s health remaining.", curHealth, curHealth2));
+        }
+        System.out.println(content);
+        //  channel.sendMessage(pasteBinHandler.postContentAsGuest("Discord RPG Fight", content.toString())).queue();
         channel.sendMessage(content.toString()).queue();
-    }
+}
 
     public int calcHitDamage(Player p1, Player p2, double wep, double arm){
         double lowDmg = calcLowDamage(p1.getStrength(), p1.getPower(), 0);

@@ -132,6 +132,6 @@ public class Player {
     public String toString() {
         return "Level: " + getLevel() + " Health: " + getHealth() + "\n"
                 + "Power: " + getPower() + " Speed: " + getSpeed() + " Strength: " + getStrength()+ "\n" +
-                "Cash: " + getMoney();
+                "Cash: $" + getMoney();
     }
 }
