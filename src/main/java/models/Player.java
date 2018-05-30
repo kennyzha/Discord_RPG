@@ -1,6 +1,6 @@
 package models;
 
-public class Player {
+public class Player extends Entity{
     private String id;
 
     private int level, money, health;
@@ -8,11 +8,8 @@ public class Player {
     private int levelExp, woodCuttingExp;
 
     public Player(String id) {
+        super(1, 200, 1, 1, 1);
         this.id = id;
-        this.level = 1;
-        this.speed = 1;
-        this.power = 1;
-        this.strength = 1;
         this.health = 200;
         this.woodcutting = 1;
         this.money = 0;
@@ -30,38 +27,6 @@ public class Player {
 
     public int getMoney() {
         return money;
-    }
-
-    public double getSpeed() {
-        return speed;
-    }
-
-    public void setSpeed(double speed) {
-        this.speed = speed;
-    }
-
-    public double getPower() {
-        return power;
-    }
-
-    public void setPower(double defense) {
-        this.power = defense;
-    }
-
-    public double getStrength() {
-        return strength;
-    }
-
-    public void setStrength(double strength) {
-        this.strength = strength;
-    }
-
-    public int getHealth() {
-        return health;
-    }
-
-    public void setHealth(int health) {
-        this.health = health;
     }
 
     public double getIntelligence() {

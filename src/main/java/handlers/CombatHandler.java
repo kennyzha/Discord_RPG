@@ -2,12 +2,13 @@ package handlers;
 
 import com.github.kennedyoliveira.pastebin4j.*;
 import config.ApplicationConstants;
+import models.Entity;
 import models.Player;
 import net.dv8tion.jda.core.entities.MessageChannel;
 
 public class CombatHandler {
 
-    public void simulateCombat(Player p1, Player p2, MessageChannel channel){
+    public void simulateCombat(Entity p1, Entity p2, MessageChannel channel){
         int curHealth = p1.getHealth();
         int curHealth2 = p2.getHealth();
 
@@ -49,7 +50,6 @@ public class CombatHandler {
                 int hitDmg = calcHitDamage(p2, p1, 0,0);
                 curHealth = (curHealth - hitDmg) > 0 ? (curHealth - hitDmg) : 0;
                 content.append(String.format(i + ". He did %s dmg (%s left)\n", hitDmg, curHealth));
-
             }
         }
 
@@ -61,7 +61,7 @@ public class CombatHandler {
         channel.sendMessage(content.toString()).queue();
 }
 
-    public int calcHitDamage(Player p1, Player p2, double wep, double arm){
+    public int calcHitDamage(Entity p1, Entity p2, double wep, double arm){
         double lowDmg = calcLowDamage(p1.getStrength(), p1.getPower(), 0);
         double highDmg = calcHighDamage(p1.getStrength(), p1.getPower(), 0);
 
