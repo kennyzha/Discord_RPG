@@ -23,7 +23,7 @@ public class CombatHandler {
             if(curHealth <= 0){
                 if(content.length() > 1900)
                 {
-                    content = new StringBuilder(String.format("The fight lasted too long to be displayed. Trust me, the enemy won the fight with %s health left.", curHealth2));
+                    content = new StringBuilder(String.format("The fight lasted too long to be displayed. The enemy won the fight with %s health left on round %d.", curHealth2, i));
                 } else{
                     content.append(String.format("\n The enemy won the fight with %s health left.", curHealth2));
                 }
@@ -31,7 +31,7 @@ public class CombatHandler {
             } else if(curHealth2 <= 0){
                 if(content.length() > 1900)
                 {
-                    content = new StringBuilder((String.format("The fight lasted too long to be displayed. Trust me, you won the fight with %s health left.", curHealth)));
+                    content = new StringBuilder((String.format("The fight lasted too long to be displayed. You won the fight with %s health left on round %d.", curHealth, i)));
                 } else {
                     content.append(String.format("\n You won the fight with %s health left.", curHealth));
                 }
@@ -44,15 +44,14 @@ public class CombatHandler {
             if(speedRoll > speedRoll2){
                 int hitDmg = calcHitDamage(p1, p2, 0,0);
                 curHealth2 = curHealth2 - hitDmg > 0 ? (curHealth2 - hitDmg) : 0;
-                content.append(String.format(i + ". You did %s damage (%s left)\n", hitDmg, curHealth2));
+                content.append(String.format(i + ". You did %s dmg (%s left)\n", hitDmg, curHealth2));
             } else{
                 int hitDmg = calcHitDamage(p2, p1, 0,0);
                 curHealth = (curHealth - hitDmg) > 0 ? (curHealth - hitDmg) : 0;
-                content.append(String.format(i + ". The enemy did %s damage (%s left)\n", hitDmg, curHealth));
+                content.append(String.format(i + ". He did %s dmg (%s left)\n", hitDmg, curHealth));
 
             }
         }
-
 
         if(curHealth > 0 && curHealth2 > 0){
             content = new StringBuilder(String.format("The fight ended with a draw because 200 rounds have gone by. You had %s health remaining while the enemy had %s health remaining.", curHealth, curHealth2));
