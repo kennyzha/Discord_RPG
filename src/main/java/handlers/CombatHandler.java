@@ -2,11 +2,23 @@ package handlers;
 
 import com.github.kennedyoliveira.pastebin4j.*;
 import config.ApplicationConstants;
+import models.CombatResult;
+import models.CombatStatistic;
 import models.Entity;
 import models.Player;
 import net.dv8tion.jda.core.entities.MessageChannel;
 
 public class CombatHandler {
+
+    private CombatResult combatResult;
+    private CombatStatistic entityOneStats;
+    private CombatStatistic entityTwoStats;
+
+    public CombatHandler() {
+        this.combatResult = new CombatResult();
+        this.entityOneStats = new CombatStatistic();
+        this.entityTwoStats = new CombatStatistic();
+    }
 
     public void simulateCombat(Entity p1, Entity p2, MessageChannel channel){
         int curHealth = p1.getHealth();
@@ -17,25 +29,10 @@ public class CombatHandler {
         double lowSpeed2 = calcLowSpeed(p2.getSpeed());
         double highSpeed2 = p2.getSpeed();
 
-        PasteBinHandler pasteBinHandler = new PasteBinHandler();
-        StringBuilder content = new StringBuilder();
-
-        for(int i = 1; i < 201; i++){
-            if(curHealth <= 0){
-                if(content.length() > 1900)
-                {
-                    content = new StringBuilder(String.format("The fight lasted too long to be displayed. The enemy won the fight with %s health left on round %d.", curHealth2, i));
-                } else{
-                    content.append(String.format("\n The enemy won the fight with %s health left.", curHealth2));
-                }
-                break;
-            } else if(curHealth2 <= 0){
-                if(content.length() > 1900)
-                {
-                    content = new StringBuilder((String.format("The fight lasted too long to be displayed. You won the fight with %s health left on round %d.", curHealth, i)));
-                } else {
-                    content.append(String.format("\n You won the fight with %s health left.", curHealth));
-                }
+        for(int roundNumber = 1; roundNumber < 201; roundNumber++){
+            if(isFightOver(curHealth, curHealth2)){
+                entityOneStats.setRoundsPassed(roundNumber);
+                entityTwoStats.setRoundsPassed(roundNumber);
                 break;
             }
 
@@ -45,30 +42,54 @@ public class CombatHandler {
             if(speedRoll > speedRoll2){
                 int hitDmg = calcHitDamage(p1, p2, 0,0);
                 curHealth2 = curHealth2 - hitDmg > 0 ? (curHealth2 - hitDmg) : 0;
-                content.append(String.format(i + ". You did %s dmg (%s left)\n", hitDmg, curHealth2));
+
+                entityOneStats.increNumHitsGiven();
+                entityOneStats.checkMinMaxDmgDealt(hitDmg);
+
+                combatResult.appendToCombatString(String.format(roundNumber + ". You did %s dmg (%s left)\n", hitDmg, curHealth2));
             } else{
                 int hitDmg = calcHitDamage(p2, p1, 0,0);
                 curHealth = (curHealth - hitDmg) > 0 ? (curHealth - hitDmg) : 0;
-                content.append(String.format(i + ". He did %s dmg (%s left)\n", hitDmg, curHealth));
+
+                entityTwoStats.increNumHitsGiven();
+                entityTwoStats.checkMinMaxDmgDealt(hitDmg);
+
+                combatResult.appendToCombatString(String.format(roundNumber + ". He did %s dmg (%s left)\n", hitDmg, curHealth));
             }
         }
 
         if(curHealth > 0 && curHealth2 > 0){
-            content = new StringBuilder(String.format("The fight ended with a draw because 200 rounds have gone by. You had %s health remaining while the enemy had %s health remaining.", curHealth, curHealth2));
+            combatResult.appendToCombatResult(String.format("The fight ended with a draw because 200 rounds have gone by. You have %s health remaining while the enemy has %s health remaining.", curHealth, curHealth2));
         }
-        System.out.println(content);
-        //  channel.sendMessage(pasteBinHandler.postContentAsGuest("Discord RPG Fight", content.toString())).queue();
-        channel.sendMessage(content.toString()).queue();
-}
 
-    public int calcHitDamage(Entity p1, Entity p2, double wep, double arm){
-        double lowDmg = calcLowDamage(p1.getStrength(), p1.getPower(), 0);
-        double highDmg = calcHighDamage(p1.getStrength(), p1.getPower(), 0);
+        System.out.println("Combat String: \n" + combatResult.getCombatString());
+        System.out.println("Combat Result \n" + combatResult.getCombatResultString());
+        System.out.println("Combat Statistics: " + entityOneStats.toString());
+
+        //  channel.sendMessage(pasteBinHandler.postContentAsGuest("Discord RPG Fight", content.toString())).queue();
+        channel.sendMessage(entityOneStats.toString() + "\n" + combatResult.getCombatResultString()).queue();
+    }
+
+    public boolean isFightOver(int health, int health2){
+        if(health <= 0){
+            combatResult.appendToCombatResult(String.format("The enemy won the fight with %s health left.\n", health2));
+            return true;
+        } else if(health2 <= 0){
+            combatResult.appendToCombatResult(String.format("\n You won the fight with %s health left.\n", health));
+            return true;
+        }
+
+        return false;
+    }
+
+    public int calcHitDamage(Entity p1, Entity p2, double weap, double arm){
+        double lowDmg = calcLowDamage(p1.getStrength(), p1.getPower(), weap);
+        double highDmg = calcHighDamage(p1.getStrength(), p1.getPower(), weap);
 
         double dmgRoll = generateRoll(lowDmg, highDmg);
 
-        double lowDef = calcLowDefense(p2.getStrength(), 0);
-        double highDef = calcHighDefense(p2.getStrength(), 0);
+        double lowDef = calcLowDefense(p2.getStrength(), arm);
+        double highDef = calcHighDefense(p2.getStrength(), arm);
 
         double defRoll = generateRoll(lowDef, highDef);
 
@@ -78,15 +99,15 @@ public class CombatHandler {
         return (int) Math.ceil(hitDmg);
     }
 
-    public double calcLowDamage(double str, double pow, double wep){
+    public double calcLowDamage(double str, double pow, double weap){
         double effectiveStrength = calcEffectiveStr(str);
         double effectivePower = calcEffectivePow(pow);
 
-        return effectiveStrength/6 + effectivePower/2 + wep;
+        return effectiveStrength/6 + effectivePower/2 + weap;
     }
 
-    public double calcHighDamage(double str, double pow, double wep){
-        return calcEffectiveStr(str)/4 + 3*calcEffectivePow(pow)/4 + wep;
+    public double calcHighDamage(double str, double pow, double weap){
+        return calcEffectiveStr(str)/4 + 3*calcEffectivePow(pow)/4 + weap;
     }
 
     public double calcLowDefense(double str, double armor){
