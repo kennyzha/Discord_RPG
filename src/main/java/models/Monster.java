@@ -4,9 +4,9 @@ import java.util.ArrayList;
 
 public class Monster extends Entity {
     private int minExpGiven, maxExpGiven;
-    private ArrayList<Integer> itemDropList;
+    private ArrayList<Item> itemDropList;
 
-    public Monster(int level, int health, double speed, double power, double strength, int minExpGiven, int maxExpGiven, ArrayList<Integer> itemDropList) {
+    public Monster(int level, int health, double speed, double power, double strength, int minExpGiven, int maxExpGiven, ArrayList<Item> itemDropList) {
         super(level, health, speed, power, strength);
         this.minExpGiven = minExpGiven;
         this.maxExpGiven = maxExpGiven;
@@ -29,11 +29,11 @@ public class Monster extends Entity {
         this.maxExpGiven = maxExpGiven;
     }
 
-    public ArrayList<Integer> getItemDropList() {
+    public ArrayList<Item> getItemDropList() {
         return itemDropList;
     }
 
-    public void setItemDropList(ArrayList<Integer> itemDropList) {
+    public void setItemDropList(ArrayList<Item> itemDropList) {
         this.itemDropList = itemDropList;
     }
 }

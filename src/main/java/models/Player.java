@@ -3,26 +3,17 @@ package models;
 public class Player extends Entity{
     private String id;
 
-    private int level, money, health;
-    private double speed, power, strength, intelligence, woodcutting;
+    private int money;
+    private double intelligence, woodcutting;
     private int levelExp, woodCuttingExp;
 
     public Player(String id) {
         super(1, 200, 1, 1, 1);
         this.id = id;
-        this.health = 200;
         this.woodcutting = 1;
         this.money = 0;
         this.levelExp = 0;
         this.woodCuttingExp = 0;
-    }
-
-    public int getLevel() {
-        return level;
-    }
-
-    public void setLevel(int level) {
-        this.level = level;
     }
 
     public int getMoney() {
@@ -97,6 +88,6 @@ public class Player extends Entity{
     public String toString() {
         return "Level: " + getLevel() + " Health: " + getHealth() + "\n"
                 + "Power: " + getPower() + " Speed: " + getSpeed() + " Strength: " + getStrength()+ "\n" +
-                "Cash: $" + getMoney();
+                "Gold: $" + getMoney();
     }
 }
