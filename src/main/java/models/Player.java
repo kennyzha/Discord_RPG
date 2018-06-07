@@ -84,6 +84,11 @@ public class Player extends Entity{
         return getSpeed() + getPower() + getStrength();
     }
 
+    public int calcExpToNextLevel(){
+        int nextLvl = getLevel() + 1;
+        return (int) (50 * (Math.pow(nextLvl, 2) - (5 * nextLvl) + 8));
+    }
+
     @Override
     public String toString() {
         return "Level: " + getLevel() + " Health: " + getHealth() + "\n"
