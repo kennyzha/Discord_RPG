@@ -64,15 +64,15 @@ public class Player extends Entity{
         this.id = id;
     }
 
-    public void incSpeed(int amt){
+    public void incSpeed(double amt){
         setSpeed(getSpeed() + amt);
     }
 
-    public void incStrength(int amt){
+    public void incStrength(double amt){
         setStrength(getStrength() + amt);
     }
 
-    public void incPower(int amt){
+    public void incPower(double amt){
         setPower(getPower() + amt);
     }
 

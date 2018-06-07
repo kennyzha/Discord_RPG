@@ -110,19 +110,6 @@ public class MessageListener extends ListenerAdapter {
                         combatHandler.simulateCombat(player, mentionedPlayer, channel);
                     }
                 }
-/*
-                Player p1 = new Player("kenny");
-                p1.setSpeed(5000);
-                p1.setPower(3000);
-                p1.setStrength(2000);
-                p1.setHealth(10000);
-                Player p2 = new Player("bobby");
-                p2.setSpeed(2000);
-                p2.setPower(3000);
-                p2.setStrength(5000);
-                p2.setHealth(10000);
-                combatHandler.simulateCombat(p1, p2, channel);
-*/
                 break;
 
             default:
