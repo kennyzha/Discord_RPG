@@ -68,6 +68,6 @@ public class CombatStatistic {
     @Override
     public String toString(){
         return String.format("Lowest damage dealt: %s Highest Damage dealt: %s \n" +
-                "Average damage dealt: %s Number of hits dealt: %s", getMinDmgDealt(), getMaxDmgDealt(), calcAvgDmgDealt());
+                "Average damage dealt: %s Number of hits dealt: %s", getMinDmgDealt(), getMaxDmgDealt(), calcAvgDmgDealt(), getNumHitsGiven());
     }
 }

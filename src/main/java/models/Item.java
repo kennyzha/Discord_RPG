@@ -1,7 +1,7 @@
 package models;
 
 public class Item {
-    public enum Type {WEAPON, SHIELD, BODY, HELMET, GLOVES, BOOTS, LEG};
+    public enum Type {WEAPON, SHIELD, BODY, HELMET, GLOVES, BOOTS, LEG, CONSUMABLE};
     public enum Rarity{COMMON, RARE, EPIC, LEGENDARY, MYTH};
 
     private String name;
@@ -10,11 +10,12 @@ public class Item {
     private Type itemType;
     private Rarity rarity;
 
-    public Item(String name, int statValue, Type itemType, Rarity rarity) {
+    public Item(String name, int statValue, Type itemType, Rarity rarity, int sellValue) {
         this.name = name;
         this.statValue = statValue;
         this.itemType = itemType;
         this.rarity = rarity;
+        this.sellValue = sellValue;
     }
 
     public String getName() {

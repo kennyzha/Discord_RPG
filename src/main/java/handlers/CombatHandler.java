@@ -11,16 +11,11 @@ import net.dv8tion.jda.core.entities.MessageChannel;
 public class CombatHandler {
 
     private CombatResult combatResult;
-    private CombatStatistic entityOneStats;
-    private CombatStatistic entityTwoStats;
-
     public CombatHandler() {
         this.combatResult = new CombatResult();
-        this.entityOneStats = new CombatStatistic();
-        this.entityTwoStats = new CombatStatistic();
     }
 
-    public void simulateCombat(Entity p1, Entity p2, MessageChannel channel){
+    public CombatResult simulateCombat(Entity p1, Entity p2, MessageChannel channel){
         int curHealth = p1.getHealth();
         int curHealth2 = p2.getHealth();
 
@@ -28,6 +23,9 @@ public class CombatHandler {
         double highSpeed = p1.getSpeed();
         double lowSpeed2 = calcLowSpeed(p2.getSpeed());
         double highSpeed2 = p2.getSpeed();
+
+        CombatStatistic entityOneStats = combatResult.getEntityOneStats();
+        CombatStatistic entityTwoStats = combatResult.getEntityTwoStats();
 
         for(int roundNumber = 1; roundNumber < 201; roundNumber++){
             if(isFightOver(curHealth, curHealth2)){
@@ -45,6 +43,7 @@ public class CombatHandler {
 
                 entityOneStats.increNumHitsGiven();
                 entityOneStats.checkMinMaxDmgDealt(hitDmg);
+                entityOneStats.addToTotalDamage(hitDmg);
 
                 combatResult.appendToCombatString(String.format(roundNumber + ". You did %s dmg (%s left)\n", hitDmg, curHealth2));
             } else{
@@ -53,6 +52,7 @@ public class CombatHandler {
 
                 entityTwoStats.increNumHitsGiven();
                 entityTwoStats.checkMinMaxDmgDealt(hitDmg);
+                entityTwoStats.addToTotalDamage(hitDmg);
 
                 combatResult.appendToCombatString(String.format(roundNumber + ". He did %s dmg (%s left)\n", hitDmg, curHealth));
             }
@@ -64,10 +64,11 @@ public class CombatHandler {
 
         System.out.println("Combat String: \n" + combatResult.getCombatString());
         System.out.println("Combat Result \n" + combatResult.getCombatResultString());
-        System.out.println("Combat Statistics: " + entityOneStats.toString());
+        System.out.println("Combat Statistics: \n" + entityOneStats.toString());
 
         //  channel.sendMessage(pasteBinHandler.postContentAsGuest("Discord RPG Fight", content.toString())).queue();
-        channel.sendMessage(entityOneStats.toString() + "\n" + combatResult.getCombatResultString()).queue();
+//        channel.sendMessage(entityOneStats.toString() + "\n" + combatResult.getCombatResultString()).queue();
+        return combatResult;
     }
 
     public boolean isFightOver(int health, int health2){
