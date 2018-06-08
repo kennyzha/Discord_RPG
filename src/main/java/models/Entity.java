@@ -51,4 +51,10 @@ public class Entity {
     public void setStrength(double strength) {
         this.strength = strength;
     }
+
+    public void setStats(double power, double speed, double strength){
+        setPower(power);
+        setSpeed(speed);
+        setStrength(strength);
+    }
 }

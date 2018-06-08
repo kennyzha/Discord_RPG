@@ -35,7 +35,7 @@ public class CombatHandler {
         player.updateLevelAndExp();
         player.increGold(totalGoldEarned);
 
-        combatResult.appendToCombatResult(String.format("\nYou won against a %s %d/%d times and gained %s exp and %s gold.", monster.getName(), numWins, numTimes, totalExpEarned, totalGoldEarned));
+        combatResult.appendToCombatResult(String.format("\nYou won against a %s %d/%d times and gained %s exp and %s gold.\n", monster.getName(), numWins, numTimes, totalExpEarned, totalGoldEarned));
 
         return combatResult;
     }
@@ -55,7 +55,7 @@ public class CombatHandler {
         CombatStatistic entityTwoStats = combatResult.getEntityTwoStats();
 
         for(int roundNumber = 1; roundNumber < 201; roundNumber++){
-            if(isFightOver(curHealth, curHealth2)){
+            if(isFightOver(curHealth, curHealth2, roundNumber - 1)){
                 break;
             }
 
@@ -81,19 +81,19 @@ public class CombatHandler {
         }
 
         if(curHealth > 0 && curHealth2 > 0){
-            combatResult.appendToCombatResult(String.format("The fight ended with a draw because 200 rounds have gone by. You have %s health remaining while the enemy has %s health remaining.", curHealth, curHealth2));
+            combatResult.appendToCombatResult(String.format("The fight ended with a draw because 200 rounds have gone by. You have %s health remaining while the enemy has %s health remaining.\n", curHealth, curHealth2));
         }
 
         //  channel.sendMessage(pasteBinHandler.postContentAsGuest("Discord RPG Fight", content.toString())).queue();
 //        channel.sendMessage(entityOneStats.toString() + "\n" + combatResult.getCombatResultString()).queue();
     }
 
-    public boolean isFightOver(int health, int health2){
+    public boolean isFightOver(int health, int health2, int round){
         if(health <= 0){
-            combatResult.appendToCombatResult(String.format("The enemy won the fight with %s health left.\n", health2));
+            combatResult.appendToCombatResult(String.format("The enemy won the fight with %s health left on round %s.\n", health2, round));
             return true;
         } else if(health2 <= 0){
-            combatResult.appendToCombatResult(String.format("You won the fight with %s health left.\n", health));
+            combatResult.appendToCombatResult(String.format("You won the fight with %s health left on round %s.\n", health, round));
             combatResult.setWinner(true);
             return true;
         }
