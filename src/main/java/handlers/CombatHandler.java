@@ -2,10 +2,7 @@ package handlers;
 
 import com.github.kennedyoliveira.pastebin4j.*;
 import config.ApplicationConstants;
-import models.CombatResult;
-import models.CombatStatistic;
-import models.Entity;
-import models.Player;
+import models.*;
 import net.dv8tion.jda.core.entities.MessageChannel;
 
 public class CombatHandler {
@@ -15,60 +12,80 @@ public class CombatHandler {
         this.combatResult = new CombatResult();
     }
 
-    public CombatResult simulateCombat(Entity p1, Entity p2, MessageChannel channel){
+    public CombatResult fightMonster(Player player, Monster monster, int numTimes){
+        int totalExpEarned = 0;
+        int totalGoldEarned = 0;
+        int numWins = 0;
+
+        for(int i = 0; i < numTimes; i++){
+            simulateCombat(player, monster, null);
+
+            if(combatResult.isWinner()){
+                numWins++;
+                int expEarned = monster.calcExpGiven();
+
+                totalExpEarned += expEarned;
+                totalGoldEarned += monster.calcGoldDropped();
+
+                combatResult.setWinner(false);
+            }
+        }
+
+        player.increExp(totalExpEarned);
+        player.updateLevelAndExp();
+        player.increGold(totalGoldEarned);
+
+        combatResult.appendToCombatResult(String.format("\nYou won against a %s %d/%d times and gained %s exp and %s gold.", monster.getName(), numWins, numTimes, totalExpEarned, totalGoldEarned));
+
+        return combatResult;
+    }
+
+    public CombatResult fightPlayer(Player player, Player enemyPlayer){
+        simulateCombat(player, enemyPlayer, null);
+        return combatResult;
+    }
+
+    public void simulateCombat(Entity p1, Entity p2, MessageChannel channel){
         int curHealth = p1.getHealth();
         int curHealth2 = p2.getHealth();
-
         double lowSpeed = calcLowSpeed(p1.getSpeed());
-        double highSpeed = p1.getSpeed();
         double lowSpeed2 = calcLowSpeed(p2.getSpeed());
-        double highSpeed2 = p2.getSpeed();
 
         CombatStatistic entityOneStats = combatResult.getEntityOneStats();
         CombatStatistic entityTwoStats = combatResult.getEntityTwoStats();
 
         for(int roundNumber = 1; roundNumber < 201; roundNumber++){
             if(isFightOver(curHealth, curHealth2)){
-                entityOneStats.setRoundsPassed(roundNumber);
-                entityTwoStats.setRoundsPassed(roundNumber);
                 break;
             }
 
-            double speedRoll = generateRoll(lowSpeed, highSpeed);
-            double speedRoll2 = generateRoll(lowSpeed2, highSpeed2);
+            double speedRoll = generateRoll(lowSpeed, p1.getSpeed());
+            double speedRoll2 = generateRoll(lowSpeed2, p2.getSpeed());
 
             if(speedRoll > speedRoll2){
                 int hitDmg = calcHitDamage(p1, p2, 0,0);
                 curHealth2 = curHealth2 - hitDmg > 0 ? (curHealth2 - hitDmg) : 0;
 
-                entityOneStats.increNumHitsGiven();
-                entityOneStats.checkMinMaxDmgDealt(hitDmg);
-                entityOneStats.addToTotalDamage(hitDmg);
-
+                entityOneStats.updateDamageStats(hitDmg);
                 combatResult.appendToCombatString(String.format(roundNumber + ". You did %s dmg (%s left)\n", hitDmg, curHealth2));
             } else{
                 int hitDmg = calcHitDamage(p2, p1, 0,0);
                 curHealth = (curHealth - hitDmg) > 0 ? (curHealth - hitDmg) : 0;
 
-                entityTwoStats.increNumHitsGiven();
-                entityTwoStats.checkMinMaxDmgDealt(hitDmg);
-                entityTwoStats.addToTotalDamage(hitDmg);
-
+                entityTwoStats.updateDamageStats(hitDmg);
                 combatResult.appendToCombatString(String.format(roundNumber + ". He did %s dmg (%s left)\n", hitDmg, curHealth));
             }
+
+            entityOneStats.increRoundsPassed(1);
+            entityTwoStats.increRoundsPassed(1);
         }
 
         if(curHealth > 0 && curHealth2 > 0){
             combatResult.appendToCombatResult(String.format("The fight ended with a draw because 200 rounds have gone by. You have %s health remaining while the enemy has %s health remaining.", curHealth, curHealth2));
         }
 
-        System.out.println("Combat String: \n" + combatResult.getCombatString());
-        System.out.println("Combat Result \n" + combatResult.getCombatResultString());
-        System.out.println("Combat Statistics: \n" + entityOneStats.toString());
-
         //  channel.sendMessage(pasteBinHandler.postContentAsGuest("Discord RPG Fight", content.toString())).queue();
 //        channel.sendMessage(entityOneStats.toString() + "\n" + combatResult.getCombatResultString()).queue();
-        return combatResult;
     }
 
     public boolean isFightOver(int health, int health2){
@@ -76,7 +93,8 @@ public class CombatHandler {
             combatResult.appendToCombatResult(String.format("The enemy won the fight with %s health left.\n", health2));
             return true;
         } else if(health2 <= 0){
-            combatResult.appendToCombatResult(String.format("\n You won the fight with %s health left.\n", health));
+            combatResult.appendToCombatResult(String.format("You won the fight with %s health left.\n", health));
+            combatResult.setWinner(true);
             return true;
         }
 
@@ -136,6 +154,6 @@ public class CombatHandler {
     }
 
     public double generateRoll(double lowerBound, double upperBound){
-        return (Math.random() * (upperBound - lowerBound)) + lowerBound;
+        return (Math.random() * (upperBound - lowerBound) + 1) + lowerBound;
     }
 }

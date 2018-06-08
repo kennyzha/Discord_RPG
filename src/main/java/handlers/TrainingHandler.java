@@ -27,14 +27,13 @@ public class TrainingHandler {
         } else if(!hasEnoughStamina(stamina, numTimesToTrain)) {
             numTimesToTrain = curStamina;
         }
-        player.incSpeed(numTimesToTrain);
+        player.increSpeed(numTimesToTrain);
         playerDatabase.insertPlayer(player);
 
         int newStamina = stamina.getStamina() - numTimesToTrain;
         updateStamina(newStamina);
 
         sendTrainMessage("speed", newStamina, numTimesToTrain);
-
     }
 
     public void trainPower(int numTimesToTrain){
@@ -45,7 +44,7 @@ public class TrainingHandler {
         } else if(!hasEnoughStamina(stamina, numTimesToTrain)) {
             numTimesToTrain = curStamina;
         }
-        player.incPower(numTimesToTrain);
+        player.increPower(numTimesToTrain);
         playerDatabase.insertPlayer(player);
 
         int newStamina = stamina.getStamina() - numTimesToTrain;
@@ -62,7 +61,7 @@ public class TrainingHandler {
         } else if(!hasEnoughStamina(stamina, numTimesToTrain)) {
             numTimesToTrain = curStamina;
         }
-        player.incStrength(numTimesToTrain);
+        player.increStrength(numTimesToTrain);
         playerDatabase.insertPlayer(player);
 
         int newStamina = stamina.getStamina() - numTimesToTrain;

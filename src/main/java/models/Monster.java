@@ -1,23 +1,51 @@
 package models;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 public class Monster extends Entity {
-    private int expGiven;
+    private String name;
+    private int baseExpGiven, basedGoldDropped;
     private ArrayList<Item> itemDropList;
 
-    public Monster(int level, int health, double speed, double power, double strength, int expGiven, ArrayList<Item> itemDropList) {
+    public Monster(String name, int level, int health, double speed, double power, double strength, int baseExpGiven, int basedGoldDropped, ArrayList<Item> itemDropList) {
         super(level, health, speed, power, strength);
-        this.expGiven = expGiven;
+        this.name = name;
+        this.baseExpGiven = baseExpGiven;
+        this.basedGoldDropped = basedGoldDropped;
         this.itemDropList = itemDropList;
     }
 
-    public int getExpGiven() {
-        return expGiven;
+    public String getName() {
+        return name;
     }
 
-    public void setExpGiven(int expGiven) {
-        this.expGiven = expGiven;
+    public int getBaseExpGiven() {
+        return baseExpGiven;
+    }
+
+    public int getBasedGoldDropped() {
+        return basedGoldDropped;
+    }
+
+    public void setBaseExpGiven(int baseExpGiven) {
+        this.baseExpGiven = baseExpGiven;
+    }
+
+    public int calcExpGiven(){
+        return baseExpGiven + (calcVariance(baseExpGiven, .1) * posOrNegOne());
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setBasedGoldDropped(int basedGoldDropped) {
+        this.basedGoldDropped = basedGoldDropped;
+    }
+
+    public int calcGoldDropped(){
+        return basedGoldDropped + (calcVariance(basedGoldDropped, .1) * posOrNegOne());
     }
 
     public ArrayList<Item> getItemDropList() {
@@ -26,5 +54,14 @@ public class Monster extends Entity {
 
     public void setItemDropList(ArrayList<Item> itemDropList) {
         this.itemDropList = itemDropList;
+    }
+
+    public int posOrNegOne(){
+        Random random = new Random();
+        return random.nextInt(3) - 1;
+    }
+
+    public int calcVariance(int base, double variance){
+        return (int) (Math.random() * (base * variance));
     }
 }

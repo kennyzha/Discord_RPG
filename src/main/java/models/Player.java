@@ -3,21 +3,23 @@ package models;
 public class Player extends Entity{
     private String id;
 
-    private int money;
+    private int gold;
     private double intelligence, woodcutting;
     private int levelExp, woodCuttingExp;
+    private boolean alive;
 
     public Player(String id) {
         super(1, 200, 1, 1, 1);
         this.id = id;
         this.woodcutting = 1;
-        this.money = 0;
+        this.gold = 0;
         this.levelExp = 0;
         this.woodCuttingExp = 0;
+        this.alive = true;
     }
 
-    public int getMoney() {
-        return money;
+    public int getGold() {
+        return gold;
     }
 
     public double getIntelligence() {
@@ -52,8 +54,8 @@ public class Player extends Entity{
         this.woodCuttingExp = woodCuttingExp;
     }
 
-    public void setMoney(int money) {
-        this.money = money;
+    public void setGold(int gold) {
+        this.gold = gold;
     }
 
     public String getId() {
@@ -64,20 +66,48 @@ public class Player extends Entity{
         this.id = id;
     }
 
-    public void incSpeed(double amt){
+    public boolean isAlive() {
+        return alive;
+    }
+
+    public void setAlive(boolean alive) {
+        this.alive = alive;
+    }
+
+    public void increSpeed(double amt){
         setSpeed(getSpeed() + amt);
     }
 
-    public void incStrength(double amt){
+    public void increStrength(double amt){
         setStrength(getStrength() + amt);
     }
 
-    public void incPower(double amt){
+    public void increPower(double amt){
         setPower(getPower() + amt);
     }
 
-    public void incHealth(int amt){
+    public void increHealth(int amt){
         setHealth(getHealth() + amt);
+    }
+
+    public void increExp(int amt){
+        setLevelExp(getLevelExp() + amt);
+    }
+
+    public void increGold(int amt){
+        setGold(getGold() + amt);
+    }
+
+    public boolean leveledUp(){
+        return getLevelExp() > calcExpToNextLevel();
+    }
+
+    public void updateLevelAndExp(){
+        while(leveledUp()){
+            int leftOverExp = getLevelExp() - calcExpToNextLevel();
+            setLevel(getLevel() + 1);
+            setLevelExp(leftOverExp);
+        }
     }
 
     public double getTotalStats(){
@@ -93,6 +123,6 @@ public class Player extends Entity{
     public String toString() {
         return "Level: " + getLevel() + " Health: " + getHealth() + "\n"
                 + "Power: " + getPower() + " Speed: " + getSpeed() + " Strength: " + getStrength()+ "\n" +
-                "Gold: $" + getMoney();
+                "Gold: $" + getGold();
     }
 }

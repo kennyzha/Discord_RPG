@@ -6,7 +6,7 @@ public class CombatStatistic {
     public CombatStatistic() {
         this.numHitsGiven = 0;
         this.totalDamageDealt = 0;
-        this.roundsPassed = 1;
+        this.roundsPassed = 0;
         this.minDmgDealt = Integer.MAX_VALUE;
         this.maxDmgDealt = Integer.MIN_VALUE;
     }
@@ -43,6 +43,10 @@ public class CombatStatistic {
         this.roundsPassed = roundsPassed;
     }
 
+    public void increRoundsPassed(int rounds){
+        setRoundsPassed(getRoundsPassed() + rounds);
+    }
+
     public void checkMinMaxDmgDealt(int dmg){
         if(getMinDmgDealt() > dmg){
             setMinDmgDealt(dmg);
@@ -57,17 +61,29 @@ public class CombatStatistic {
         return numHitsGiven;
     }
 
+    public double calcAvgNumHitsGiven(){
+        double percentHits = (double) getNumHitsGiven() / getRoundsPassed() * 100.0;
+        double roundedPercentage = Math.round(percentHits * 100.0) / 100.0;
+        return roundedPercentage;
+    }
+
     public void increNumHitsGiven() {
         this.numHitsGiven++;
     }
 
-    public double calcAvgDmgDealt(){
-        return getTotalDamageDealt() / getRoundsPassed();
+    public int calcAvgDmgDealt(){
+        return (int) (getTotalDamageDealt() / getNumHitsGiven());
+    }
+
+    public void updateDamageStats(int hitDmg){
+        increNumHitsGiven();
+        checkMinMaxDmgDealt(hitDmg);
+        addToTotalDamage(hitDmg);
     }
 
     @Override
     public String toString(){
         return String.format("Lowest damage dealt: %s Highest Damage dealt: %s \n" +
-                "Average damage dealt: %s Number of hits dealt: %s", getMinDmgDealt(), getMaxDmgDealt(), calcAvgDmgDealt(), getNumHitsGiven());
+                "Average damage dealt: %s Percentage hits dealt: %s", getMinDmgDealt(), getMaxDmgDealt(), calcAvgDmgDealt(), calcAvgNumHitsGiven());
     }
 }

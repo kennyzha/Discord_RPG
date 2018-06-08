@@ -15,21 +15,21 @@ public class PlayerStatsTest {
     @Test
     public void increaseSpeedTest(){
         double oldSpeed = player.getSpeed();
-        player.incSpeed(100.0);
+        player.increSpeed(100.0);
         assertEquals(oldSpeed + 100, player.getSpeed());
     }
 
     @Test
     public void increasePowerTest(){
         double oldPower = player.getPower();
-        player.incPower(250);
+        player.increPower(250);
         assertEquals(oldPower + 250, player.getPower());
     }
 
     @Test
     public void increaseStrengthTest(){
         double oldStrength = player.getStrength();
-        player.incStrength(100.5);
+        player.increStrength(100.5);
         assertEquals(oldStrength + 100.5, player.getStrength());
     }
 
