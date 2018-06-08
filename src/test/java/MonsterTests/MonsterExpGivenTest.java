@@ -1,4 +1,4 @@
-package ExperienceTests;
+package MonsterTests;
 
 import models.Monster;
 import org.junit.Test;

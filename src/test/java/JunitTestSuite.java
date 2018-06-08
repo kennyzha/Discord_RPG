@@ -1,6 +1,5 @@
-import ExperienceTests.LevelExpTests;
-import ExperienceTests.LevelUpTests;
-import ExperienceTests.MonsterExpGivenTest;
+import MonsterTests.MonsterExpGivenTest;
+import PlayerTests.*;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
@@ -10,10 +9,9 @@ import org.junit.runners.Suite;
         LevelUpTests.class,
         LevelExpTests.class,
         MonsterExpGivenTest.class,
-        PlayerStatsTest.class
+        PlayerStatsTest.class,
+        HealthGainedTests.class
 })
 
 public class JunitTestSuite {
-
-
 }

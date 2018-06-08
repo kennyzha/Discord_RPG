@@ -1,7 +1,9 @@
 package simulators;
 
+import config.MonsterConstants;
 import handlers.CombatHandler;
 import models.CombatResult;
+import models.Monster;
 import models.Player;
 
 public class CombatSimulator {
@@ -12,10 +14,17 @@ public class CombatSimulator {
 
     public static void main(String[] args){
         CombatSimulator simulator = new CombatSimulator();
-        CombatResult results = simulator.pvp(simulator.player1, simulator.player2);
 
+        CombatResult results = simulator.pvp(simulator.player1, simulator.player2);
         System.out.println(results.getCombatResultString());
         System.out.println(results.getEntityOneStats());
+
+        System.out.println("PVM");
+
+        simulator = new CombatSimulator();
+        CombatResult pvmResults = simulator.pvm(simulator.player1, MonsterConstants.KOBOLD, 20);
+        System.out.println(pvmResults.getCombatResultString());
+        System.out.println(pvmResults.getEntityOneStats());
     }
 
     public CombatSimulator(){
@@ -30,5 +39,9 @@ public class CombatSimulator {
 
     public CombatResult pvp(Player p1, Player p2){
         return combatHandler.fightPlayer(p1, p2);
+    }
+
+    public CombatResult pvm(Player p1, Monster m1, int numFights){
+        return combatHandler.fightMonster(p1, m1, numFights);
     }
 }

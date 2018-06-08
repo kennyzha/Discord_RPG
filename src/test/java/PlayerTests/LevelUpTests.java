@@ -1,6 +1,5 @@
-package ExperienceTests;
+package PlayerTests;
 
-import config.ApplicationConstants;
 import config.MonsterConstants;
 import handlers.CombatHandler;
 import models.CombatResult;
@@ -10,6 +9,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import static junit.framework.TestCase.assertEquals;
+import static junit.framework.TestCase.assertTrue;
 
 public class LevelUpTests {
     CombatHandler combatHandler;
@@ -37,15 +37,21 @@ public class LevelUpTests {
         Monster slime = MonsterConstants.SLIME;
 
         int oldLevel = overPoweredPlayer.getLevel();
-        CombatResult combatResult = combatHandler.fightMonster(overPoweredPlayer, slime, 10);
-        int newLevel = overPoweredPlayer.getLevel();
+        int oldHealth = overPoweredPlayer.getHealth();
 
-        System.out.println("Combat Result String -----------------------");
+        CombatResult combatResult = combatHandler.fightMonster(overPoweredPlayer, slime, 10);
+
+        int newLevel = overPoweredPlayer.getLevel();
+        int newHealth = overPoweredPlayer.getHealth();
+
         System.out.println(combatResult.getCombatResultString());
-        System.out.println("Player Stats String -----------------------");
         System.out.println(combatResult.getEntityOneStats());
         System.out.println(String.format("Player used to be level %d now he is level %d", oldLevel, newLevel));
+
         assertEquals(4, newLevel);
+
+        int healthDiff = newHealth - oldHealth;
+        assertTrue(healthDiff >= 7);
     }
 
     @Test
@@ -57,9 +63,7 @@ public class LevelUpTests {
         CombatResult combatResult = combatHandler.fightMonster(overPoweredPlayer, kobold, 100);
         int newLevel = overPoweredPlayer.getLevel();
 
-        System.out.println("Combat Result String -----------------------");
         System.out.println(combatResult.getCombatResultString());
-        System.out.println("Player Stats String -----------------------");
         System.out.println(combatResult.getEntityOneStats());
         System.out.println(String.format("Player used to be level %d now he is level %d", oldLevel, newLevel));
         assertEquals(23, newLevel);
@@ -72,9 +76,7 @@ public class LevelUpTests {
 
         CombatResult combatResult = combatHandler.fightMonster(underPoweredPlayer, kobold, 20);
 
-        System.out.println("Combat Result String -----------------------");
         System.out.println(combatResult.getCombatResultString());
-        System.out.println("Player Stats String -----------------------");
         System.out.println(combatResult.getEntityOneStats());
     }
 

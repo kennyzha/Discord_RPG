@@ -1,4 +1,4 @@
-package ExperienceTests;
+package PlayerTests;
 
 import models.Player;
 import org.junit.Before;
@@ -33,13 +33,13 @@ public class LevelExpTests {
 
     @Test
     public void nextLevelFiveHundredTest(){
-        long expectedExpToLevel51 = 2070900000 - 2058474800;
-        assertEquals(expectedExpToLevel51, calcNextLevelExp(500));
+        long expectedExpToLevelTo501 = 2070900000 - 2058474800;
+        assertEquals(expectedExpToLevelTo501, calcNextLevelExp(500));
     }
 
     @Test
     public void nextLevelOneThousandTest(){
-        long expectedExpToLevel51 = 16616800000L - 16566949800L;
-        assertEquals(expectedExpToLevel51, calcNextLevelExp(1000));
+        long expectedExpToLevelTo1001 = 16616800000L - 16566949800L;
+        assertEquals(expectedExpToLevelTo1001, calcNextLevelExp(1000));
     }
 }

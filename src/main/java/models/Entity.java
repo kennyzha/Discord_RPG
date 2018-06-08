@@ -1,5 +1,7 @@
 package models;
 
+import java.util.Random;
+
 public class Entity {
     private int level, health;
     private double speed, power, strength;
@@ -56,5 +58,14 @@ public class Entity {
         setPower(power);
         setSpeed(speed);
         setStrength(strength);
+    }
+
+    public int posOrNegOne(){
+        Random random = new Random();
+        return random.nextInt(3) - 1;
+    }
+
+    public int calcVariance(int base, double variance){
+        return (int) (Math.random() * (base * variance));
     }
 }

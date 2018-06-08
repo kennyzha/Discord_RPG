@@ -9,7 +9,7 @@ public class Player extends Entity{
     private boolean alive;
 
     public Player(String id) {
-        super(1, 200, 1, 1, 1);
+        super(1, 50, 1, 1, 1);
         this.id = id;
         this.woodcutting = 1;
         this.gold = 0;
@@ -107,11 +107,33 @@ public class Player extends Entity{
             int leftOverExp = getLevelExp() - calcExpToNextLevel();
             setLevel(getLevel() + 1);
             setLevelExp(leftOverExp);
+            int hpGained = calcActualHealthGained(calcBaseHealthGained());
+            increHealth(hpGained);
+            System.out.println("Leveled up to " + getLevel() + " and hp gained: " + hpGained);
         }
     }
 
     public double getTotalStats(){
         return getSpeed() + getPower() + getStrength();
+    }
+
+    public int calcBaseHealthGained(){
+        double multiplier = 1;
+        if(getLevel() <= 100){
+            multiplier = 2.5;
+        } else if(getLevel() <= 200){
+            multiplier = 2.25;
+        } else if(getLevel() <= 300){
+            multiplier = 2;
+        } else{
+            return 600;
+        }
+
+        return (int) (multiplier * getLevel());
+    }
+
+    public int calcActualHealthGained(int baseHealth){
+        return baseHealth + calcVariance(baseHealth, .1);
     }
 
     public int calcExpToNextLevel(){

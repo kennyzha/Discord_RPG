@@ -1,7 +1,6 @@
 package models;
 
 import java.util.ArrayList;
-import java.util.Random;
 
 public class Monster extends Entity {
     private String name;
@@ -54,14 +53,5 @@ public class Monster extends Entity {
 
     public void setItemDropList(ArrayList<Item> itemDropList) {
         this.itemDropList = itemDropList;
-    }
-
-    public int posOrNegOne(){
-        Random random = new Random();
-        return random.nextInt(3) - 1;
-    }
-
-    public int calcVariance(int base, double variance){
-        return (int) (Math.random() * (base * variance));
     }
 }

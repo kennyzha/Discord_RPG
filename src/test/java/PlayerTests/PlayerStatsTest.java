@@ -1,3 +1,5 @@
+package PlayerTests;
+
 import models.Player;
 import org.junit.Before;
 import org.junit.Test;
