@@ -1,6 +1,7 @@
 package ExperienceTests;
 
 import config.ApplicationConstants;
+import config.MonsterConstants;
 import handlers.CombatHandler;
 import models.CombatResult;
 import models.Monster;
@@ -18,6 +19,7 @@ public class LevelUpTests {
     @Before
     public void init(){
         combatHandler = new CombatHandler();
+
         overPoweredPlayer = new Player("");
         overPoweredPlayer.setPower(99999);
         overPoweredPlayer.setSpeed(99999);
@@ -32,7 +34,7 @@ public class LevelUpTests {
 
     @Test
     public void playerLevelUpSlimeTest() {
-        Monster slime = ApplicationConstants.SLIME;
+        Monster slime = MonsterConstants.SLIME;
 
         int oldLevel = overPoweredPlayer.getLevel();
         CombatResult combatResult = combatHandler.fightMonster(overPoweredPlayer, slime, 10);
@@ -48,7 +50,7 @@ public class LevelUpTests {
 
     @Test
     public void playerLevelUpKoboldTest(){
-        Monster kobold = ApplicationConstants.KOBOLD;
+        Monster kobold = MonsterConstants.KOBOLD;
         overPoweredPlayer.setLevel(20);
 
         int oldLevel = overPoweredPlayer.getLevel();
@@ -65,7 +67,7 @@ public class LevelUpTests {
 
     @Test
     public void underPoweredTest(){
-        Monster kobold = ApplicationConstants.KOBOLD;
+        Monster kobold = MonsterConstants.KOBOLD;
         underPoweredPlayer.setLevel(20);
 
         CombatResult combatResult = combatHandler.fightMonster(underPoweredPlayer, kobold, 20);

@@ -25,7 +25,6 @@ public class MonsterExpGivenTest {
                 break;
             }
         }
-
         assertTrue(String.format("Lower bound is expected to be %s and upper bound is expected to be %s but actual variance is %s", 0, maxValue, curVar), isInRange);
     }
 
