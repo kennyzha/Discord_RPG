@@ -1,0 +1,6 @@
+MonsterTests\MonsterExpGivenTest.class
+PlayerTests\HealthGainedTests.class
+PlayerTests\LevelUpTests.class
+PlayerTests\LevelExpTests.class
+JunitTestSuite.class
+PlayerTests\PlayerStatsTest.class
