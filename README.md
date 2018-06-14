@@ -17,7 +17,7 @@ To add the bot to your discord server, please click on the discord button on top
 !help - Lists out available commands.
 ```
 ```
-!profile! - Lists out a player's level, stats, and amount of gold owned.
+!profile - Lists out a player's level, stats, and amount of gold owned.
 ```
 
 ```
