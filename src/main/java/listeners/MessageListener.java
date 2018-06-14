@@ -1,9 +1,12 @@
 package listeners;
 
 import config.ApplicationConstants;
+import config.MonsterConstants;
 import database.PlayerDatabase;
 import handlers.CombatHandler;
 import handlers.TrainingHandler;
+import models.CombatResult;
+import models.Monster;
 import models.Player;
 import models.Stamina;
 import net.dv8tion.jda.core.entities.*;
@@ -44,7 +47,7 @@ public class MessageListener extends ListenerAdapter {
 
         PlayerDatabase playerDatabase = new PlayerDatabase();
         Player player;
-
+        Stamina curStamina;
         switch(msgArr[0]){
             case "!profile":
                 if(msgArr.length == 1){
@@ -76,7 +79,7 @@ public class MessageListener extends ListenerAdapter {
                             channel.sendMessage(author.getName() + ", please type in a number between 1 and 20.").queue();
                         } else{
                             player = grabPlayer(playerDatabase, author.getId());
-                            Stamina curStamina = playerDatabase.retreivePlayerStamina(author.getId());
+                            curStamina = playerDatabase.retreivePlayerStamina(author.getId());
                             TrainingHandler trainingHandler = new TrainingHandler(player, curStamina, channel, playerDatabase);
 
                             if(arg2.equals("speed")){
@@ -95,25 +98,65 @@ public class MessageListener extends ListenerAdapter {
                 }
                 break;
             case "!stamina":
-                Stamina stamina = playerDatabase.retreivePlayerStamina(author.getId());
-                channel.sendMessage(author.getName() + ", you currently have " + stamina.getStamina() + " stamina.").queue();
+               curStamina = playerDatabase.retreivePlayerStamina(author.getId());
+                channel.sendMessage(author.getName() + ", you currently have " + curStamina.getStamina() + " stamina.").queue();
                 break;
             case "!fight":
                 CombatHandler combatHandler = new CombatHandler();
                 if(msgArr.length < 2){
-                    channel.sendMessage(author.getName() + ", Please mention the name of the user you wish to fight with !fight @name").queue();
+                    channel.sendMessage(author.getName() + ", Please mention the name of the user you wish to fight with !fight @name.").queue();
                 } else{
                     Player mentionedPlayer = grabMentionedPlayer(playerDatabase, message, channel, "fight");
 
                     if(mentionedPlayer != null){
                         player = grabPlayer(playerDatabase, author.getId());
-                        combatHandler.simulateCombat(player, mentionedPlayer, channel);
+                        CombatResult pvpResults = combatHandler.fightPlayer(player, mentionedPlayer);
+                        channel.sendMessage(pvpResults.getCombatResultString() + "\n" + pvpResults.getEntityOneStats()).queue();
                     }
                 }
                 break;
+            case "!hunt":
+                CombatHandler handler = new CombatHandler();
+                if(msgArr.length < 3){
+                    channel.sendMessage(author.getName() + ", Please type the name of the monster you wish to hunt and the # of times with \"!hunt name 1\". !monsters for list of monsters.").queue();
+                }
 
+                String inputtedName = msgArr[1];
+                Monster monster = identifyMonster(inputtedName);
+
+                if(monster == null){
+                    channel.sendMessage(author.getName() + ", " + inputtedName + " is not a valid monster name. Please type a valid name of the monster you wish to hunt with !!hunt monster-name. !monsters for list of monsters.").queue();
+                } else{
+                    curStamina = playerDatabase.retreivePlayerStamina(author.getId());
+                    player = grabPlayer(playerDatabase, author.getId());
+
+                    try{
+                        int numTimesToHunt = Math.min(Integer.parseInt(msgArr[2]), curStamina.getStamina());
+
+                        if(numTimesToHunt == 0){
+                            channel.sendMessage(author.getName() + ", You are too tired to hunt monsters. You recover 1 stamina every 5 minutes.").queue();
+                            break;
+                        }
+
+                        curStamina.setStamina(curStamina.getStamina() - numTimesToHunt);
+                        CombatResult results = handler.fightMonster(player, monster, numTimesToHunt);
+
+                        playerDatabase.insertPlayer(player);
+                        playerDatabase.insertPlayerStamina(curStamina);
+
+                        channel.sendMessage(results.getCombatResultString().toString() + "\n " + results.getEntityOneStats()).queue();
+
+                    } catch(Exception e){
+                        System.out.println(e.getMessage());
+                        channel.sendMessage(author.getName() + ", Please type a valid number of times you wish to hunt that monster with \"!hunt name 1\". \"!monsters\" for list of monsters.").queue();
+                    }
+                }
+                break;
+            case "!monsters":
+                channel.sendMessage("Available monsters to !hunt: slime (lvl 1), spider (lvl 5), goblin (lvl 10), kobold (lvl 20), orc (lvl 30), and ogre (lvl 50").queue();
+                break;
             default:
-                channel.sendMessage(author.getName() + ", invalid input: " + message.getContentDisplay() + "\n" + ApplicationConstants.ALL_COMMANDS).queue();
+                channel.sendMessage(author.getName() + ", Command not recognized: " + message.getContentDisplay() + "\n" + ApplicationConstants.ALL_COMMANDS).queue();
         }
     }
 
@@ -148,4 +191,22 @@ public class MessageListener extends ListenerAdapter {
         return player;
     }
 
+    public Monster identifyMonster(String monsterString){
+        switch(monsterString.toLowerCase()){
+            case "slime":
+                return MonsterConstants.SLIME;
+            case "spider":
+                return MonsterConstants.SPIDER;
+            case "goblin":
+                return MonsterConstants.GOBLIN;
+            case "kobold":
+                return MonsterConstants.KOBOLD;
+            case "orc":
+                return MonsterConstants.ORC;
+            case "ogre":
+                return MonsterConstants.OGRE;
+        }
+
+        return null;
+    }
 }

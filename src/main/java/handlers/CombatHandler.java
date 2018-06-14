@@ -31,12 +31,10 @@ public class CombatHandler {
             }
         }
 
-        player.increExp(totalExpEarned);
-        player.updateLevelAndExp();
+        combatResult.appendToCombatResult(String.format("\nYou won against a %s %d/%d times and gained %s exp and %s gold.", monster.getName(), numWins, numTimes, totalExpEarned, totalGoldEarned));
+
         player.increGold(totalGoldEarned);
-
-        combatResult.appendToCombatResult(String.format("\nYou won against a %s %d/%d times and gained %s exp and %s gold.\n", monster.getName(), numWins, numTimes, totalExpEarned, totalGoldEarned));
-
+        playerLevelUp(player, totalExpEarned);
         return combatResult;
     }
 
@@ -83,9 +81,23 @@ public class CombatHandler {
         if(curHealth > 0 && curHealth2 > 0){
             combatResult.appendToCombatResult(String.format("The fight ended with a draw because 200 rounds have gone by. You have %s health remaining while the enemy has %s health remaining.\n", curHealth, curHealth2));
         }
+    }
 
-        //  channel.sendMessage(pasteBinHandler.postContentAsGuest("Discord RPG Fight", content.toString())).queue();
-//        channel.sendMessage(entityOneStats.toString() + "\n" + combatResult.getCombatResultString()).queue();
+    public void playerLevelUp(Player player, int totalExpEarned){
+        int oldPlayerLevel = player.getLevel();
+        int oldHealth = player.getHealth();
+
+        player.increExp(totalExpEarned);
+        player.updateLevelAndExp();
+
+        int lvlsGained = player.getLevel() - oldPlayerLevel;
+        int healthGained = player.getHealth() - oldHealth;
+
+        if(lvlsGained == 1){
+            combatResult.appendToCombatResult( String.format(" You have gained a level and %s health. You are now level %s.", healthGained, player.getLevel()));
+        } else if(lvlsGained > 1){
+            combatResult.appendToCombatResult( String.format(" You have gained %s levels and %s health. You are now level %s.", lvlsGained, healthGained, player.getLevel()));
+        }
     }
 
     public boolean isFightOver(int health, int health2, int round){

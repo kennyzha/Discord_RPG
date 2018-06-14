@@ -8,7 +8,7 @@ public class CombatStatistic {
         this.totalDamageDealt = 0;
         this.roundsPassed = 0;
         this.minDmgDealt = Integer.MAX_VALUE;
-        this.maxDmgDealt = Integer.MIN_VALUE;
+        this.maxDmgDealt = 0;
     }
 
     public int getTotalDamageDealt() {
@@ -62,6 +62,8 @@ public class CombatStatistic {
     }
 
     public double calcAvgNumHitsGiven(){
+        if(getRoundsPassed() == 0) return 0;
+
         double percentHits = (double) getNumHitsGiven() / getRoundsPassed() * 100.0;
         double roundedPercentage = Math.round(percentHits * 100.0) / 100.0;
         return roundedPercentage;
@@ -72,6 +74,9 @@ public class CombatStatistic {
     }
 
     public int calcAvgDmgDealt(){
+        if(getNumHitsGiven() == 0)
+            return 0;
+
         return (int) (getTotalDamageDealt() / getNumHitsGiven());
     }
 
@@ -83,7 +88,7 @@ public class CombatStatistic {
 
     @Override
     public String toString(){
-        return String.format("Lowest damage dealt: %s Highest Damage dealt: %s \n" +
+        return String.format("\nLowest damage dealt: %s Highest Damage dealt: %s \n" +
                 "Average damage dealt: %s Percentage hits dealt: %s", getMinDmgDealt(), getMaxDmgDealt(), calcAvgDmgDealt(), calcAvgNumHitsGiven());
     }
 }
