@@ -10,7 +10,7 @@ As you level up, your health increases and you get an increase in stats each tim
 
 ## Getting Started
 
-To add the bot to your discord server, please click on the discord button on top which contains the invite link. To register yourself to the bot, please type in any of the valid commands list below on any server which contains the bot.
+To add the bot to your discord server, please click on this [invite link](https://discordapp.com/api/oauth2/authorize?client_id=449444515548495882&permissions=8&scope=bot). To register yourself to the bot, please type in any of the valid commands list below on any server which contains the bot.
 
 ## List of Commands
 ```
