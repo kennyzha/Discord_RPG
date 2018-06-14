@@ -50,7 +50,7 @@ To add the bot to your discord server, please click on this [invite link](https:
 
 # Join the community!
 
-Discord RPG is in current in beta, and it’s in continuous development. We are open to suggestions and feedback which can be posted in github issues or on our official discord server. Stay tuned by [joining the official server](https://discord.gg/3Gq4kAr)!
+Discord RPG is currently in beta and it’s in continuous development. We are open to suggestions and feedback which can be posted in github issues or on our official discord server. Stay tuned by [joining the official server](https://discord.gg/3Gq4kAr)!
 
 # License
 
