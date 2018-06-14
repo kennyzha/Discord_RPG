@@ -9,7 +9,7 @@ public class Player extends Entity{
     private boolean alive;
 
     public Player(String id) {
-        super(1, 50, 1, 1, 1);
+        super(1, 200, 1, 1, 1);
         this.id = id;
         this.woodcutting = 1;
         this.gold = 0;
@@ -74,16 +74,29 @@ public class Player extends Entity{
         this.alive = alive;
     }
 
+    public double calcStatGain(){
+        double baseGain = .5;
+        double additionalGain = getLevel() * .0025;
+
+        return baseGain + additionalGain;
+    }
     public void increSpeed(double amt){
-        setSpeed(getSpeed() + amt);
+        double totalStatGain = amt * calcStatGain();
+        double rounded = Math.round((getSpeed() + totalStatGain) * 100.0) / 100.0;
+        setSpeed(rounded);
     }
 
     public void increStrength(double amt){
-        setStrength(getStrength() + amt);
+        double totalStatGain = amt * calcStatGain();
+        double rounded = Math.round((getStrength() + totalStatGain) * 100.0) / 100.0;
+
+        setStrength(rounded);
     }
 
     public void increPower(double amt){
-        setPower(getPower() + amt);
+        double totalStatGain = amt * calcStatGain();
+        double rounded = Math.round((getPower() + totalStatGain) * 100.0) / 100.0;
+        setPower(rounded);
     }
 
     public void increHealth(int amt){
@@ -145,6 +158,6 @@ public class Player extends Entity{
     public String toString() {
         return "Level: " + getLevel() + " Health: " + getHealth() + "\n"
                 + "Power: " + getPower() + " Speed: " + getSpeed() + " Strength: " + getStrength()+ "\n" +
-                "Gold: $" + getGold();
+                "Gold: " + getGold();
     }
 }
