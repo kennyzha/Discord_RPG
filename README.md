@@ -37,7 +37,7 @@ To add the bot to your discord server, please click on the discord button on top
 ```
 
 ```
-!fight @name - Fights the person on the serve that is mentioned.
+!fight @name - Fights the person on the server that is mentioned.
 ```
 
 ```
