@@ -8,6 +8,7 @@ public class Player extends Entity{
     private int levelExp, woodCuttingExp;
     private boolean alive;
 
+    public enum Stat {POWER, SPEED, STRENGTH};
     public Player(String id) {
         super(1, 200, 1, 1, 1);
         this.id = id;
@@ -156,7 +157,7 @@ public class Player extends Entity{
 
     @Override
     public String toString() {
-        return "Level: " + getLevel() + " Health: " + getHealth() + "\n"
+        return "Level: " + getLevel() + " Experience: " + getLevelExp() + "/" + calcExpToNextLevel() + " Health: " + getHealth() + "\n"
                 + "Power: " + getPower() + " Speed: " + getSpeed() + " Strength: " + getStrength()+ "\n" +
                 "Gold: " + getGold();
     }

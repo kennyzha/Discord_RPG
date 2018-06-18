@@ -9,7 +9,7 @@ import javax.security.auth.login.LoginException;
 
 public class Rpg {
     public static void main(String[] args) throws LoginException, RateLimitedException, InterruptedException{
-        JDA jda = new JDABuilder(AccountType.BOT).setToken(ApplicationConstants.TOKEN).buildBlocking();
+        JDA jda = new JDABuilder(AccountType.BOT).setToken(ApplicationConstants.TEST_TOKEN).buildBlocking();
         jda.addEventListener(new MessageListener());
     }
 }

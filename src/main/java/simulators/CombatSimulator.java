@@ -35,6 +35,7 @@ public class CombatSimulator {
         player2 = new Player("");
         player2.setHealth(5000);
         player2.setStats(400, 500, 200);
+
     }
 
     public CombatResult pvp(Player p1, Player p2){

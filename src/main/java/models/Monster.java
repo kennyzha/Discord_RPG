@@ -1,5 +1,7 @@
 package models;
 
+import config.MonsterConstants;
+
 import java.util.ArrayList;
 
 public class Monster extends Entity {
@@ -53,5 +55,24 @@ public class Monster extends Entity {
 
     public void setItemDropList(ArrayList<Item> itemDropList) {
         this.itemDropList = itemDropList;
+    }
+
+    public static Monster identifyMonster(String monsterString){
+        switch(monsterString.toLowerCase()){
+            case "slime":
+                return MonsterConstants.SLIME;
+            case "spider":
+                return MonsterConstants.SPIDER;
+            case "goblin":
+                return MonsterConstants.GOBLIN;
+            case "kobold":
+                return MonsterConstants.KOBOLD;
+            case "orc":
+                return MonsterConstants.ORC;
+            case "ogre":
+                return MonsterConstants.OGRE;
+        }
+
+        return null;
     }
 }

@@ -4,6 +4,7 @@ import config.ApplicationConstants;
 import config.MonsterConstants;
 import database.PlayerDatabase;
 import handlers.CombatHandler;
+import handlers.CommandHandler;
 import handlers.TrainingHandler;
 import models.CombatResult;
 import models.Monster;
@@ -31,7 +32,8 @@ public class MessageListener extends ListenerAdapter {
         if(event.getAuthor().isBot()){
             return;
         }
-        handleCommand(event);
+
+        new CommandHandler().handleCommand(event);
     }
 
     public void handleCommand(MessageReceivedEvent event){
@@ -122,7 +124,7 @@ public class MessageListener extends ListenerAdapter {
                 }
 
                 String inputtedName = msgArr[1];
-                Monster monster = identifyMonster(inputtedName);
+                Monster monster = Monster.identifyMonster(inputtedName);
 
                 if(monster == null){
                     channel.sendMessage(author.getName() + ", " + inputtedName + " is not a valid monster name. Please type a valid name of the monster you wish to hunt with !!hunt monster-name. !monsters for list of monsters.").queue();
@@ -189,24 +191,5 @@ public class MessageListener extends ListenerAdapter {
             return null;
         }
         return player;
-    }
-
-    public Monster identifyMonster(String monsterString){
-        switch(monsterString.toLowerCase()){
-            case "slime":
-                return MonsterConstants.SLIME;
-            case "spider":
-                return MonsterConstants.SPIDER;
-            case "goblin":
-                return MonsterConstants.GOBLIN;
-            case "kobold":
-                return MonsterConstants.KOBOLD;
-            case "orc":
-                return MonsterConstants.ORC;
-            case "ogre":
-                return MonsterConstants.OGRE;
-        }
-
-        return null;
     }
 }
