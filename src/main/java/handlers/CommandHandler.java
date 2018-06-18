@@ -6,15 +6,17 @@ import models.CombatResult;
 import models.Monster;
 import models.Player;
 import models.Stamina;
-import net.dv8tion.jda.core.entities.Message;
-import net.dv8tion.jda.core.entities.MessageChannel;
-import net.dv8tion.jda.core.entities.User;
+import net.dv8tion.jda.core.EmbedBuilder;
+import net.dv8tion.jda.core.MessageBuilder;
+import net.dv8tion.jda.core.entities.*;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
+
+import java.awt.*;
 
 public class CommandHandler {
 
     private PlayerDatabase playerDatabase;
-
+    private final String COMMAND_PREFIX = "r!";
     public CommandHandler(){
         this.playerDatabase = new PlayerDatabase();
     }
@@ -27,29 +29,32 @@ public class CommandHandler {
         String msg = message.getContentDisplay().toLowerCase();
         String[] msgArr = msg.split(" ");
 
-        if(msgArr.length == 0 || !msgArr[0].startsWith("!"))
+        if(msgArr.length == 0 || !msgArr[0].startsWith(COMMAND_PREFIX))
             return;
 
         switch(msgArr[0]){
-            case "!profile":
+            case "r!profile":
                 profile(channel, author, message);
                 break;
-            case "!help":
+            case "r!help":
                 help(channel);
                 break;
-            case "!train":
+            case "r!commands":
+                commands(channel);
+                break;
+            case "r!train":
                train(channel, msgArr, author);
                 break;
-            case "!stamina":
+            case "r!stamina":
                 stamina(channel, author);
                 break;
-            case "!fight":
+            case "r!fight":
                fight(channel, message, author);
                 break;
-            case "!hunt":
+            case "r!hunt":
                 hunt(channel, msgArr, author);
                 break;
-            case "!monsters":
+            case "r!monsters":
                 channel.sendMessage("Available monsters to !hunt: slime (lvl 1), spider (lvl 5), goblin (lvl 10), kobold (lvl 20), orc (lvl 30), and ogre (lvl 50)").queue();
                 break;
             default:
@@ -59,33 +64,42 @@ public class CommandHandler {
 
     public void profile(MessageChannel channel, User user, Message message){
         String[] msgArr = message.getContentDisplay().split(" ");
+        MessageHandler messageHandler = new MessageHandler();
+
         if(msgArr.length == 1){
             Player player = playerDatabase.grabPlayer(user.getId());
-            channel.sendMessage( user.getName() + "'s profile: \n" + player.toString()).queue();
+            String slime = "http://wiki.chronicles-of-blood.com/images/Creatures-Slime_monster.jpg";
+            String orc = "https://wallscover.com/images/orc-9.jpg";
 
+            channel.sendMessage(messageHandler.createProfileEmbed(user, player)).queue();
         } else{
             Player mentionedPlayer = playerDatabase.grabMentionedPlayer(message, channel, "profile");
-
             if(mentionedPlayer != null){
-                channel.sendMessage(mentionedPlayer.toString()).queue();
+                User mentionedUser = message.getMentionedMembers().get(0).getUser();
+                channel.sendMessage(messageHandler.createProfileEmbed(mentionedUser, mentionedPlayer)).queue();
+
             }
         }
     }
 
     public void help(MessageChannel channel){
-        channel.sendMessage(ApplicationConstants.HELP_STRING + ApplicationConstants.VERBOSE_COMMANDS).queue();
+        channel.sendMessage(ApplicationConstants.HELP_STRING).queue();
+    }
+
+    public void commands(MessageChannel channel){
+        channel.sendMessage(ApplicationConstants.VERBOSE_COMMANDS).queue();
     }
 
     public void train( MessageChannel channel, String[] msgArr, User user){
         if(msgArr.length < 3){
-            channel.sendMessage(user + ", Please include a number between 1 and 20 and the type of stat you would like to train. e.g. !train power 10").queue();
+            channel.sendMessage(user.getName() + ", Please include a number between 1 and 20 and the type of stat you would like to train. e.g. !train power 10").queue();
         }else{
             String statToTrain = msgArr[1];
             try{
                 int numTimesToTrain = Integer.parseInt(msgArr[2]);
 
                 if(numTimesToTrain < 1 || numTimesToTrain > 20){
-                    channel.sendMessage(user + ", Please include a number between 1 and 20 and the type of stat you would like to train. e.g. !train power 10").queue();
+                    channel.sendMessage(user.getName() + ", Please include a number between 1 and 20 and the type of stat you would like to train. e.g. !train power 10").queue();
                 } else{
                     Player player = playerDatabase.grabPlayer(user.getId());
                     Stamina curStamina = playerDatabase.retreivePlayerStamina(user.getId());
@@ -99,7 +113,7 @@ public class CommandHandler {
                     }else if(statToTrain.equals("strength")){
                         trainingHandler.trainStrength(numTimesToTrain);
                     } else{
-                        channel.sendMessage( user + ", Invalid argument. Failed to train: " + statToTrain + ". You can only train power, speed and strength.\n").queue();
+                        channel.sendMessage( user.getName() + ", Invalid argument. Failed to train: " + statToTrain + ". You can only train power, speed and strength.\n").queue();
                     }
                 }
             } catch(Exception e){
@@ -135,26 +149,26 @@ public class CommandHandler {
         }
     }
 
-    public void hunt(MessageChannel channel, String[] msgArr, User author){
+    public void hunt(MessageChannel channel, String[] msgArr, User user){
         CombatHandler handler = new CombatHandler();
         if(msgArr.length < 3){
-            channel.sendMessage(author.getName() + ", Please type the name of the monster you wish to hunt and the # of times with \"!hunt name 1\". !monsters for list of monsters.").queue();
+            channel.sendMessage(user.getName() + ", Please type the name of the monster you wish to hunt and the # of times with \"!hunt name 1\". !monsters for list of monsters.").queue();
         }
 
         String inputtedName = msgArr[1];
         Monster monster = Monster.identifyMonster(inputtedName);
 
         if(monster == null){
-            channel.sendMessage(author.getName() + ", " + inputtedName + " is not a valid monster name. Please type a valid name of the monster you wish to hunt with !!hunt monster-name. !monsters for list of monsters.").queue();
+            channel.sendMessage(user.getName() + ", " + inputtedName + " is not a valid monster name. Please type a valid name of the monster you wish to hunt with !!hunt monster-name. !monsters for list of monsters.").queue();
         } else{
-            Player player = playerDatabase.grabPlayer(author.getId());
-            Stamina curStamina = playerDatabase.retreivePlayerStamina(author.getId());
+            Player player = playerDatabase.grabPlayer(user.getId());
+            Stamina curStamina = playerDatabase.retreivePlayerStamina(user.getId());
 
             try{
                 int numTimesToHunt = Math.min(Integer.parseInt(msgArr[2]), curStamina.getStamina());
 
                 if(numTimesToHunt == 0){
-                    channel.sendMessage(author.getName() + ", You are too tired to hunt monsters. You recover 1 stamina every 5 minutes.").queue();
+                    channel.sendMessage(user.getName() + ", You are too tired to hunt monsters. You recover 1 stamina every 5 minutes.").queue();
                     return;
                 }
 
@@ -168,7 +182,7 @@ public class CommandHandler {
 
             } catch(Exception e){
                 System.out.println(e.getMessage());
-                channel.sendMessage(author.getName() + ", Please type a valid number of times you wish to hunt that monster with \"!hunt name 1\". \"!monsters\" for list of monsters.").queue();
+                channel.sendMessage(user.getName() + ", Please type a valid number of times you wish to hunt that monster with \"!hunt name 1\". \"!monsters\" for list of monsters.").queue();
             }
         }
     }
