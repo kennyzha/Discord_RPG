@@ -162,7 +162,8 @@ public class CommandHandler {
     public void hunt(MessageChannel channel, String[] msgArr, User user){
         CombatHandler handler = new CombatHandler();
         if(msgArr.length < 3){
-            sendDefaultEmbedMessage(user, "Please type the name of the monster you wish to hunt and the # of times with \\\"!hunt name 1\\\". r!monsters for list of monsters.", messageHandler, channel);
+            sendDefaultEmbedMessage(user, "Please type the name of the monster you wish to hunt and the # of times. e.g. \"r!hunt slime 1\". r!monsters for list of monsters.", messageHandler, channel);
+            return;
         }
 
         String inputtedName = msgArr[1];
@@ -188,12 +189,10 @@ public class CommandHandler {
                 playerDatabase.insertPlayer(player);
                 playerDatabase.insertPlayerStamina(curStamina);
 
-                channel.sendMessage(pvmResults.getCombatResultString().toString() + "\n " + pvmResults.getEntityOneStats()).queue();
                 channel.sendMessage(messageHandler.createEmbedFightMessage(user, monster.getName(), pvmResults)).queue();
 
             } catch(Exception e){
-                System.out.println(e.getMessage());
-                sendDefaultEmbedMessage(user, "Please type a valid number of times you wish to hunt that monster with e.g. \"r!hunt slime 1\". \"r!monsters\" for list of monsters.", messageHandler, channel);
+                sendDefaultEmbedMessage(user, "Please type a valid number of times you wish to hunt that monster with. e.g. \"r!hunt slime 1\". \"r!monsters\" for list of monsters.", messageHandler, channel);
             }
         }
     }
