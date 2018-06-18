@@ -65,19 +65,22 @@ public class CommandHandler {
     public void profile(MessageChannel channel, User user, Message message){
         String[] msgArr = message.getContentDisplay().split(" ");
         MessageHandler messageHandler = new MessageHandler();
-
+        System.out.println("hello!");
         if(msgArr.length == 1){
             Player player = playerDatabase.grabPlayer(user.getId());
+            Stamina curStamina = playerDatabase.retreivePlayerStamina(user.getId());
             String slime = "http://wiki.chronicles-of-blood.com/images/Creatures-Slime_monster.jpg";
             String orc = "https://wallscover.com/images/orc-9.jpg";
-
-            channel.sendMessage(messageHandler.createProfileEmbed(user, player)).queue();
+            if(curStamina != null){
+                channel.sendMessage(messageHandler.createProfileEmbed(user, player, curStamina)).queue();
+            }
         } else{
             Player mentionedPlayer = playerDatabase.grabMentionedPlayer(message, channel, "profile");
-            if(mentionedPlayer != null){
-                User mentionedUser = message.getMentionedMembers().get(0).getUser();
-                channel.sendMessage(messageHandler.createProfileEmbed(mentionedUser, mentionedPlayer)).queue();
+            Stamina curStamina = playerDatabase.retreivePlayerStamina(user.getId());
 
+            if(mentionedPlayer != null && curStamina != null){
+                User mentionedUser = message.getMentionedMembers().get(0).getUser();
+                channel.sendMessage(messageHandler.createProfileEmbed(mentionedUser, mentionedPlayer, curStamina)).queue();
             }
         }
     }
