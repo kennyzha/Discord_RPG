@@ -31,7 +31,7 @@ public class CombatHandler {
             }
         }
 
-        combatResult.appendToCombatResult(String.format("\nYou won against a %s %d/%d times and gained %s exp and %s gold.", monster.getName(), numWins, numTimes, totalExpEarned, totalGoldEarned));
+        combatResult.appendToCombatResult(String.format("\nYou won %d/%d times and gained %s exp and %s gold.", numWins, numTimes, totalExpEarned, totalGoldEarned));
 
         player.increGold(totalGoldEarned);
         playerLevelUp(player, totalExpEarned);

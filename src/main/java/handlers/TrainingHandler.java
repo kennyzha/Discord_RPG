@@ -4,16 +4,19 @@ import database.PlayerDatabase;
 import models.Player;
 import models.Stamina;
 import net.dv8tion.jda.core.entities.MessageChannel;
+import net.dv8tion.jda.core.entities.User;
 
 public class TrainingHandler {
     private Player player;
+    private User user;
     private Stamina stamina;
     private MessageChannel channel;
 
     private PlayerDatabase playerDatabase;
 
-    public TrainingHandler(Player player, Stamina stamina, MessageChannel channel, PlayerDatabase playerDatabase){
+    public TrainingHandler(Player player, User user, Stamina stamina, MessageChannel channel, PlayerDatabase playerDatabase){
         this.player = player;
+        this.user = user;
         this.stamina = stamina;
         this.channel = channel;
         this.playerDatabase = playerDatabase;
@@ -21,23 +24,29 @@ public class TrainingHandler {
 
     public void trainSpeed(int numTimesToTrain){
         int curStamina = stamina.getStamina();
+        double oldSpeed = player.getSpeed();
+
         if(curStamina == 0){
             sendNoStaminaMessage();
             return;
         } else if(!hasEnoughStamina(stamina, numTimesToTrain)) {
             numTimesToTrain = curStamina;
         }
+
         player.increSpeed(numTimesToTrain);
         playerDatabase.insertPlayer(player);
 
         int newStamina = stamina.getStamina() - numTimesToTrain;
         updateStamina(newStamina);
 
-        sendTrainMessage("speed", newStamina, numTimesToTrain);
+        double spdGained = player.getSpeed() - oldSpeed;
+        sendTrainMessage(player.round(spdGained),"speed", newStamina, numTimesToTrain);
     }
 
     public void trainPower(int numTimesToTrain){
         int curStamina = stamina.getStamina();
+        double oldPow = player.getPower();
+
         if(curStamina == 0){
             sendNoStaminaMessage();
             return;
@@ -50,11 +59,15 @@ public class TrainingHandler {
         int newStamina = stamina.getStamina() - numTimesToTrain;
         updateStamina(newStamina);
 
-        sendTrainMessage("power", newStamina, numTimesToTrain);
+        double powGained = player.getPower() - oldPow;
+        sendTrainMessage(player.round(powGained),"power", newStamina, numTimesToTrain);
     }
 
     public void trainStrength(int numTimesToTrain){
         int curStamina = stamina.getStamina();
+
+        double oldStr = player.getStrength();
+
         if(curStamina == 0){
             sendNoStaminaMessage();
             return;
@@ -67,7 +80,8 @@ public class TrainingHandler {
         int newStamina = stamina.getStamina() - numTimesToTrain;
         updateStamina(newStamina);
 
-        sendTrainMessage("strength", newStamina, numTimesToTrain);
+        double strGained = player.getStrength() - oldStr;
+        sendTrainMessage(player.round(strGained), "strength", newStamina, numTimesToTrain);
     }
 
     public boolean hasEnoughStamina(Stamina stamina, int staminaUsage){
@@ -81,8 +95,10 @@ public class TrainingHandler {
         playerDatabase.insertPlayerStamina(curStamina);
     }
 
-    public void sendTrainMessage(String statType, int stamina, int staminaUsed){
-        channel.sendMessage("Successfully trained " + statType + ". You used " + staminaUsed + " stamina and now have " + stamina + " stamina left.").queue();
+    public void sendTrainMessage(double statGained, String statType,  int staminaUsed, int staminaLeft){
+        MessageHandler messageHandler = new MessageHandler();
+        channel.sendMessage(messageHandler.createEmbedTrainMessage(user, statGained, statType, staminaLeft, staminaUsed)).queue();
+        channel.sendMessage("Successfully trained " + statType + ". You used " + staminaUsed + " stamina and now have " + staminaLeft + " stamina left.").queue();
     }
 
     public void sendNoStaminaMessage(){

@@ -16,9 +16,12 @@ import java.awt.*;
 public class CommandHandler {
 
     private PlayerDatabase playerDatabase;
+    private MessageHandler messageHandler;
+
     private final String COMMAND_PREFIX = "r!";
     public CommandHandler(){
         this.playerDatabase = new PlayerDatabase();
+        this.messageHandler = new MessageHandler();
     }
 
     public void handleCommand(MessageReceivedEvent event){
@@ -37,10 +40,10 @@ public class CommandHandler {
                 profile(channel, author, message);
                 break;
             case "r!help":
-                help(channel);
+                help(channel, author);
                 break;
             case "r!commands":
-                commands(channel);
+                commands(channel, author);
                 break;
             case "r!train":
                train(channel, msgArr, author);
@@ -64,7 +67,6 @@ public class CommandHandler {
 
     public void profile(MessageChannel channel, User user, Message message){
         String[] msgArr = message.getContentDisplay().split(" ");
-        MessageHandler messageHandler = new MessageHandler();
         System.out.println("hello!");
         if(msgArr.length == 1){
             Player player = playerDatabase.grabPlayer(user.getId());
@@ -85,12 +87,12 @@ public class CommandHandler {
         }
     }
 
-    public void help(MessageChannel channel){
-        channel.sendMessage(ApplicationConstants.HELP_STRING).queue();
+    public void help(MessageChannel channel, User user){
+        channel.sendMessage(messageHandler.createDefaultEmbedMessage(user, ApplicationConstants.HELP_STRING)).queue();;
     }
 
-    public void commands(MessageChannel channel){
-        channel.sendMessage(ApplicationConstants.VERBOSE_COMMANDS).queue();
+    public void commands(MessageChannel channel, User user){
+        channel.sendMessage(messageHandler.createDefaultEmbedMessage(user, ApplicationConstants.VERBOSE_COMMANDS)).queue();;
     }
 
     public void train( MessageChannel channel, String[] msgArr, User user){
@@ -107,7 +109,7 @@ public class CommandHandler {
                     Player player = playerDatabase.grabPlayer(user.getId());
                     Stamina curStamina = playerDatabase.retreivePlayerStamina(user.getId());
 
-                    TrainingHandler trainingHandler = new TrainingHandler(player, curStamina, channel, playerDatabase);
+                    TrainingHandler trainingHandler = new TrainingHandler(player, user, curStamina, channel, playerDatabase);
 
                     if(statToTrain.equals("speed")){
                         trainingHandler.trainSpeed(numTimesToTrain);
@@ -120,7 +122,8 @@ public class CommandHandler {
                     }
                 }
             } catch(Exception e){
-                channel.sendMessage(user + ", please type in a number between 1 and 20.").queue();
+                e.printStackTrace();
+                channel.sendMessage(user.getName() + ", please type in a number between 1 and 20.").queue();
             }
         }
     }
@@ -129,9 +132,9 @@ public class CommandHandler {
         Stamina curStamina = playerDatabase.retreivePlayerStamina(user.getId());
         if(curStamina == null)
         {
-            channel.sendMessage(user.getName() + ", Please register an account into the system with !profile.").queue();
+            channel.sendMessage(messageHandler.createDefaultEmbedMessage(user, "Please register an account into the system with !profile.")).queue();
         } else{
-            channel.sendMessage(user.getName() + ", you currently have " + curStamina.getStamina() + " stamina.").queue();
+            channel.sendMessage(messageHandler.createDefaultEmbedMessage(user, "You currently have " + curStamina.getStamina() + " stamina.")).queue();
         }
     }
 
@@ -145,9 +148,12 @@ public class CommandHandler {
             Player mentionedPlayer = playerDatabase.grabMentionedPlayer(message, channel, "fight");
 
             if(mentionedPlayer != null){
+                String enemyName = message.getMentionedUsers().get(0).getName();
+
                 Player player = playerDatabase.grabPlayer(user.getId());
                 CombatResult pvpResults = combatHandler.fightPlayer(player, mentionedPlayer);
                 channel.sendMessage(pvpResults.getCombatResultString() + "\n" + pvpResults.getEntityOneStats()).queue();
+                channel.sendMessage(messageHandler.createEmbedFightMessage(user, enemyName, pvpResults)).queue();
             }
         }
     }
@@ -176,17 +182,22 @@ public class CommandHandler {
                 }
 
                 curStamina.setStamina(curStamina.getStamina() - numTimesToHunt);
-                CombatResult results = handler.fightMonster(player, monster, numTimesToHunt);
+                CombatResult pvmResults = handler.fightMonster(player, monster, numTimesToHunt);
 
                 playerDatabase.insertPlayer(player);
                 playerDatabase.insertPlayerStamina(curStamina);
 
-                channel.sendMessage(results.getCombatResultString().toString() + "\n " + results.getEntityOneStats()).queue();
+                channel.sendMessage(pvmResults.getCombatResultString().toString() + "\n " + pvmResults.getEntityOneStats()).queue();
+                channel.sendMessage(messageHandler.createEmbedFightMessage(user, monster.getName(), pvmResults)).queue();
 
             } catch(Exception e){
                 System.out.println(e.getMessage());
                 channel.sendMessage(user.getName() + ", Please type a valid number of times you wish to hunt that monster with \"!hunt name 1\". \"!monsters\" for list of monsters.").queue();
             }
         }
+    }
+
+    public void monsters(){
+
     }
 }

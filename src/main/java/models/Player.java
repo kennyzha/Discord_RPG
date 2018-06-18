@@ -82,21 +82,25 @@ public class Player extends Entity{
         return baseGain + additionalGain;
     }
     public void increSpeed(double amt){
+        double statGain = calcStatGain();
         double totalStatGain = amt * calcStatGain();
-        double rounded = Math.round((getSpeed() + totalStatGain) * 100.0) / 100.0;
+        double rounded = Math.round((getSpeed() + totalStatGain) * 1000.0) / 1000.0;
         setSpeed(rounded);
     }
 
     public void increStrength(double amt){
         double totalStatGain = amt * calcStatGain();
-        double rounded = Math.round((getStrength() + totalStatGain) * 100.0) / 100.0;
+        double rounded = Math.round((getStrength() + totalStatGain) * 1000.0) / 1000.0;
 
         setStrength(rounded);
     }
 
     public void increPower(double amt){
+        double oldPow = getPower();
+
         double totalStatGain = amt * calcStatGain();
-        double rounded = Math.round((getPower() + totalStatGain) * 100.0) / 100.0;
+        double rounded = Math.round((getPower() + totalStatGain) * 1000.0) / 1000.0;
+
         setPower(rounded);
     }
 
@@ -153,6 +157,10 @@ public class Player extends Entity{
     public int calcExpToNextLevel(){
         int nextLvl = getLevel() + 1;
         return (int) (50 * (Math.pow(nextLvl, 2) - (5 * nextLvl) + 8));
+    }
+
+    public double round(double num){
+        return (double) (Math.round(num * 1000d) / 1000d);
     }
 
     @Override

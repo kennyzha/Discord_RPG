@@ -4,6 +4,8 @@ import models.Player;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.math.BigDecimal;
+
 import static junit.framework.TestCase.assertEquals;
 
 public class PlayerStatsTest {
@@ -93,5 +95,51 @@ public class PlayerStatsTest {
 
         System.out.println("Lvl 500 stat gain: " + expected);
         assertEquals(expected, player.calcStatGain());
+    }
+
+    @Test
+    public void statIncreLevel100Test(){
+        player.setLevel(100);
+        System.out.println("Old Speed " + player.getSpeed());
+        player.increSpeed(20);
+        System.out.println("New Speed " + player.getSpeed());
+
+        assertEquals(16.0, player.getSpeed());
+    }
+
+    @Test
+    public void statIncreLevel50Test(){
+        player.setLevel(50);
+        System.out.println("Old Speed " + player.getSpeed());
+        player.increSpeed(20);
+        System.out.println("New Speed " + player.getSpeed());
+
+        assertEquals(20 * .625 + 1, player.getSpeed());
+    }
+
+    @Test
+    public void statIncreLevelTwoTest(){
+        player.setLevel(2);
+        System.out.println("Old Speed " + player.getSpeed());
+        player.increSpeed(20);
+        System.out.println("New Speed " + player.getSpeed());
+
+        double expected = 20 * .505 + 1;
+        System.out.println(expected);
+        assertEquals(expected, player.getSpeed());
+    }
+
+    @Test
+    public void statIncreLevelThreeTest(){
+        player.setLevel(3);
+        System.out.println("Old Speed " + player.getSpeed());
+        player.increSpeed(20);
+        System.out.println("New Speed " + player.getSpeed());
+
+        double expected = (20 * player.calcStatGain()) + 1.0;
+        double rounded = player.round(expected);
+
+        System.out.println(rounded);
+        assertEquals(rounded, player.getSpeed());
     }
 }
