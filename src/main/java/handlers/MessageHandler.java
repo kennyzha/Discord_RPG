@@ -1,6 +1,8 @@
 package handlers;
 
+import config.MonsterConstants;
 import models.CombatResult;
+import models.Monster;
 import models.Player;
 import models.Stamina;
 import net.dv8tion.jda.core.EmbedBuilder;
@@ -8,6 +10,7 @@ import net.dv8tion.jda.core.entities.MessageEmbed;
 import net.dv8tion.jda.core.entities.User;
 
 import java.awt.*;
+import java.util.ArrayList;
 
 public class MessageHandler {
 
@@ -50,6 +53,19 @@ public class MessageHandler {
         } else if(statType.equals("strength")){
             eb.setThumbnail("https://cdn0.iconfinder.com/data/icons/fighting-1/225/brawl005-512.png");
         }
+        return eb.build();
+    }
+
+    public MessageEmbed createEmbedMonsterListMessage(User user){
+        EmbedBuilder eb = new EmbedBuilder();
+        setEmbedMessageDefaults(eb , user);
+
+        ArrayList<Monster> monsters = MonsterConstants.getMonsters();
+
+        for(Monster m: monsters){
+            eb.addField(m.getName() + " (Level " + m.getLevel() + ")", m.toString(), false);
+        }
+
         return eb.build();
     }
 

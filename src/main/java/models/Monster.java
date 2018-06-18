@@ -75,4 +75,9 @@ public class Monster extends Entity {
 
         return null;
     }
+
+    @Override
+    public String toString(){
+        return String.format("Health: %s Power: %s Speed: %s Strength: %s", getHealth(), getPower(), getSpeed(), getStrength());
+    }
 }

@@ -98,10 +98,10 @@ public class TrainingHandler {
     public void sendTrainMessage(double statGained, String statType,  int staminaUsed, int staminaLeft){
         MessageHandler messageHandler = new MessageHandler();
         channel.sendMessage(messageHandler.createEmbedTrainMessage(user, statGained, statType, staminaLeft, staminaUsed)).queue();
-        channel.sendMessage("Successfully trained " + statType + ". You used " + staminaUsed + " stamina and now have " + staminaLeft + " stamina left.").queue();
     }
 
     public void sendNoStaminaMessage(){
-        channel.sendMessage("You have 0 stamina. You regain 1 stamina every 5 minutes.").queue();
+        MessageHandler messageHandler = new MessageHandler();
+        channel.sendMessage(messageHandler.createDefaultEmbedMessage(user, "You have 0 stamina. You regain 1 stamina every 5 minutes.")).queue();
     }
 }
