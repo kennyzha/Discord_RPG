@@ -127,7 +127,6 @@ public class Player extends Entity{
             setLevelExp(leftOverExp);
             int hpGained = calcActualHealthGained(calcBaseHealthGained());
             increHealth(hpGained);
-            System.out.println("Leveled up to " + getLevel() + " and hp gained: " + hpGained);
         }
     }
 
@@ -137,6 +136,7 @@ public class Player extends Entity{
 
     public int calcBaseHealthGained(){
         double multiplier = 1;
+
         if(getLevel() <= 100){
             multiplier = 2.5;
         } else if(getLevel() <= 200){
@@ -146,7 +146,6 @@ public class Player extends Entity{
         } else{
             return 600;
         }
-
         return (int) (multiplier * getLevel());
     }
 

@@ -39,22 +39,14 @@ public class Stamina {
 
     public void updateStamina(){
         long curTime = System.currentTimeMillis();
-        System.out.println("cur time " + curTime);
-        System.out.println("time since updated " + timeSinceUpdated);
         long timeElapsed = curTime - timeSinceUpdated;
-        System.out.println("time elapsed " + timeElapsed);
         int baseStaminaGained = (int) (timeElapsed / ApplicationConstants.STAMINA_REFRESH_RATE);
-        System.out.println("based stamina gained " + baseStaminaGained);
 
         int staminaGained = baseStaminaGained * ApplicationConstants.STAMINA_GAINED_PER_REFRESH;
 
-        System.out.println("stamina gained " + staminaGained);
-
         if(staminaGained > 0){
             Long leftOverTime = timeElapsed % ApplicationConstants.STAMINA_REFRESH_RATE;
-            System.out.println("Left over time is " + leftOverTime);
             setTimeSinceUpdated(curTime - leftOverTime);
-            System.out.println("Setting time since updated to " + (curTime - leftOverTime));
         }
         setStamina(Math.min(ApplicationConstants.MAX_STAMINA, getStamina() + staminaGained));
     }

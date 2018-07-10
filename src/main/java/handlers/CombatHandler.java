@@ -103,6 +103,7 @@ public class CombatHandler {
     public boolean isFightOver(int health, int health2, int round){
         if(health <= 0){
             combatResult.appendToCombatResult(String.format("The enemy won the fight with %s health left on round %s.\n", health2, round));
+            combatResult.setWinner(false);
             return true;
         } else if(health2 <= 0){
             combatResult.appendToCombatResult(String.format("You won the fight with %s health left on round %s.\n", health, round));
