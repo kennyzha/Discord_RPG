@@ -20,6 +20,10 @@ public class DynamoClient {
     private String playerTableName = ApplicationConstants.PLAYER_TABLE_NAME;
     private String staminaTableName = ApplicationConstants.STAMINA_TABLE_NAME;
 
+    private String playerSpeedIndex = ApplicationConstants.PLAYER_SPEED_INDEX;
+    private String playerPowerIndex = ApplicationConstants.PLAYER_POWER_INDEX;
+    private String playerStrengthIndex = ApplicationConstants.PLAYER_STRENGTH_INDEX;
+
     public DynamoClient(){
         awsCredentialsProvider = new AWSStaticCredentialsProvider(new AWSCredentials() {
             public String getAWSAccessKeyId() {
@@ -59,4 +63,18 @@ public class DynamoClient {
     public String getStaminaTableName(){
         return staminaTableName;
     }
+
+    public String getPlayerSpeedIndex() {
+        return playerSpeedIndex;
+    }
+
+    public String getPlayerPowerIndex() {
+        return playerPowerIndex;
+    }
+
+    public String getPlayerStrengthIndex() {
+        return playerStrengthIndex;
+    }
+
+
 }

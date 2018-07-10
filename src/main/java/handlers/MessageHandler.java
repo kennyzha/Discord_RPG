@@ -1,11 +1,13 @@
 package handlers;
 
+import config.ApplicationConstants;
 import config.MonsterConstants;
 import models.CombatResult;
 import models.Monster;
 import models.Player;
 import models.Stamina;
 import net.dv8tion.jda.core.EmbedBuilder;
+import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.entities.MessageEmbed;
 import net.dv8tion.jda.core.entities.User;
 
@@ -35,7 +37,7 @@ public class MessageHandler {
 
         eb.setTitle(user.getName() + " vs " + enemyName);
         eb.setDescription(combatResult.getCombatResultString() + "\n" + combatResult.getEntityOneStats().toString());
-        eb.setThumbnail("http://www.thegoodsurvivalist.com/wp-content/myimages/2014/05/dirty-fighting.png");
+        eb.setThumbnail(ApplicationConstants.FIGHT_IMG);
         return eb.build();
     }
 
@@ -43,15 +45,14 @@ public class MessageHandler {
     public MessageEmbed createEmbedTrainMessage(User user, double statGained, String statType, int staminaUsed, int staminaLeft){
         EmbedBuilder eb = new EmbedBuilder();
         setEmbedMessageDefaults(eb , user);
-        //"Successfully trained " + statType + ". You used " + staminaUsed + " stamina and now have " + stamina + " stamina left."
         eb.setDescription(String.format("You gained " + statGained + " %s. You used %s stamina and now have %s stamina left.", statType, staminaUsed, staminaLeft));
 
         if(statType.equals("power"))
-            eb.setThumbnail("https://www.shareicon.net/data/512x512/2015/12/06/683488_man_512x512.png");
+            eb.setThumbnail(ApplicationConstants.POWER_IMG);
         else if(statType.equals("speed")){
-            eb.setThumbnail("https://t4.rbxcdn.com/cee4c230345374225df92e9946566fe9");
+            eb.setThumbnail(ApplicationConstants.SPEED_IMG);
         } else if(statType.equals("strength")){
-            eb.setThumbnail("https://cdn0.iconfinder.com/data/icons/fighting-1/225/brawl005-512.png");
+            eb.setThumbnail(ApplicationConstants.STRENGTH_IMG);
         }
         return eb.build();
     }
@@ -80,5 +81,21 @@ public class MessageHandler {
     public void setEmbedMessageDefaults(EmbedBuilder eb, User user){
         eb.setAuthor(user.getName(), null, user.getEffectiveAvatarUrl());
         eb.setColor(Color.CYAN);
+    }
+
+    public MessageEmbed createHighscoreEmbedMessage(User user, ArrayList<Player> players, JDA jda){
+        EmbedBuilder eb = new EmbedBuilder();
+        setEmbedMessageDefaults(eb , user);
+
+        for(Player p: players){
+            User curUser = jda.getUserById(p.getId());
+            if(curUser == null){
+                System.out.println(p.getId() + " is null");
+                continue;
+            }
+            eb.addField(curUser.getName() + "#" + curUser.getDiscriminator() + " (Level: " + p.getLevel() + ")", " Power: " +  p.getPower() + " Speed: " + p.getSpeed() + " Strength: " + p.getStrength(), false);
+        }
+
+        return eb.build();
     }
 }

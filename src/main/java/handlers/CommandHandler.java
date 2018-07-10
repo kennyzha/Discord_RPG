@@ -7,21 +7,25 @@ import models.Monster;
 import models.Player;
 import models.Stamina;
 import net.dv8tion.jda.core.EmbedBuilder;
+import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.MessageBuilder;
 import net.dv8tion.jda.core.entities.*;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 
 import java.awt.*;
+import java.util.ArrayList;
 
 public class CommandHandler {
 
     private PlayerDatabase playerDatabase;
     private MessageHandler messageHandler;
+    HighscoreHandler highscoreHandler;
 
     private final String COMMAND_PREFIX = "r!";
     public CommandHandler(){
         this.playerDatabase = new PlayerDatabase();
         this.messageHandler = new MessageHandler();
+        this.highscoreHandler = new HighscoreHandler();
     }
 
     public void handleCommand(MessageReceivedEvent event){
@@ -60,6 +64,9 @@ public class CommandHandler {
             case "r!monsters":
                 channel.sendMessage(messageHandler.createEmbedMonsterListMessage(author)).queue();
                 break;
+//            case"r!highscore":
+//                highscore(channel, author, event.getJDA());
+//                break;
             default:
                 String str = "Command not recognized: " + message.getContentDisplay() + "\n" + ApplicationConstants.VERBOSE_COMMANDS;
                 sendDefaultEmbedMessage(author, str, messageHandler, channel);
@@ -68,7 +75,6 @@ public class CommandHandler {
 
     public void profile(MessageChannel channel, User user, Message message){
         String[] msgArr = message.getContentDisplay().split(" ");
-        System.out.println("hello!");
         if(msgArr.length == 1){
             Player player = playerDatabase.grabPlayer(user.getId());
             Stamina curStamina = playerDatabase.retreivePlayerStamina(user.getId());
@@ -120,10 +126,11 @@ public class CommandHandler {
                     }else if(statToTrain.equals("strength")){
                         trainingHandler.trainStrength(numTimesToTrain);
                     } else{
-                        channel.sendMessage(messageHandler.createDefaultEmbedMessage(user, "Invalid argument. Failed to train: \" + statToTrain + \". You can only train power, speed and strength.\\n\"")).queue();
+                        channel.sendMessage(messageHandler.createDefaultEmbedMessage(user, "Invalid argument. Failed to train:" + statToTrain + ". You can only train power, speed and strength.")).queue();
                     }
                 }
             } catch(Exception e){
+                e.printStackTrace();
                 channel.sendMessage(messageHandler.createDefaultEmbedMessage(user, "Please include a valid number between 1 and 20. e.g. r!train speed 10")).queue();
             }
         }
@@ -153,7 +160,6 @@ public class CommandHandler {
 
                 Player player = playerDatabase.grabPlayer(user.getId());
                 CombatResult pvpResults = combatHandler.fightPlayer(player, mentionedPlayer);
-                channel.sendMessage(pvpResults.getCombatResultString() + "\n" + pvpResults.getEntityOneStats()).queue();
                 channel.sendMessage(messageHandler.createEmbedFightMessage(user, enemyName, pvpResults)).queue();
             }
         }
@@ -199,6 +205,11 @@ public class CommandHandler {
 
     public void monsters(){
 
+    }
+
+    private void highscore(MessageChannel channel, User user, JDA jda){
+//        ArrayList<Player> players = highscoreHandler.getLevelHighscore();
+//        channel.sendMessage(messageHandler.createHighscoreEmbedMessage(user, players, jda)).queue();
     }
 
     public void sendDefaultEmbedMessage(User user, String description, MessageHandler messageHandler, MessageChannel channel){
