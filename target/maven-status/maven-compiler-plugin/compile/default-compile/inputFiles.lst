@@ -1,4 +1,5 @@
 C:\Users\Kenny\Git_Repos\Discord_RPG\src\main\java\Rpg.java
+C:\Users\Kenny\Git_Repos\Discord_RPG\src\main\java\handlers\HighscoreHandler.java
 C:\Users\Kenny\Git_Repos\Discord_RPG\src\main\java\database\PlayerDatabase.java
 C:\Users\Kenny\Git_Repos\Discord_RPG\src\main\java\models\Item.java
 C:\Users\Kenny\Git_Repos\Discord_RPG\src\main\java\config\ItemConstants.java
@@ -8,8 +9,11 @@ C:\Users\Kenny\Git_Repos\Discord_RPG\src\main\java\handlers\CombatHandler.java
 C:\Users\Kenny\Git_Repos\Discord_RPG\src\main\java\models\Monster.java
 C:\Users\Kenny\Git_Repos\Discord_RPG\src\main\java\models\CombatResult.java
 C:\Users\Kenny\Git_Repos\Discord_RPG\src\main\java\simulators\CombatSimulator.java
+C:\Users\Kenny\Git_Repos\Discord_RPG\src\main\java\simulators\Simulator.java
 C:\Users\Kenny\Git_Repos\Discord_RPG\src\main\java\handlers\PasteBinHandler.java
+C:\Users\Kenny\Git_Repos\Discord_RPG\src\main\java\handlers\MessageHandler.java
 C:\Users\Kenny\Git_Repos\Discord_RPG\src\main\java\models\Player.java
+C:\Users\Kenny\Git_Repos\Discord_RPG\src\main\java\handlers\CommandHandler.java
 C:\Users\Kenny\Git_Repos\Discord_RPG\src\main\java\models\Entity.java
 C:\Users\Kenny\Git_Repos\Discord_RPG\src\main\java\config\MonsterConstants.java
 C:\Users\Kenny\Git_Repos\Discord_RPG\src\main\java\handlers\TrainingHandler.java

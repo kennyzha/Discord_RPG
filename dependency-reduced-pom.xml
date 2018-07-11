@@ -5,6 +5,7 @@
   <artifactId>discord-rpg</artifactId>
   <version>1.0-SNAPSHOT</version>
   <build>
+    <finalName>Discord-Rpg</finalName>
     <plugins>
       <plugin>
         <artifactId>maven-compiler-plugin</artifactId>
