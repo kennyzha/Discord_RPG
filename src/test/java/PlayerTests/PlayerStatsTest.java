@@ -195,7 +195,7 @@ public class PlayerStatsTest {
 
         String actual = player.getStrengthPercentage();
 
-        assertEquals("50.09", actual);
+        assertEquals("50.93", actual);
     }
 
     @Test

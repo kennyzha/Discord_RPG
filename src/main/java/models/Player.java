@@ -143,11 +143,12 @@ public class Player extends Entity{
     }
 
     public String getPowerPercentage(){
-        return "0";
+
+        return new DecimalFormat("#,###.##").format(getPower() / getTotalStats() * 100);
     }
 
     public String getStrengthPercentage(){
-        return "0";
+        return new DecimalFormat("#,###.##").format(getStrength() / getTotalStats() * 100);
     }
 
     public int calcBaseHealthGained(){
