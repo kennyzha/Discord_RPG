@@ -148,8 +148,64 @@ public class PlayerStatsTest {
         player.setPower(500);
         player.setSpeed(300);
         player.setStrength(200);
-        Double actual = player.getSpeedPercentage();
 
-        assertEquals(30.0, actual);
+        String actual = player.getSpeedPercentage();
+
+        assertEquals("30", actual);
+    }
+
+    @Test
+    public void speedPercentage2Test(){
+        player.setPower(1000);
+        player.setSpeed(353);
+        player.setStrength(187);
+
+        String actual = player.getSpeedPercentage();
+
+        assertEquals("22.92", actual);
+    }
+
+    @Test
+    public void powerPercentageTest(){
+        player.setPower(321);
+        player.setSpeed(192);
+        player.setStrength(584);
+
+        String actual = player.getPowerPercentage();
+
+        assertEquals("29.26", actual);
+    }
+
+    @Test
+    public void powerPercentage2Test(){
+        player.setPower(1);
+        player.setSpeed(321);
+        player.setStrength(584);
+
+        String actual = player.getPowerPercentage();
+
+        assertEquals("0.11", actual);
+    }
+
+    @Test
+    public void strengthPercentageTest(){
+        player.setPower(534);
+        player.setSpeed(321.73);
+        player.setStrength(888.32);
+
+        String actual = player.getStrengthPercentage();
+
+        assertEquals("50.09", actual);
+    }
+
+    @Test
+    public void strengthPercentage2Test(){
+        player.setPower(1534.33);
+        player.setSpeed(9321.73);
+        player.setStrength(888.32);
+
+        String actual = player.getStrengthPercentage();
+
+        assertEquals("7.56", actual);
     }
 }

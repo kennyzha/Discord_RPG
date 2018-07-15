@@ -1,5 +1,7 @@
 package models;
 
+import java.text.DecimalFormat;
+
 public class Player extends Entity{
     private String id;
 
@@ -134,8 +136,18 @@ public class Player extends Entity{
         return getSpeed() + getPower() + getStrength();
     }
 
-    public double getSpeedPercentage(){
-        return getSpeed() / getTotalStats() * 100;
+    public String getSpeedPercentage(){
+        DecimalFormat format = new DecimalFormat("#,###.##");
+
+        return format.format(getSpeed() / getTotalStats() * 100);
+    }
+
+    public String getPowerPercentage(){
+        return "0";
+    }
+
+    public String getStrengthPercentage(){
+        return "0";
     }
 
     public int calcBaseHealthGained(){
