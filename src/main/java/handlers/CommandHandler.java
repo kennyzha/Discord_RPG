@@ -2,6 +2,7 @@ package handlers;
 
 import config.ApplicationConstants;
 import database.PlayerDatabase;
+import listeners.MessageListener;
 import models.CombatResult;
 import models.Monster;
 import models.Player;
@@ -19,13 +20,13 @@ public class CommandHandler {
 
     private PlayerDatabase playerDatabase;
     private MessageHandler messageHandler;
-    HighscoreHandler highscoreHandler;
+    private HighscoreHandler highscoreHandler;
 
     private final String COMMAND_PREFIX = "r!";
-    public CommandHandler(){
-        this.playerDatabase = new PlayerDatabase();
-        this.messageHandler = new MessageHandler();
-        this.highscoreHandler = new HighscoreHandler();
+    public CommandHandler(PlayerDatabase playerDatabase, MessageHandler messageHandler, HighscoreHandler highscoreHandler){
+        this.playerDatabase = playerDatabase;
+        this.messageHandler = messageHandler;
+        this.highscoreHandler = highscoreHandler;
     }
 
     public void handleCommand(MessageReceivedEvent event){
@@ -38,6 +39,8 @@ public class CommandHandler {
 
         if(msgArr.length == 0 || !msgArr[0].startsWith(COMMAND_PREFIX))
             return;
+
+//        System.out.println(author.getIdLong() + " username: " + event.getJDA().getUserById(author.getIdLong()));
 
         switch(msgArr[0]){
             case "r!profile":
@@ -64,11 +67,11 @@ public class CommandHandler {
             case "r!monsters":
                 channel.sendMessage(messageHandler.createEmbedMonsterListMessage(author)).queue();
                 break;
-//            case"r!highscore":
-//                highscore(channel, author, event.getJDA());
-//                break;
+            case"r!highscore":
+                highscore(channel, msgArr, author, event.getJDA());
+                break;
             default:
-                String str = "Command not recognized: " + message.getContentDisplay() + "\n" + ApplicationConstants.VERBOSE_COMMANDS;
+                String str = "Command not recognized: " + message.getContentDisplay();
                 sendDefaultEmbedMessage(author, str, messageHandler, channel);
         }
     }
@@ -78,19 +81,17 @@ public class CommandHandler {
         if(msgArr.length == 1){
             Player player = playerDatabase.grabPlayer(user.getId());
             Stamina curStamina = playerDatabase.retreivePlayerStamina(user.getId());
-            String slime = "http://wiki.chronicles-of-blood.com/images/Creatures-Slime_monster.jpg";
-            String orc = "https://wallscover.com/images/orc-9.jpg";
 
             if(curStamina != null){
                 channel.sendMessage(messageHandler.createProfileEmbed(user, player, curStamina)).queue();
             }
         } else{
             Player mentionedPlayer = playerDatabase.grabMentionedPlayer(message, channel, "profile");
-            Stamina curStamina = playerDatabase.retreivePlayerStamina(user.getId());
 
-            if(mentionedPlayer != null && curStamina != null){
+            if(mentionedPlayer != null){
                 User mentionedUser = message.getMentionedMembers().get(0).getUser();
-                channel.sendMessage(messageHandler.createProfileEmbed(mentionedUser, mentionedPlayer, curStamina)).queue();
+                Stamina mentionedUserStamina = playerDatabase.retreivePlayerStamina(mentionedUser.getId());
+                channel.sendMessage(messageHandler.createProfileEmbed(mentionedUser, mentionedPlayer, mentionedUserStamina)).queue();
             }
         }
     }
@@ -207,9 +208,29 @@ public class CommandHandler {
 
     }
 
-    private void highscore(MessageChannel channel, User user, JDA jda){
-//        ArrayList<Player> players = highscoreHandler.getLevelHighscore();
-//        channel.sendMessage(messageHandler.createHighscoreEmbedMessage(user, players, jda)).queue();
+    public void highscore(MessageChannel channel, String[] msgArr, User user, JDA jda){
+        ArrayList<Player> players;
+        if(msgArr.length < 2){
+            players = highscoreHandler.getLevelHighscore();
+        } else{
+            switch(msgArr[1]){
+                case "level":
+                    players = highscoreHandler.getLevelHighscore();
+                    break;
+                case "speed":
+                    players = highscoreHandler.getSpeedHighscore();
+                    break;
+                case "power":
+                    players = highscoreHandler.getPowerHighscore();
+                    break;
+                case "strength":
+                    players = highscoreHandler.getStrengthHighscore();
+                    break;
+                default:
+                    return;
+            }
+        }
+        channel.sendMessage(messageHandler.createHighscoreEmbedMessage(user, players, jda)).queue();
     }
 
     public void sendDefaultEmbedMessage(User user, String description, MessageHandler messageHandler, MessageChannel channel){

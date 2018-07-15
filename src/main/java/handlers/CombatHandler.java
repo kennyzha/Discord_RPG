@@ -80,6 +80,7 @@ public class CombatHandler {
 
         if(curHealth > 0 && curHealth2 > 0){
             combatResult.appendToCombatResult(String.format("The fight ended with a draw because 200 rounds have gone by. You have %s health remaining while the enemy has %s health remaining.\n", curHealth, curHealth2));
+            combatResult.setWinner(false);
         }
     }
 

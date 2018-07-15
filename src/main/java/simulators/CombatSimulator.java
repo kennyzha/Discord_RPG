@@ -18,52 +18,49 @@ public class CombatSimulator {
         CombatSimulator simulator = new CombatSimulator();
         int num = 5;
         int wins = 0;
-        int wins2 = 0;
 
-//        for(int i = 0; i < 500; i++){
-//            CombatResult results = simulator.pvp(simulator.player1, simulator.player2);
+        for(int i = 0; i < 500; i++){
+            CombatResult results = simulator.pvp(simulator.player2, simulator.player1);
 //            System.out.println(results.getCombatResultString());
-//
-//            if(results.isWinner()){
-//                wins++;
-//            } else{
-//                wins2++;
-//            }
-//        }
 
-        System.out.println("P1 wins: " + wins + " | P2 Wins: " + wins2);
+            if(results.isWinner()){
+                wins++;
+            }
+        }
+
+        System.out.println("Player wins: " + wins);
 
         simulator = new CombatSimulator();
 
-//        CombatResult pvmResults = simulator.pvm(simulator.player1, MonsterConstants.KOBOLD, 20);
-//        System.out.println("Asdf");
-//        System.out.println(pvmResults.getCombatString());
-//        System.out.println(pvmResults.getCombatResultString());
+        CombatResult pvmResults = simulator.pvm(simulator.player1, MonsterConstants.GIANT, 20);
+        System.out.println("Asdf");
+        System.out.println(pvmResults.getCombatString());
+        System.out.println(pvmResults.getCombatResultString());
 
 
-        for(int i = 1; i < 150; i++){
-            simulator.player1.setLevel(i);
-            System.out.println("Level " + i);
-
-            DecimalFormat format = new DecimalFormat("#,###");
-            double exp = simulator.player1.calcExpToNextLevel();
-
-            int hpGained = simulator.player1.calcActualHealthGained(simulator.player1.calcBaseHealthGained());
-            simulator.player1.increHealth(hpGained);
-            System.out.println("Exp to level: " + format.format(exp) + " | HP: " + format.format((double) simulator.player1.getHealth()) + " | HP GAIN: " + hpGained);
-
-        }
-
+//        for(int i = 1; i < 150; i++){
+//            simulator.player1.setLevel(i);
+//            System.out.println("Level " + i);
+//
+//            DecimalFormat format = new DecimalFormat("#,###");
+//            double exp = simulator.player1.calcExpToNextLevel();
+//
+//            int hpGained = simulator.player1.calcActualHealthGained(simulator.player1.calcBaseHealthGained());
+//            simulator.player1.increHealth(hpGained);
+//            System.out.println("Exp to level: " + format.format(exp) + " | HP: " + format.format((double) simulator.player1.getHealth()) + " | HP GAIN: " + hpGained);
+//        }
     }
 
     public CombatSimulator(){
         combatHandler = new CombatHandler();
         player1 = new Player("");
-        player1.setStats(300,500,200);
+//        player1.setStats(1500,600,900);
+//        player1.setStats(600,900,1500);
+        player1.setStats(1000,2000,500);
+        player1.setHealth(3500);
         player2 = new Player("");
-        player2.setHealth(3500);
 //        player1.setStats(400, 400, 200);
-        player2.setStats(200,300,500);
+        player2.setStats(100,1850,1850);
 
 
     }

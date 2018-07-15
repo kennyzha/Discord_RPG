@@ -86,6 +86,7 @@ public class MessageHandler {
     public MessageEmbed createHighscoreEmbedMessage(User user, ArrayList<Player> players, JDA jda){
         EmbedBuilder eb = new EmbedBuilder();
         setEmbedMessageDefaults(eb , user);
+        eb.setTitle("Leaderboards");
 
         for(Player p: players){
             User curUser = jda.getUserById(p.getId());
