@@ -115,12 +115,14 @@ public class PlayerDatabase {
                 String speed = item.get("speed").getN();
                 String power = item.get("power").getN();
                 String strength = item.get("strength").getN();
+                String gold = item.get("gold").getN();
 
                 Player player = new Player(id);
                 player.setLevel(Integer.parseInt(level));
                 player.setSpeed(Double.parseDouble(speed));
                 player.setPower(Double.parseDouble(power));
                 player.setStrength(Double.parseDouble(strength));
+                player.setGold(Integer.parseInt(gold));
                 players.add(player);
 
             } catch (NumberFormatException e) {

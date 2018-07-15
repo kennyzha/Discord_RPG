@@ -10,7 +10,7 @@ import javax.security.auth.login.LoginException;
 public class Rpg {
     public static void main(String[] args) throws LoginException, RateLimitedException, InterruptedException{
         System.out.println("lol");
-        JDA jda = new JDABuilder(AccountType.BOT).setToken(ApplicationConstants.TEST_TOKEN).buildBlocking();
+        JDA jda = new JDABuilder(AccountType.BOT).setToken(ApplicationConstants.TOKEN).buildBlocking();
         jda.addEventListener(new MessageListener());
         System.out.println(jda.getUserById(134457842731188224L));
     }

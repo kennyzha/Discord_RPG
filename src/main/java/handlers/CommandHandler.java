@@ -40,8 +40,6 @@ public class CommandHandler {
         if(msgArr.length == 0 || !msgArr[0].startsWith(COMMAND_PREFIX))
             return;
 
-//        System.out.println(author.getIdLong() + " username: " + event.getJDA().getUserById(author.getIdLong()));
-
         switch(msgArr[0]){
             case "r!profile":
                 profile(channel, author, message);
@@ -209,13 +207,15 @@ public class CommandHandler {
     }
 
     public void highscore(MessageChannel channel, String[] msgArr, User user, JDA jda){
-        String highscoreType = "Level";
+        String highscoreType = "";
         ArrayList<Player> players;
         if(msgArr.length < 2){
-            players = highscoreHandler.getLevelHighscore();
+            channel.sendMessage(messageHandler.createDefaultEmbedMessage(user, "Highscores update daily. Available highscores: Level, Power, Speed, Strength, Total, Gold. e.g r!highscore total")).queue();
+            return;
         } else{
             switch(msgArr[1]){
                 case "level":
+                    highscoreType = "Level";
                     players = highscoreHandler.getLevelHighscore();
                     break;
                 case "speed":
@@ -230,7 +230,18 @@ public class CommandHandler {
                     players = highscoreHandler.getStrengthHighscore();
                     highscoreType = "Strength";
                     break;
+                case "total":
+                    players = highscoreHandler.getTotalHighscore();
+                    highscoreType = "Total Stats";
+                    channel.sendMessage(messageHandler.createTotalHighscoreEmbedMessage(user, players, jda, highscoreType)).queue();
+                    return;
+                case "gold":
+                    players = highscoreHandler.getGoldHighscore();
+                    highscoreType = "Gold";
+                    channel.sendMessage(messageHandler.createGoldHighscoreEmbedMessage(user, players, jda, highscoreType)).queue();
+                    return;
                 default:
+                    channel.sendMessage(messageHandler.createDefaultEmbedMessage(user, "Available highscores: Level, Power, Speed, Strength, Total, Gold. e.g r!highscore total")).queue();
                     return;
             }
         }

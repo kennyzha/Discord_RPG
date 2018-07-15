@@ -103,7 +103,40 @@ public class MessageHandler {
             eb.addField(curUser.getName() + "#" + curUser.getDiscriminator() + " (Level " + p.getLevel() + ")", " Power: " +  p.getPower(), true);
             eb.addField("", " Speed: " + p.getSpeed(), true);
             eb.addField("", " Strength: " + p.getStrength(), true);
+        }
 
+        return eb.build();
+    }
+
+    public MessageEmbed createTotalHighscoreEmbedMessage(User user, ArrayList<Player> players, JDA jda, String highscoreType) {
+        EmbedBuilder eb = new EmbedBuilder();
+        setEmbedMessageDefaults(eb, user);
+        eb.setTitle(highscoreType + " Highscore");
+
+        for (Player p : players) {
+            User curUser = jda.getUserById(p.getId());
+            if (curUser == null) {
+                continue;
+            }
+
+            eb.addField(curUser.getName() + "#" + curUser.getDiscriminator() + " (Level " + p.getLevel() + ")", " Total Stats: " + format.format(p.getTotalStats()), false);
+        }
+
+        return eb.build();
+    }
+
+    public MessageEmbed createGoldHighscoreEmbedMessage(User user, ArrayList<Player> players, JDA jda, String highscoreType) {
+        EmbedBuilder eb = new EmbedBuilder();
+        setEmbedMessageDefaults(eb, user);
+        eb.setTitle(highscoreType + " Highscore");
+
+        for (Player p : players) {
+            User curUser = jda.getUserById(p.getId());
+            if (curUser == null) {
+                continue;
+            }
+
+            eb.addField(curUser.getName() + "#" + curUser.getDiscriminator() + " (Level " + p.getLevel() + ")", " Total Gold: " + format.format(p.getGold()), false);
         }
 
         return eb.build();

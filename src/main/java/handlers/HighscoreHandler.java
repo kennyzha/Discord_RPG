@@ -14,6 +14,8 @@ public class HighscoreHandler {
     private ArrayList<Player> speedHighscore;
     private ArrayList<Player> powerHighscore;
     private ArrayList<Player> strengthHighscore;
+    private ArrayList<Player> totalHighscore;
+    private ArrayList<Player> goldHighscore;
 
     private PlayerDatabase playerDatabase;
 
@@ -55,6 +57,20 @@ public class HighscoreHandler {
         return strengthHighscore;
     }
 
+    public ArrayList<Player> getTotalHighscore(){
+        if(totalHighscore.isEmpty() || isStale()){
+            updateHighscores();
+        }
+        return totalHighscore;
+    }
+
+    public ArrayList<Player> getGoldHighscore(){
+        if(goldHighscore.isEmpty() || isStale()){
+            updateHighscores();
+        }
+        return goldHighscore;
+    }
+
     public boolean isStale(){
         long curTime = System.currentTimeMillis();
         long elapsedTime = curTime - timeSinceUpdated;
@@ -71,6 +87,8 @@ public class HighscoreHandler {
         PriorityQueue<Player> powerPq = new PriorityQueue<>((p1, p2) -> (int) (p2.getPower() - p1.getPower()));
         PriorityQueue<Player> speedPq = new PriorityQueue<>((p1, p2) -> (int) (p2.getSpeed() - p1.getSpeed()));
         PriorityQueue<Player> strengthPq = new PriorityQueue<>((p1, p2) -> (int) (p2.getStrength() - p1.getStrength()));
+        PriorityQueue<Player> totalPq = new PriorityQueue<>((p1,p2) -> (int) (p2.getTotalStats() - p1.getTotalStats()));
+        PriorityQueue<Player> goldPq = new PriorityQueue<>((p1,p2) -> (p2.getGold() - p1.getGold()));
 
         List<Player> players = playerDatabase.retreivePlayers();
 
@@ -83,6 +101,8 @@ public class HighscoreHandler {
             powerPq.add(p);
             speedPq.add(p);
             strengthPq.add(p);
+            totalPq.add(p);
+            goldPq.add(p);
         }
 
         for(int i = 0; i < HIGHSCORE_SIZE; i++){
@@ -90,6 +110,8 @@ public class HighscoreHandler {
             powerHighscore.add(powerPq.poll());
             speedHighscore.add(speedPq.poll());
             strengthHighscore.add(strengthPq.poll());
+            totalHighscore.add(totalPq.poll());
+            goldHighscore.add(goldPq.poll());
         }
     }
 
@@ -98,5 +120,7 @@ public class HighscoreHandler {
         this.speedHighscore = new ArrayList<>();
         this.powerHighscore = new ArrayList<>();
         this.strengthHighscore = new ArrayList<>();
+        this.totalHighscore = new ArrayList<>();
+        this.goldHighscore = new ArrayList<>();
     }
 }
