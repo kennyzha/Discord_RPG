@@ -66,7 +66,7 @@ public class LevelUpTests {
         System.out.println(combatResult.getCombatResultString());
         System.out.println(combatResult.getEntityOneStats());
         System.out.println(String.format("Player used to be level %d now he is level %d", oldLevel, newLevel));
-        assertEquals(23, newLevel);
+        assertEquals(30, newLevel);
     }
 
     @Test

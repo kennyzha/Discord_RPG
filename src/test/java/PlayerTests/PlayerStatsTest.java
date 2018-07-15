@@ -9,7 +9,7 @@ import java.math.BigDecimal;
 import static junit.framework.TestCase.assertEquals;
 
 public class PlayerStatsTest {
-    Player player;
+    private Player player;
 
     @Before
     public void init(){
@@ -141,5 +141,15 @@ public class PlayerStatsTest {
 
         System.out.println(rounded);
         assertEquals(rounded, player.getSpeed());
+    }
+
+    @Test
+    public void speedPercentageTest(){
+        player.setPower(500);
+        player.setSpeed(300);
+        player.setStrength(200);
+        Double actual = player.getSpeedPercentage();
+
+        assertEquals(30.0, actual);
     }
 }
