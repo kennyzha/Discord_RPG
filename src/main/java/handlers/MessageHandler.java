@@ -12,21 +12,27 @@ import net.dv8tion.jda.core.entities.MessageEmbed;
 import net.dv8tion.jda.core.entities.User;
 
 import java.awt.*;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 public class MessageHandler {
+    private DecimalFormat format;
+    public MessageHandler(){
+        format = new DecimalFormat("#,###.##");
+    }
 
     public MessageEmbed createProfileEmbed(User user, Player player, Stamina stamina){
         EmbedBuilder eb = new EmbedBuilder();
         setEmbedMessageDefaults(eb, user);
 
-        eb.setTitle("Level: " + player.getLevel() + " (" + player.getLevelExp() + "/" + player.calcExpToNextLevel() + ")");
-        eb.addField("Health", Integer.toString(player.getHealth()), true);
+        eb.setTitle("Level: " + player.getLevel() + " (" + format.format(player.getLevelExp()) + "/" + format.format(player.calcExpToNextLevel()) + ")");
+
+        eb.addField("Health", format.format(player.getHealth()), true);
         eb.addField("Stamina", stamina.getStamina() + "/20", true);
-        eb.addField("Gold", Integer.toString(player.getGold()), true);
-        eb.addField("Power", Double.toString(player.getPower()), true);
-        eb.addField("Speed", Double.toString(player.getSpeed()), true);
-        eb.addField("Strength", Double.toString(player.getStrength()), true);
+        eb.addField("Gold", format.format(player.getGold()), true);
+        eb.addField("Power", format.format(player.getPower()), true);
+        eb.addField("Speed", format.format(player.getSpeed()), true);
+        eb.addField("Strength", format.format(player.getStrength()), true);
 
         return eb.build();
     }
@@ -83,18 +89,21 @@ public class MessageHandler {
         eb.setColor(Color.CYAN);
     }
 
-    public MessageEmbed createHighscoreEmbedMessage(User user, ArrayList<Player> players, JDA jda){
+    public MessageEmbed createHighscoreEmbedMessage(User user, ArrayList<Player> players, JDA jda, String highscoreType){
         EmbedBuilder eb = new EmbedBuilder();
         setEmbedMessageDefaults(eb , user);
-        eb.setTitle("Leaderboards");
+        eb.setTitle(highscoreType + " Highscore");
 
         for(Player p: players){
             User curUser = jda.getUserById(p.getId());
             if(curUser == null){
-                System.out.println(p.getId() + " is null");
                 continue;
             }
-            eb.addField(curUser.getName() + "#" + curUser.getDiscriminator() + " (Level: " + p.getLevel() + ")", " Power: " +  p.getPower() + " Speed: " + p.getSpeed() + " Strength: " + p.getStrength(), false);
+            
+            eb.addField(curUser.getName() + "#" + curUser.getDiscriminator() + " (Level " + p.getLevel() + ")", " Power: " +  p.getPower(), true);
+            eb.addField("", " Speed: " + p.getSpeed(), true);
+            eb.addField("", " Strength: " + p.getStrength(), true);
+
         }
 
         return eb.build();

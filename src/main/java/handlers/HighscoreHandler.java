@@ -17,7 +17,7 @@ public class HighscoreHandler {
 
     private PlayerDatabase playerDatabase;
 
-    private final int HIGHSCORE_SIZE = 10;
+    private final int HIGHSCORE_SIZE = 8;
     private final long HIGHSCORE_REFRESH_TIME = 86400000;
 
     public HighscoreHandler() {
@@ -63,6 +63,7 @@ public class HighscoreHandler {
     }
 
     private void updateHighscores(){
+        System.out.println("updating hs");
         this.timeSinceUpdated = System.currentTimeMillis();
         initHighscoreArrays();
 
@@ -72,6 +73,10 @@ public class HighscoreHandler {
         PriorityQueue<Player> strengthPq = new PriorityQueue<>((p1, p2) -> (int) (p2.getStrength() - p1.getStrength()));
 
         List<Player> players = playerDatabase.retreivePlayers();
+
+        if(players.size() < HIGHSCORE_SIZE){
+            return;
+        }
 
         for(Player p : players){
             levelsPq.add(p);

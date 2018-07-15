@@ -37,18 +37,21 @@ public class CombatSimulator {
         System.out.println(pvmResults.getCombatString());
         System.out.println(pvmResults.getCombatResultString());
 
+        int total = 0;
+        for(int i = 20; i < 31; i++){
+            simulator.player1.setLevel(i);
+            System.out.println("Level " + i);
+            total += simulator.player1.calcExpToNextLevel();
 
-//        for(int i = 1; i < 150; i++){
-//            simulator.player1.setLevel(i);
-//            System.out.println("Level " + i);
-//
-//            DecimalFormat format = new DecimalFormat("#,###");
-//            double exp = simulator.player1.calcExpToNextLevel();
-//
-//            int hpGained = simulator.player1.calcActualHealthGained(simulator.player1.calcBaseHealthGained());
-//            simulator.player1.increHealth(hpGained);
-//            System.out.println("Exp to level: " + format.format(exp) + " | HP: " + format.format((double) simulator.player1.getHealth()) + " | HP GAIN: " + hpGained);
-//        }
+            DecimalFormat format = new DecimalFormat("#,###");
+            double exp = simulator.player1.calcExpToNextLevel();
+
+            int hpGained = simulator.player1.calcActualHealthGained(simulator.player1.calcBaseHealthGained());
+            simulator.player1.increHealth(hpGained);
+            System.out.println("Exp to level: " + format.format(exp) + " | HP: " + format.format((double) simulator.player1.getHealth()) + " | HP GAIN: " + hpGained);
+        }
+
+        System.out.println(total);
     }
 
     public CombatSimulator(){

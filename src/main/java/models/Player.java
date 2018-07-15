@@ -134,6 +134,10 @@ public class Player extends Entity{
         return getSpeed() + getPower() + getStrength();
     }
 
+    public double getSpeedPercentage(){
+        return getSpeed() / getTotalStats() * 100;
+    }
+
     public int calcBaseHealthGained(){
         double multiplier = 1;
 

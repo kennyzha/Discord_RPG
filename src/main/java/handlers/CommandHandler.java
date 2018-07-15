@@ -209,6 +209,7 @@ public class CommandHandler {
     }
 
     public void highscore(MessageChannel channel, String[] msgArr, User user, JDA jda){
+        String highscoreType = "Level";
         ArrayList<Player> players;
         if(msgArr.length < 2){
             players = highscoreHandler.getLevelHighscore();
@@ -219,18 +220,22 @@ public class CommandHandler {
                     break;
                 case "speed":
                     players = highscoreHandler.getSpeedHighscore();
+                    highscoreType = "Speed";
                     break;
                 case "power":
                     players = highscoreHandler.getPowerHighscore();
+                    highscoreType = "Power";
                     break;
                 case "strength":
                     players = highscoreHandler.getStrengthHighscore();
+                    highscoreType = "Strength";
                     break;
                 default:
                     return;
             }
         }
-        channel.sendMessage(messageHandler.createHighscoreEmbedMessage(user, players, jda)).queue();
+        System.out.println(highscoreType);
+        channel.sendMessage(messageHandler.createHighscoreEmbedMessage(user, players, jda, highscoreType)).queue();
     }
 
     public void sendDefaultEmbedMessage(User user, String description, MessageHandler messageHandler, MessageChannel channel){
