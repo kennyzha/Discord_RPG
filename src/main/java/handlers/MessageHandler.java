@@ -28,11 +28,11 @@ public class MessageHandler {
         eb.setTitle("Level: " + player.getLevel() + " (" + format.format(player.getLevelExp()) + "/" + format.format(player.calcExpToNextLevel()) + ")");
 
         eb.addField("Health", format.format(player.getHealth()), true);
-        eb.addField("Stamina", stamina.getStamina() + "/20", true);
         eb.addField("Gold", format.format(player.getGold()), true);
-        eb.addField("Power", format.format(player.getPower()), true);
-        eb.addField("Speed", format.format(player.getSpeed()), true);
-        eb.addField("Strength", format.format(player.getStrength()), true);
+        eb.addField("Total Stats", format.format(player.getTotalStats()), true);
+        eb.addField("Power", format.format(player.getPower()) + " (" + player.getPowerPercentage() + "%)", true);
+        eb.addField("Speed", format.format(player.getSpeed()) + " (" + player.getSpeedPercentage() + "%)", true);
+        eb.addField("Strength", format.format(player.getStrength()) + " (" + player.getStrengthPercentage() + "%)", true);
 
         return eb.build();
     }
@@ -93,16 +93,16 @@ public class MessageHandler {
         EmbedBuilder eb = new EmbedBuilder();
         setEmbedMessageDefaults(eb , user);
         eb.setTitle(highscoreType + " Highscore");
-
+        int rankCounter = 1;
         for(Player p: players){
             User curUser = jda.getUserById(p.getId());
             if(curUser == null){
                 continue;
             }
             
-            eb.addField(curUser.getName() + "#" + curUser.getDiscriminator() + " (Level " + p.getLevel() + ")", " Power: " +  p.getPower(), true);
-            eb.addField("", " Speed: " + p.getSpeed(), true);
-            eb.addField("", " Strength: " + p.getStrength(), true);
+            eb.appendDescription(rankCounter + ". " + curUser.getName() + "#" + curUser.getDiscriminator() + " (Level " + p.getLevel() + ")\n");
+            eb.appendDescription(String.format("Power: %s Speed: %s Strength: %s Total: %s\n\n", format.format(p.getPower()), format.format(p.getSpeed()), format.format(p.getStrength()), format.format(p.getTotalStats())));
+            rankCounter++;
         }
 
         return eb.build();
@@ -113,13 +113,15 @@ public class MessageHandler {
         setEmbedMessageDefaults(eb, user);
         eb.setTitle(highscoreType + " Highscore");
 
+        int rankCounter = 1;
         for (Player p : players) {
             User curUser = jda.getUserById(p.getId());
             if (curUser == null) {
                 continue;
             }
 
-            eb.addField(curUser.getName() + "#" + curUser.getDiscriminator() + " (Level " + p.getLevel() + ")", " Total Stats: " + format.format(p.getTotalStats()), false);
+            eb.addField(rankCounter + ". " + curUser.getName() + "#" + curUser.getDiscriminator() + " (Level " + p.getLevel() + ")", " Total Stats: " + format.format(p.getTotalStats()), false);
+            rankCounter++;
         }
 
         return eb.build();
@@ -130,13 +132,15 @@ public class MessageHandler {
         setEmbedMessageDefaults(eb, user);
         eb.setTitle(highscoreType + " Highscore");
 
+        int rankCounter = 1;
         for (Player p : players) {
             User curUser = jda.getUserById(p.getId());
             if (curUser == null) {
                 continue;
             }
 
-            eb.addField(curUser.getName() + "#" + curUser.getDiscriminator() + " (Level " + p.getLevel() + ")", " Total Gold: " + format.format(p.getGold()), false);
+            eb.addField(rankCounter + ". " + curUser.getName() + "#" + curUser.getDiscriminator() + " (Level " + p.getLevel() + ")", " Total Gold: " + format.format(p.getGold()), false);
+            rankCounter++;
         }
 
         return eb.build();
