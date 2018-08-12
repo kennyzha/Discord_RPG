@@ -73,4 +73,26 @@ public class Item {
         }
         return 0;
     }
+
+    public static int rollItemStats(int playerLevel){
+        return -1;
+    }
+
+    public static Rarity rollItemRarity(){
+        int roll = generateNumber();
+
+        if(roll >= 50){
+            return Rarity.COMMON;
+        } else if(roll >= 20){
+            return Rarity.RARE;
+        } else if(roll > 1){
+            return Rarity.EPIC;
+        } else{
+            return Rarity.LEGENDARY;
+        }
+    }
+
+    public static int generateNumber(){
+        return (int) (Math.random() * 100) + 1;
+    }
 }

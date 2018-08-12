@@ -128,7 +128,6 @@ public class CombatHandler {
 
         double hitDmg = Math.max(0, dmgRoll - defRoll);
 
-//        System.out.printf("Player attacked and did %s damage (dmg roll: %s def roll: %s)\n", hitDmg, dmgRoll, defRoll);
         return (int) Math.ceil(hitDmg);
     }
 

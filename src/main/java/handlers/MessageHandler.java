@@ -25,7 +25,7 @@ public class MessageHandler {
         EmbedBuilder eb = new EmbedBuilder();
         setEmbedMessageDefaults(eb, user);
 
-        eb.setTitle("Level: " + player.getLevel() + " (" + format.format(player.getLevelExp()) + "/" + format.format(player.calcExpToNextLevel()) + ")");
+        eb.setTitle("Level " + player.getLevel() + " (" + format.format(player.getLevelExp()) + "/" + format.format(player.calcExpToNextLevel()) + ")");
 
         eb.addField("Health", format.format(player.getHealth()), true);
         eb.addField("Gold", format.format(player.getGold()), true);
@@ -34,6 +34,7 @@ public class MessageHandler {
         eb.addField("Speed", format.format(player.getSpeed()) + " (" + player.getSpeedPercentage() + "%)", true);
         eb.addField("Strength", format.format(player.getStrength()) + " (" + player.getStrengthPercentage() + "%)", true);
 
+        eb.setFooter("Stamina: " + stamina.getStamina() + " / 20", null);
         return eb.build();
     }
 
@@ -93,6 +94,8 @@ public class MessageHandler {
         EmbedBuilder eb = new EmbedBuilder();
         setEmbedMessageDefaults(eb , user);
         eb.setTitle(highscoreType + " Highscore");
+        eb.setFooter("Updated daily", null);
+
         int rankCounter = 1;
         for(Player p: players){
             User curUser = jda.getUserById(p.getId());
@@ -101,7 +104,7 @@ public class MessageHandler {
             }
             
             eb.appendDescription(rankCounter + ". " + curUser.getName() + "#" + curUser.getDiscriminator() + " (Level " + p.getLevel() + ")\n");
-            eb.appendDescription(String.format("Power: %s Speed: %s Strength: %s Total: %s\n\n", format.format(p.getPower()), format.format(p.getSpeed()), format.format(p.getStrength()), format.format(p.getTotalStats())));
+            eb.appendDescription(String.format("   Power: %s Speed: %s Strength: %s Total: %s\n\n", format.format(p.getPower()), format.format(p.getSpeed()), format.format(p.getStrength()), format.format(p.getTotalStats())));
             rankCounter++;
         }
 
@@ -112,6 +115,7 @@ public class MessageHandler {
         EmbedBuilder eb = new EmbedBuilder();
         setEmbedMessageDefaults(eb, user);
         eb.setTitle(highscoreType + " Highscore");
+        eb.setFooter("Updated daily", null);
 
         int rankCounter = 1;
         for (Player p : players) {
@@ -120,7 +124,8 @@ public class MessageHandler {
                 continue;
             }
 
-            eb.addField(rankCounter + ". " + curUser.getName() + "#" + curUser.getDiscriminator() + " (Level " + p.getLevel() + ")", " Total Stats: " + format.format(p.getTotalStats()), false);
+            eb.appendDescription(rankCounter + ". " + curUser.getName() + "#" + curUser.getDiscriminator() + " (Level " + p.getLevel() + ")" + "\n" +
+                        "   Total Stats: " + format.format(p.getTotalStats()) + "\n\n");
             rankCounter++;
         }
 
@@ -131,6 +136,7 @@ public class MessageHandler {
         EmbedBuilder eb = new EmbedBuilder();
         setEmbedMessageDefaults(eb, user);
         eb.setTitle(highscoreType + " Highscore");
+        eb.setFooter("Updated daily", null);
 
         int rankCounter = 1;
         for (Player p : players) {
@@ -139,7 +145,8 @@ public class MessageHandler {
                 continue;
             }
 
-            eb.addField(rankCounter + ". " + curUser.getName() + "#" + curUser.getDiscriminator() + " (Level " + p.getLevel() + ")", " Total Gold: " + format.format(p.getGold()), false);
+            eb.appendDescription(rankCounter + ". " + curUser.getName() + "#" + curUser.getDiscriminator() + " (Level " + p.getLevel() + ")" + "\n"
+                                + "   Total Gold: " + format.format(p.getGold()) + "\n\n");
             rankCounter++;
         }
 

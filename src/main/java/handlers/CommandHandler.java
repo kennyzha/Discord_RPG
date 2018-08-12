@@ -51,6 +51,7 @@ public class CommandHandler {
                 commands(channel, author);
                 break;
             case "r!train":
+            case "r!t":
                train(channel, msgArr, author);
                 break;
             case "r!stamina":
@@ -60,6 +61,7 @@ public class CommandHandler {
                fight(channel, message, author);
                 break;
             case "r!hunt":
+            case "r!h":
                 hunt(channel, msgArr, author);
                 break;
             case "r!monsters":
@@ -68,8 +70,12 @@ public class CommandHandler {
             case"r!highscore":
                 highscore(channel, msgArr, author, event.getJDA());
                 break;
+            case "r!server":
+                String link = "Link to official RPG server.  Join for update announcements and to give feedback to help shape the development of the game.\n\nhttps://discord.gg/3Gq4kAr";
+                sendDefaultEmbedMessage(author,link, messageHandler, channel);
+                break;
             default:
-                String str = "Command not recognized: " + message.getContentDisplay();
+                String str = "Command not recognized: " + message.getContentDisplay() + ". Type r!commands for list of commands.";
                 sendDefaultEmbedMessage(author, str, messageHandler, channel);
         }
     }
@@ -129,7 +135,6 @@ public class CommandHandler {
                     }
                 }
             } catch(Exception e){
-                e.printStackTrace();
                 channel.sendMessage(messageHandler.createDefaultEmbedMessage(user, "Please include a valid number between 1 and 20. e.g. r!train speed 10")).queue();
             }
         }
@@ -245,7 +250,6 @@ public class CommandHandler {
                     return;
             }
         }
-        System.out.println(highscoreType);
         channel.sendMessage(messageHandler.createHighscoreEmbedMessage(user, players, jda, highscoreType)).queue();
     }
 

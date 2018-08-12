@@ -143,7 +143,6 @@ public class Player extends Entity{
     }
 
     public String getPowerPercentage(){
-
         return new DecimalFormat("#,###.##").format(getPower() / getTotalStats() * 100);
     }
 
