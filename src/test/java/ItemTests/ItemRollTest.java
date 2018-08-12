@@ -130,4 +130,34 @@ public class ItemRollTest {
         System.out.println(lowest + " " + highest);
         assertTrue(lowest == 29000 && highest == 32999);
     }
+
+    @Test
+    public void itemStatRollBoundsLegendaryTest(){
+        assertTrue(500 == Item.rollItemStat(50, Item.Rarity.LEGENDARY));
+    }
+
+    @Test
+    public void itemStatRollBoundsLegendaryTest2(){
+        assertTrue(1500 == Item.rollItemStat(147, Item.Rarity.LEGENDARY));
+    }
+
+    @Test
+    public void itemStatRollBoundsLegendaryTest3(){
+        assertTrue(3000 == Item.rollItemStat(150, Item.Rarity.LEGENDARY));
+    }
+
+    @Test
+    public void itemStatRollBoundsLegendaryTest4(){
+        assertTrue(3000 == Item.rollItemStat(151, Item.Rarity.LEGENDARY));
+    }
+
+    @Test
+    public void itemStatRollBoundsLegendaryTest5(){
+        assertTrue(10500 == Item.rollItemStat(333, Item.Rarity.LEGENDARY));
+    }
+
+    @Test
+    public void itemStatRollBoundsLegendaryTest6(){
+        assertTrue(33000 == Item.rollItemStat(541, Item.Rarity.LEGENDARY));
+    }
 }
