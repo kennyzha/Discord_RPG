@@ -74,12 +74,24 @@ public class Item {
         return 0;
     }
 
-    public static int rollItemStat(int level){
+    public static int rollItemStat(int level, Rarity rarity){
         int lowerBoundStat = getLowerBoundStat(level);
         int upperBoundStat = getUpperBoundStat(level);
-
         int diff = upperBoundStat - lowerBoundStat;
 
+        switch(rarity){
+            case COMMON:
+                return lowerBoundStat;
+            case RARE:
+                diff /= 2;
+                break;
+            case EPIC:
+                diff /= 2;
+                lowerBoundStat += diff;
+                break;
+            case LEGENDARY:
+                return upperBoundStat;
+        }
         return (int) (Math.random() * diff) + lowerBoundStat;
     }
 
