@@ -74,8 +74,47 @@ public class Item {
         return 0;
     }
 
-    public static int rollItemStats(int playerLevel){
-        return -1;
+    public static int rollItemStat(int level){
+        int lowerBoundStat = getLowerBoundStat(level);
+        int upperBoundStat = getUpperBoundStat(level);
+
+        int diff = upperBoundStat - lowerBoundStat;
+
+        return (int) (Math.random() * diff) + lowerBoundStat;
+    }
+
+    public static int getLowerBoundStat(int level){
+        return getLowerBoundLevel(level) * getLevelMultiplier(level - 50);
+    }
+
+    public static int getUpperBoundStat(int level){
+        return getUpperBoundLevel(level) * getLevelMultiplier(level);
+    }
+
+    public static int getUpperBoundLevel(int level){
+        return getLevelBracket(level + 50) * 50;
+    }
+
+    public static int getLowerBoundLevel(int level){
+        return getLevelBracket(level) * 50;
+    }
+
+    public static int getLevelMultiplier(int level){
+        int levelBracket = getLevelBracket(level);
+
+        if(levelBracket == 0){
+            return 1;
+        } else if(levelBracket >= 9){
+            levelBracket += (levelBracket - 8);
+        }
+
+        int levelMultiplier = levelBracket * 5;
+
+        return levelMultiplier;
+    }
+
+    public static int getLevelBracket(int level){
+        return level/50;
     }
 
     public static Rarity rollItemRarity(){
