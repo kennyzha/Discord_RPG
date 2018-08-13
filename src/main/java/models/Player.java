@@ -9,6 +9,7 @@ public class Player extends Entity{
     private double intelligence, woodcutting;
     private int levelExp, woodCuttingExp;
     private boolean alive;
+    private int weapon, armor;
 
     public enum Stat {POWER, SPEED, STRENGTH};
     public Player(String id) {
@@ -19,6 +20,24 @@ public class Player extends Entity{
         this.levelExp = 0;
         this.woodCuttingExp = 0;
         this.alive = true;
+        this.weapon = 0;
+        this.armor = 0;
+    }
+
+    public int getWeapon() {
+        return weapon;
+    }
+
+    public void setWeapon(int weapon) {
+        this.weapon = weapon;
+    }
+
+    public int getArmor() {
+        return armor;
+    }
+
+    public void setArmor(int armor) {
+        this.armor = armor;
     }
 
     public int getGold() {

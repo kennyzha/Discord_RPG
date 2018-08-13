@@ -2,10 +2,7 @@ package handlers;
 
 import config.ApplicationConstants;
 import config.MonsterConstants;
-import models.CombatResult;
-import models.Monster;
-import models.Player;
-import models.Stamina;
+import models.*;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.entities.MessageEmbed;
@@ -149,6 +146,55 @@ public class MessageHandler {
                                 + "   Total Gold: " + format.format(p.getGold()) + "\n\n");
             rankCounter++;
         }
+
+        return eb.build();
+    }
+
+    public MessageEmbed createCrateEmbedMessage(User user, Player player, int cost, int itemLowerBound, int itemUpperBound){
+        EmbedBuilder eb = new EmbedBuilder();
+        setEmbedMessageDefaults(eb, user);
+
+        eb.appendDescription(String.format("Your crate currently costs %s each. You item can roll %s ~ %s ATK/DEF. The cost and stat range increases every 50 level interval.", format.format(cost) , format.format(itemLowerBound), format.format(itemUpperBound)));
+        eb.setThumbnail("https://i.imgur.com/OYIWNY7.png");
+        eb.setFooter(String.format("Weapon: %s ATK  Armor: %s DEF", player.getWeapon(), player.getArmor()), null);
+        return eb.build();
+    }
+
+    public MessageEmbed createCrateOpeningEmbed(User user, Player player, String crateSummary, int oldItemRoll, int itemRoll, Item.Rarity rarity, Item.Type itemType){
+        EmbedBuilder eb = new EmbedBuilder();
+        setEmbedMessageDefaults(eb, user);
+
+        String suffix = itemType == Item.Type.WEAPON ? "attack" : "defense";
+
+        eb.appendDescription(crateSummary);
+
+        String itemTypeString = itemType.toString().toLowerCase();
+        if(oldItemRoll >= itemRoll){
+            eb.appendDescription(String.format("\nYou decided to keep using your %s %s %s.",  oldItemRoll, suffix, itemTypeString));
+        } else{
+            eb.appendDescription(String.format("\nYou replaced your old %s %s %s with a shiny new %s %s %s %s.", oldItemRoll, suffix, itemTypeString, itemRoll, suffix, Item.getItemRarity(player.getLevel(), itemRoll), itemTypeString));
+        }
+
+        String img = "https://i.imgur.com/OYIWNY7.png";
+
+        switch(rarity){
+            case COMMON:
+                img = (itemType == Item.Type.WEAPON) ? ApplicationConstants.WEAPON_COMMON_IMG : ApplicationConstants.ARMOR_COMMON_IMG;
+                break;
+            case RARE:
+                img = (itemType == Item.Type.WEAPON) ? ApplicationConstants.WEAPON_RARE_IMG : ApplicationConstants.ARMOR_RARE_IMG;
+                break;
+            case EPIC:
+                img = (itemType == Item.Type.WEAPON) ? ApplicationConstants.WEAPON_EPIC_IMG : ApplicationConstants.ARMOR_EPIC_IMG;
+                break;
+            case LEGENDARY:
+                img = (itemType == Item.Type.WEAPON) ? ApplicationConstants.WEAPON_LEGENDARY_IMG : ApplicationConstants.ARMOR_LEGENDARY_IMG;
+                eb.appendDescription("Legendary effect is applied. Total stats will increase by 3% permanently.");
+                break;
+        }
+
+        eb.setThumbnail(img);
+        eb.setFooter(String.format("Min Roll: %s Max Roll: %s", Item.getLowerBoundStat(player.getLevel()), Item.getUpperBoundStat(player.getLevel())), null);
 
         return eb.build();
     }

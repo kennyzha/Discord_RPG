@@ -52,7 +52,7 @@ public class CombatSimulator {
 //
 //        System.out.println(total);
 
-        System.out.println(simulator.monstersNeededToLevel(simulator.player1, MonsterConstants.i, 325, 350));
+        System.out.println(simulator.monstersNeededToLevel(simulator.player1, MonsterConstants.n, 450, 475));
 
     }
 
@@ -84,7 +84,7 @@ public class CombatSimulator {
     public int monstersNeededToLevel(Player p, Monster m, int initialLevel, int targetLevel){
         int monstersKilled = 0;
         p.setLevel(initialLevel);
-        while(p.getLevel() != targetLevel){
+        while(p.getLevel() < targetLevel){
             pvm(p, m, 1);
             p.updateLevelAndExp();
             monstersKilled++;

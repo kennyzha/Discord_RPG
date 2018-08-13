@@ -1,7 +1,9 @@
 package models;
 
+import java.util.Random;
+
 public class Item {
-    public enum Type {WEAPON, SHIELD, BODY, HELMET, GLOVES, BOOTS, LEG, CONSUMABLE};
+    public enum Type {WEAPON, ARMOR, CONSUMABLE};
     public enum Rarity{COMMON, RARE, EPIC, LEGENDARY, MYTH};
 
     private String name;
@@ -58,22 +60,6 @@ public class Item {
         this.sellValue = sellValue;
     }
 
-    public double getDropRate(){
-        switch(getRarity()){
-            case COMMON:
-                return .15;
-            case RARE:
-                return .05;
-             case EPIC:
-                return .01;
-            case LEGENDARY:
-                return .005;
-            case MYTH:
-                return 0;
-        }
-        return 0;
-    }
-
     public static int rollItemStat(int level, Rarity rarity){
         int lowerBoundStat = getLowerBoundStat(level);
         int upperBoundStat = getUpperBoundStat(level);
@@ -84,15 +70,37 @@ public class Item {
                 return lowerBoundStat;
             case RARE:
                 diff /= 2;
+                diff--;
                 break;
             case EPIC:
                 diff /= 2;
                 lowerBoundStat += diff;
+                lowerBoundStat--;
                 break;
             case LEGENDARY:
                 return upperBoundStat;
         }
-        return (int) (Math.random() * diff) + lowerBoundStat;
+        return (int) (Math.random() * diff) + lowerBoundStat + 1;
+    }
+
+    public static Rarity getItemRarity(int level, int statValue){
+        int lowerBound = getLowerBoundStat(level);
+        int upperBound = getUpperBoundStat(level);
+        int diff = upperBound - lowerBound;
+
+        if(statValue < lowerBound || statValue > upperBound){
+            return null;
+        }
+
+        if(statValue == lowerBound){
+            return Rarity.COMMON;
+        } else if(statValue == upperBound){
+            return Rarity.LEGENDARY;
+        } else if (statValue >= lowerBound + diff/2){
+            return Rarity.EPIC;
+        } else{
+            return Rarity.RARE;
+        }
     }
 
     public static int getLowerBoundStat(int level){
