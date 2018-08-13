@@ -11,12 +11,19 @@ import static junit.framework.TestCase.assertTrue;
 public class ItemRollTest {
     @Test
     public void itemStatRollNormalTest(){
-        assertEquals(50, Item.rollItemStat(88, Item.Rarity.COMMON));
+
+        int level = 88;
+        int itemStat = 50;
+
+        assertEquals(itemStat, Item.rollItemStat(level, Item.Rarity.COMMON));
+        assertEquals(Item.Rarity.COMMON, Item.getItemRarity(level, itemStat));
     }
 
     @Test
     public void itemStatRollNormalTest2(){
-        assertEquals(500, Item.rollItemStat(100, Item.Rarity.COMMON));
+        int level = 100;
+        int itemStat = 500;
+        assertEquals(itemStat, Item.rollItemStat(level, Item.Rarity.COMMON));
     }
 
     @Test
@@ -39,13 +46,16 @@ public class ItemRollTest {
         int lowest = Integer.MAX_VALUE;
         int highest = Integer.MIN_VALUE;
 
+        int level = 109;
         for(int i = 0; i < 100000; i++){
-            int itemRoll = Item.rollItemStat(109, Item.Rarity.RARE);
+            int itemRoll = Item.rollItemStat(level, Item.Rarity.RARE);
             lowest = Integer.min(itemRoll, lowest);
             highest = Integer.max(itemRoll, highest);
+
+            assertEquals(Item.Rarity.RARE, Item.getItemRarity(level, itemRoll));
         }
         System.out.println(lowest + " " + highest);
-        assertTrue(lowest == 500 && highest == 999);
+        assertTrue(lowest == 501 && highest == 999);
     }
 
     @Test
@@ -53,13 +63,17 @@ public class ItemRollTest {
         int lowest = Integer.MAX_VALUE;
         int highest = Integer.MIN_VALUE;
 
+        int level = 58;
+
         for(int i = 0; i < 100000; i++){
-            int itemRoll = Item.rollItemStat(58, Item.Rarity.RARE);
+            int itemRoll = Item.rollItemStat(level, Item.Rarity.RARE);
             lowest = Integer.min(itemRoll, lowest);
             highest = Integer.max(itemRoll, highest);
+
+            assertEquals(Item.Rarity.RARE, Item.getItemRarity(level, itemRoll));
+
         }
-        System.out.println(lowest + " " + highest);
-        assertTrue(lowest == 50 && highest == 274);
+        assertTrue(lowest == 51 && highest == 274);
     }
 
     @Test
@@ -72,20 +86,22 @@ public class ItemRollTest {
             lowest = Integer.min(itemRoll, lowest);
             highest = Integer.max(itemRoll, highest);
         }
-        System.out.println(lowest + " " + highest);
-        assertTrue(lowest == 25000 && highest == 28999);
+        assertTrue(lowest == 25001 && highest == 28999);
     }
     @Test
     public void itemStatRollBoundsEpicTest(){
         int lowest = Integer.MAX_VALUE;
         int highest = Integer.MIN_VALUE;
 
+        int level = 50;
         for(int i = 0; i < 100000; i++){
-            int itemRoll = Item.rollItemStat(50, Item.Rarity.EPIC);
+            int itemRoll = Item.rollItemStat(level, Item.Rarity.EPIC);
             lowest = Integer.min(itemRoll, lowest);
             highest = Integer.max(itemRoll, highest);
+
+            assertEquals(Item.Rarity.EPIC, Item.getItemRarity(level, itemRoll));
+
         }
-        System.out.println(lowest + " " + highest);
         assertTrue(lowest == 275 && highest == 499);
     }
 
@@ -94,12 +110,15 @@ public class ItemRollTest {
         int lowest = Integer.MAX_VALUE;
         int highest = Integer.MIN_VALUE;
 
+        int level = 103;
         for(int i = 0; i < 100000; i++){
-            int itemRoll = Item.rollItemStat(103, Item.Rarity.EPIC);
+            int itemRoll = Item.rollItemStat(level, Item.Rarity.EPIC);
             lowest = Integer.min(itemRoll, lowest);
             highest = Integer.max(itemRoll, highest);
+
+            assertEquals(Item.Rarity.EPIC, Item.getItemRarity(level, itemRoll));
+
         }
-        System.out.println(lowest + " " + highest);
         assertTrue(lowest == 1000 && highest == 1499);
     }
 
@@ -108,12 +127,16 @@ public class ItemRollTest {
         int lowest = Integer.MAX_VALUE;
         int highest = Integer.MIN_VALUE;
 
+        int level = 248;
+
         for(int i = 0; i < 100000; i++){
-            int itemRoll = Item.rollItemStat(248, Item.Rarity.EPIC);
+            int itemRoll = Item.rollItemStat(level, Item.Rarity.EPIC);
             lowest = Integer.min(itemRoll, lowest);
             highest = Integer.max(itemRoll, highest);
+
+            assertEquals(Item.Rarity.EPIC, Item.getItemRarity(level, itemRoll));
+
         }
-        System.out.println(lowest + " " + highest);
         assertTrue(lowest == 4000 && highest == 4999);
     }
 
@@ -121,43 +144,70 @@ public class ItemRollTest {
     public void itemStatRollBoundsEpicTest4(){
         int lowest = Integer.MAX_VALUE;
         int highest = Integer.MIN_VALUE;
+        int level = 532;
 
         for(int i = 0; i < 100000; i++){
-            int itemRoll = Item.rollItemStat(532, Item.Rarity.EPIC);
+            int itemRoll = Item.rollItemStat(level, Item.Rarity.EPIC);
             lowest = Integer.min(itemRoll, lowest);
             highest = Integer.max(itemRoll, highest);
+
+            assertEquals(Item.Rarity.EPIC, Item.getItemRarity(level, itemRoll));
+
         }
-        System.out.println(lowest + " " + highest);
         assertTrue(lowest == 29000 && highest == 32999);
     }
 
     @Test
     public void itemStatRollBoundsLegendaryTest(){
-        assertTrue(500 == Item.rollItemStat(50, Item.Rarity.LEGENDARY));
+        int level = 50;
+        int itemRoll = Item.rollItemStat(50, Item.Rarity.LEGENDARY);
+
+        assertTrue(500 == itemRoll);
+        assertTrue(Item.Rarity.LEGENDARY == Item.getItemRarity(level , itemRoll));
     }
 
     @Test
     public void itemStatRollBoundsLegendaryTest2(){
-        assertTrue(1500 == Item.rollItemStat(147, Item.Rarity.LEGENDARY));
+        int level = 147;
+        int itemRoll = Item.rollItemStat(level, Item.Rarity.LEGENDARY);
+
+        assertTrue(1500 == itemRoll);
+        assertTrue(Item.Rarity.LEGENDARY == Item.getItemRarity(level , itemRoll));
     }
 
     @Test
     public void itemStatRollBoundsLegendaryTest3(){
-        assertTrue(3000 == Item.rollItemStat(150, Item.Rarity.LEGENDARY));
+        int level = 150;
+        int itemRoll = Item.rollItemStat(level, Item.Rarity.LEGENDARY);
+
+        assertTrue(3000 == itemRoll);
+        assertTrue(Item.Rarity.LEGENDARY == Item.getItemRarity(level , itemRoll));
     }
 
     @Test
     public void itemStatRollBoundsLegendaryTest4(){
-        assertTrue(3000 == Item.rollItemStat(151, Item.Rarity.LEGENDARY));
+        int level = 151;
+        int itemRoll = Item.rollItemStat(level, Item.Rarity.LEGENDARY);
+
+        assertTrue(3000 == itemRoll);
+        assertTrue(Item.Rarity.LEGENDARY == Item.getItemRarity(level , itemRoll));
     }
 
     @Test
     public void itemStatRollBoundsLegendaryTest5(){
-        assertTrue(10500 == Item.rollItemStat(333, Item.Rarity.LEGENDARY));
+        int level = 333;
+        int itemRoll = Item.rollItemStat(level, Item.Rarity.LEGENDARY);
+
+        assertTrue(10500 == itemRoll);
+        assertTrue(Item.Rarity.LEGENDARY == Item.getItemRarity(level , itemRoll));
     }
 
     @Test
     public void itemStatRollBoundsLegendaryTest6(){
-        assertTrue(33000 == Item.rollItemStat(541, Item.Rarity.LEGENDARY));
+        int level = 541;
+        int itemRoll = Item.rollItemStat(level, Item.Rarity.LEGENDARY);
+
+        assertTrue(33000 == itemRoll);
+        assertTrue(Item.Rarity.LEGENDARY == Item.getItemRarity(level , itemRoll));
     }
 }

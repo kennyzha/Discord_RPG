@@ -11,10 +11,15 @@ public class ItemTest {
 
     @Test
     public void generateRollTest(){
-        for(int i = 0; i < 10000; i++){
+        int lowest = Integer.MAX_VALUE;
+        int highest = Integer.MIN_VALUE;
+
+        for(int i = 0; i < 100000; i++){
             int roll = Item.generateNumber();
-            assertTrue(roll > 0 && roll <= 100);
+            lowest = Integer.min(roll, lowest);
+            highest = Integer.max(roll, highest);
         }
+        assertTrue(lowest == 1 && highest == 100);
     }
 
     @Test
@@ -131,4 +136,50 @@ public class ItemTest {
     public void itemUpperBoundLevelTest4(){
         assertEquals(300, Item.getUpperBoundLevel(250));
     }
+
+    @Test
+    public void itemRarityTest(){
+        assertEquals(Item.Rarity.COMMON, Item.getItemRarity(100, 500));
+    }
+
+    @Test
+    public void itemRarityTest2(){
+        assertEquals(Item.Rarity.RARE, Item.getItemRarity(100, 555));
+    }
+
+    @Test
+    public void itemRarityTest3(){
+        assertEquals(Item.Rarity.RARE, Item.getItemRarity(100, 999));
+    }
+
+    @Test
+    public void itemRarityTest4(){
+        assertEquals(Item.Rarity.EPIC, Item.getItemRarity(100, 1000));
+    }
+
+    @Test
+    public void itemRarityTest5(){
+        assertEquals(Item.Rarity.EPIC, Item.getItemRarity(100, 1400));
+    }
+
+    @Test
+    public void itemRarityTest6(){
+        assertEquals(Item.Rarity.LEGENDARY, Item.getItemRarity(100, 1500));
+    }
+
+    @Test
+    public void itemRarityTest7(){
+        assertEquals(null, Item.getItemRarity(100, 1555));
+    }
+
+    @Test
+    public void itemRarityTest8(){
+        assertEquals(Item.Rarity.EPIC, Item.getItemRarity(359, 12250));
+    }
+
+    @Test
+    public void itemRarityTest9(){
+        assertEquals(Item.Rarity.RARE, Item.getItemRarity(359, 12249));
+    }
 }
+

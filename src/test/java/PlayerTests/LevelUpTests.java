@@ -44,10 +44,6 @@ public class LevelUpTests {
         int newLevel = overPoweredPlayer.getLevel();
         int newHealth = overPoweredPlayer.getHealth();
 
-        System.out.println(combatResult.getCombatResultString());
-        System.out.println(combatResult.getEntityOneStats());
-        System.out.println(String.format("Player used to be level %d now he is level %d", oldLevel, newLevel));
-
         assertEquals(4, newLevel);
 
         int healthDiff = newHealth - oldHealth;
@@ -63,9 +59,6 @@ public class LevelUpTests {
         CombatResult combatResult = combatHandler.fightMonster(overPoweredPlayer, kobold, 100);
         int newLevel = overPoweredPlayer.getLevel();
 
-        System.out.println(combatResult.getCombatResultString());
-        System.out.println(combatResult.getEntityOneStats());
-        System.out.println(String.format("Player used to be level %d now he is level %d", oldLevel, newLevel));
         assertEquals(30, newLevel);
     }
 
@@ -76,8 +69,6 @@ public class LevelUpTests {
 
         CombatResult combatResult = combatHandler.fightMonster(underPoweredPlayer, kobold, 20);
 
-        System.out.println(combatResult.getCombatResultString());
-        System.out.println(combatResult.getEntityOneStats());
     }
 
 }

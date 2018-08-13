@@ -139,7 +139,6 @@ public class PlayerStatsTest {
         double expected = (20 * player.calcStatGain()) + 1.0;
         double rounded = player.round(expected);
 
-        System.out.println(rounded);
         assertEquals(rounded, player.getSpeed());
     }
 
