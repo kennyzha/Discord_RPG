@@ -207,4 +207,62 @@ public class PlayerStatsTest {
 
         assertEquals("7.56", actual);
     }
+
+    @Test
+    public void legendaryEffectTest(){
+        player.setSpeed(100.0);
+        player.setPower(100.0);
+        player.setStrength(100.0);
+
+        player.applyLegendaryEffect();
+
+        assertEquals(105, player.getSpeed(), .01);
+        assertEquals(105, player.getPower(), .01);
+        assertEquals(105, player.getStrength(), .01);
+    }
+
+    @Test
+    public void legendaryEffectTest2(){
+        player.setSpeed(531.952);
+        player.setPower(97.42);
+        player.setStrength(9324.841);
+
+        player.applyLegendaryEffect();
+
+        assertEquals(558.5496, player.getSpeed(),  .01);
+        assertEquals(102.291, player.getPower(), .01);
+        assertEquals(9791.08, player.getStrength(),.01);
+    }
+
+    @Test
+    public void legendaryEffectTest3(){
+        player.setSpeed(531.952);
+        player.setPower(97.42);
+        player.setStrength(9324.841);
+
+        double oldTotal = player.getTotalStats();
+        player.applyLegendaryEffect();
+        double newTotal = player.getTotalStats();
+
+        double diff = newTotal - oldTotal;
+
+        assertEquals(diff, oldTotal *.05,  .01);
+
+    }
+
+    @Test
+    public void legendaryEffectTest4(){
+        player.setSpeed(38472.7324);
+        player.setPower(32597.428);
+        player.setStrength(19324.241);
+
+        double oldTotal = player.getTotalStats();
+        player.applyLegendaryEffect();
+        double newTotal = player.getTotalStats();
+
+        double diff = newTotal - oldTotal;
+
+        assertEquals(diff, oldTotal *.05, .01);
+
+    }
 }

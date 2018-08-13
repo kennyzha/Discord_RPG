@@ -143,9 +143,18 @@ public class CommandHandler {
                             } else{
                                 player.setArmor(Math.max(oldPlayerItemStat, newPlayerItemStat));
                             }
-
                             playerGold -= totalCost;
                             player.setGold(playerGold);
+
+                            if(Item.getItemRarity(playerLevel, newPlayerItemStat) != null && Item.getItemRarity(playerLevel, newPlayerItemStat) == Item.Rarity.LEGENDARY){
+                                double oldStatTotal = player.getTotalStats();
+                                player.applyLegendaryEffect();
+                                double statsGained = player.getTotalStats() - oldStatTotal;
+
+                                sb.append("\nLegendary effect is applied. Total stats will increase by 5% permanently. You total stats increased by " + statsGained + "\n");
+
+                            }
+
                             playerDatabase.insertPlayer(player);
 
                             channel.sendMessage(messageHandler.createCrateOpeningEmbed(user, player, sb.toString(), oldPlayerItemStat, newPlayerItemStat, Item.getItemRarity(playerLevel, newPlayerItemStat), itemType)).queue();

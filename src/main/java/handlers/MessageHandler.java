@@ -30,6 +30,9 @@ public class MessageHandler {
         eb.addField("Power", format.format(player.getPower()) + " (" + player.getPowerPercentage() + "%)", true);
         eb.addField("Speed", format.format(player.getSpeed()) + " (" + player.getSpeedPercentage() + "%)", true);
         eb.addField("Strength", format.format(player.getStrength()) + " (" + player.getStrengthPercentage() + "%)", true);
+        eb.addField("Weapon", format.format(player.getWeapon()), true);
+        eb.addBlankField(true);
+        eb.addField("Armor", format.format(player.getArmor()), true);
 
         eb.setFooter("Stamina: " + stamina.getStamina() + " / 20", null);
         return eb.build();
@@ -154,7 +157,7 @@ public class MessageHandler {
         EmbedBuilder eb = new EmbedBuilder();
         setEmbedMessageDefaults(eb, user);
 
-        eb.appendDescription(String.format("Your crate currently costs %s each. You item can roll %s ~ %s ATK/DEF. The cost and stat range increases every 50 level interval.", format.format(cost) , format.format(itemLowerBound), format.format(itemUpperBound)));
+        eb.appendDescription(String.format("Your crate currently costs %s each.\nYour item can roll %s ~ %s ATK/DEF.\nThe cost and stat range increases every 50 level interval.\n1 Attack/Defense is similar to 1 point of power/strength.\nLegendary items give 5 percent permanent stats.", format.format(cost) , format.format(itemLowerBound), format.format(itemUpperBound)));
         eb.setThumbnail("https://i.imgur.com/OYIWNY7.png");
         eb.setFooter(String.format("Weapon: %s ATK  Armor: %s DEF", player.getWeapon(), player.getArmor()), null);
         return eb.build();
@@ -189,7 +192,6 @@ public class MessageHandler {
                 break;
             case LEGENDARY:
                 img = (itemType == Item.Type.WEAPON) ? ApplicationConstants.WEAPON_LEGENDARY_IMG : ApplicationConstants.ARMOR_LEGENDARY_IMG;
-                eb.appendDescription("Legendary effect is applied. Total stats will increase by 3% permanently.");
                 break;
         }
 
