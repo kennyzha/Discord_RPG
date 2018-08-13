@@ -200,8 +200,11 @@ public class CommandHandler {
     }
 
     public void commands(MessageChannel channel, User user){
-        channel.sendMessage(messageHandler.createDefaultEmbedMessage(user, ApplicationConstants.VERBOSE_COMMANDS)).queue();;
-    }
+        user.openPrivateChannel().queue((privateChannel) -> {
+            privateChannel.sendMessage(messageHandler.createDefaultEmbedMessage(user, ApplicationConstants.VERBOSE_COMMANDS)).queue();;
+        });
+
+        channel.sendMessage(messageHandler.createDefaultEmbedMessage(user, "Messaged you the list of commands.")).queue();    }
 
     public void train( MessageChannel channel, String[] msgArr, User user){
         if(msgArr.length < 3){
