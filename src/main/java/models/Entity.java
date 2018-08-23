@@ -5,6 +5,7 @@ import java.util.Random;
 public class Entity {
     private int level, health;
     private double speed, power, strength;
+    private int weapon, armor;
 
     public Entity(int level, int health, double speed, double power, double strength) {
         this.level = level;
@@ -12,6 +13,8 @@ public class Entity {
         this.speed = speed;
         this.power = power;
         this.strength = strength;
+        this.weapon = 0;
+        this.armor = 0;
     }
 
     public int getLevel() {
@@ -58,6 +61,22 @@ public class Entity {
         setPower(power);
         setSpeed(speed);
         setStrength(strength);
+    }
+
+    public int getWeapon() {
+        return weapon;
+    }
+
+    public void setWeapon(int weapon) {
+        this.weapon = weapon;
+    }
+
+    public int getArmor() {
+        return armor;
+    }
+
+    public void setArmor(int armor) {
+        this.armor = armor;
     }
 
     public int posOrNegOne(){

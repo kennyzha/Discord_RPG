@@ -58,7 +58,7 @@ public class Monster extends Entity {
     }
 
     public static Monster identifyMonster(String monsterString){
-        switch(monsterString.toLowerCase()){
+        switch(monsterString.toLowerCase()) {
             case "slime":
                 return MonsterConstants.SLIME;
             case "spider":
@@ -81,8 +81,39 @@ public class Monster extends Entity {
                 return MonsterConstants.OGRE;
             case "ent":
                 return MonsterConstants.ENT;
+            case "ghost":
+                return MonsterConstants.GHOST;
+            case "gnome":
+                return MonsterConstants.GNOME;
+            case "nymph":
+                return MonsterConstants.NYMPH;
+            case "dwarf":
+                return MonsterConstants.DWARF;
+            case "pixie":
+                return MonsterConstants.PIXIE;
+            case "zombie":
+                return MonsterConstants.ZOMBIE;
+            case "harpy":
+                return MonsterConstants.HARPY;
+            case "mummy":
+                return MonsterConstants.MUMMY;
+            case "fairy":
+                return MonsterConstants.FAIRY;
+            case "minotaur":
+                return MonsterConstants.MINOTAUR;
+            case "nix":
+                return MonsterConstants.NIX;
+            case "bunyip":
+                return MonsterConstants.BUNYIP;
+            case "elf":
+                return MonsterConstants.ELF;
+            case "yeti":
+                return MonsterConstants.YETI;
+            case "mermaid":
+                return MonsterConstants.MERMAID;
+            case "wyvern":
+                return MonsterConstants.WYVERN;
         }
-
         return null;
     }
 

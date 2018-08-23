@@ -61,13 +61,13 @@ public class CombatHandler {
             double speedRoll2 = generateRoll(lowSpeed2, p2.getSpeed());
 
             if(speedRoll > speedRoll2){
-                int hitDmg = calcHitDamage(p1, p2, 0,0);
+                int hitDmg = calcHitDamage(p1, p2, p1.getWeapon(),p2.getArmor());
                 curHealth2 = curHealth2 - hitDmg > 0 ? (curHealth2 - hitDmg) : 0;
 
                 entityOneStats.updateDamageStats(hitDmg);
                 combatResult.appendToCombatString(String.format(roundNumber + ". You did %s dmg (%s left)\n", hitDmg, curHealth2));
             } else{
-                int hitDmg = calcHitDamage(p2, p1, 0,0);
+                int hitDmg = calcHitDamage(p2, p1, p2.getWeapon(),p1.getArmor());
                 curHealth = (curHealth - hitDmg) > 0 ? (curHealth - hitDmg) : 0;
 
                 entityTwoStats.updateDamageStats(hitDmg);
@@ -116,8 +116,8 @@ public class CombatHandler {
     }
 
     public int calcHitDamage(Entity p1, Entity p2, double weap, double arm){
-        double lowDmg = calcLowDamage(p1.getStrength(), p1.getPower(), weap);
-        double highDmg = calcHighDamage(p1.getStrength(), p1.getPower(), weap);
+        double lowDmg = calcLowDamage(p1.getStrength(), p1.getPower(), weap, arm);
+        double highDmg = calcHighDamage(p1.getStrength(), p1.getPower(), weap, arm);
 
         double dmgRoll = generateRoll(lowDmg, highDmg);
 
@@ -128,27 +128,26 @@ public class CombatHandler {
 
         double hitDmg = Math.max(0, dmgRoll - defRoll);
 
-//        System.out.printf("Player attacked and did %s damage (dmg roll: %s def roll: %s)\n", hitDmg, dmgRoll, defRoll);
         return (int) Math.ceil(hitDmg);
     }
 
-    public double calcLowDamage(double str, double pow, double weap){
-        double effectiveStrength = calcEffectiveStr(str);
-        double effectivePower = calcEffectivePow(pow);
+    public double calcLowDamage(double str, double pow, double weap, double arm){
+        double effectiveStrength = calcEffectiveStr(str + arm/2);
+        double effectivePower = calcEffectivePow(pow + weap/2);
 
-        return effectiveStrength/6 + effectivePower/2 + weap;
+        return effectiveStrength/6 + effectivePower/2;
     }
 
-    public double calcHighDamage(double str, double pow, double weap){
-        return calcEffectiveStr(str)/4 + 3*calcEffectivePow(pow)/4 + weap;
+    public double calcHighDamage(double str, double pow, double weap, double arm){
+        return calcEffectiveStr(str + arm)/4 + 3*calcEffectivePow(pow + weap/2)/4;
     }
 
     public double calcLowDefense(double str, double armor){
-        return (calcEffectiveStr(str)/3 + armor);
+        return (calcEffectiveStr(str + armor/2)/3 );
     }
 
     public double calcHighDefense(double str, double armor){
-        return (calcEffectiveStr(str)/2 + armor);
+        return (calcEffectiveStr(str + armor/2)/2);
     }
 
     public double calcLowSpeed(double speed){

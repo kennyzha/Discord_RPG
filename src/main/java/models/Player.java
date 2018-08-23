@@ -19,6 +19,7 @@ public class Player extends Entity{
         this.levelExp = 0;
         this.woodCuttingExp = 0;
         this.alive = true;
+
     }
 
     public int getGold() {
@@ -143,7 +144,6 @@ public class Player extends Entity{
     }
 
     public String getPowerPercentage(){
-
         return new DecimalFormat("#,###.##").format(getPower() / getTotalStats() * 100);
     }
 
@@ -177,6 +177,12 @@ public class Player extends Entity{
 
     public double round(double num){
         return (double) (Math.round(num * 1000d) / 1000d);
+    }
+
+    public void applyLegendaryEffect(){
+        this.setSpeed((this.getSpeed() * .05) + this.getSpeed());
+        this.setPower((this.getPower() * .05) + this.getPower());
+        this.setStrength((this.getStrength() * .05) + this.getStrength());
     }
 
     @Override

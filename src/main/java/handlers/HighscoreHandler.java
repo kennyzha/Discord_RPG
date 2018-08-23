@@ -19,7 +19,7 @@ public class HighscoreHandler {
 
     private PlayerDatabase playerDatabase;
 
-    private final int HIGHSCORE_SIZE = 8;
+    private final int HIGHSCORE_SIZE = 10;
     private final long HIGHSCORE_REFRESH_TIME = 86400000;
 
     public HighscoreHandler() {
@@ -79,7 +79,6 @@ public class HighscoreHandler {
     }
 
     private void updateHighscores(){
-        System.out.println("updating hs");
         this.timeSinceUpdated = System.currentTimeMillis();
         initHighscoreArrays();
 

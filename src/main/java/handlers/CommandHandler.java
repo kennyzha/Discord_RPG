@@ -3,10 +3,7 @@ package handlers;
 import config.ApplicationConstants;
 import database.PlayerDatabase;
 import listeners.MessageListener;
-import models.CombatResult;
-import models.Monster;
-import models.Player;
-import models.Stamina;
+import models.*;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.MessageBuilder;
@@ -14,6 +11,7 @@ import net.dv8tion.jda.core.entities.*;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 
 import java.awt.*;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 public class CommandHandler {
@@ -30,7 +28,7 @@ public class CommandHandler {
     }
 
     public void handleCommand(MessageReceivedEvent event){
-        User author = event.getAuthor();                //The user that sent the message
+        User user = event.getAuthor();                //The user that sent the message
         Message message = event.getMessage();           //The message that was received.
         MessageChannel channel = event.getChannel();    //This is the MessageChannel that the message was sent to.
 
@@ -42,35 +40,140 @@ public class CommandHandler {
 
         switch(msgArr[0]){
             case "r!profile":
-                profile(channel, author, message);
+                profile(channel, user, message);
                 break;
             case "r!help":
-                help(channel, author);
+                help(channel, user);
                 break;
             case "r!commands":
-                commands(channel, author);
+                commands(channel, user);
                 break;
             case "r!train":
-               train(channel, msgArr, author);
+            case "r!t":
+               train(channel, msgArr, user);
                 break;
             case "r!stamina":
-                stamina(channel, author);
+                stamina(channel, user);
                 break;
             case "r!fight":
-               fight(channel, message, author);
+               fight(channel, message, user);
                 break;
             case "r!hunt":
-                hunt(channel, msgArr, author);
+            case "r!h":
+                hunt(channel, msgArr, user);
                 break;
             case "r!monsters":
-                channel.sendMessage(messageHandler.createEmbedMonsterListMessage(author)).queue();
+                monsters(channel, user);
                 break;
             case"r!highscore":
-                highscore(channel, msgArr, author, event.getJDA());
+                highscore(channel, msgArr, user, event.getJDA());
+                break;
+            case "r!server":
+                String link = "Link to official RPG server.  Join for update announcements and to give feedback to help shape the development of the game.\n\nhttps://discord.gg/3Gq4kAr";
+                sendDefaultEmbedMessage(user,link, messageHandler, channel);
+                break;
+            case "r!crate":
+                crate(channel, msgArr, user);
                 break;
             default:
-                String str = "Command not recognized: " + message.getContentDisplay();
-                sendDefaultEmbedMessage(author, str, messageHandler, channel);
+                String str = "Command not recognized: " + message.getContentDisplay() + ". Type r!commands for list of commands.";
+                sendDefaultEmbedMessage(user, str, messageHandler, channel);
+        }
+    }
+
+    public void crate(MessageChannel channel, String[] msgArr, User user){
+        Player player = playerDatabase.grabPlayer(user.getId());
+
+        if(player != null){
+            int playerLevel = player.getLevel();
+
+            if(playerLevel < 50){
+                sendDefaultEmbedMessage(user, "Crates provide you with weapon and armor stats. You will unlock them at level 50.", messageHandler, channel);
+                return;
+            }
+
+            int crateCost = Crate.cost[Item.getLevelBracket(playerLevel) - 1];
+            int lowerBound = Item.getLowerBoundStat(playerLevel);
+            int upperBound = Item.getUpperBoundStat(playerLevel);
+
+            if(msgArr.length == 1){
+                channel.sendMessage(messageHandler.createCrateEmbedMessage(user, player, crateCost, lowerBound, upperBound)).queue();
+            } else if(msgArr.length == 3){
+                Item.Type itemType = null;
+                int oldPlayerItemStat = 0;
+
+                if(msgArr[1].equals("weap") || msgArr[1].equals("weapon")){
+                    itemType = Item.Type.WEAPON;
+                    oldPlayerItemStat = player.getWeapon();
+                } else if(msgArr[1].equals("arm") || msgArr[1].equals("armor")){
+                    itemType = Item.Type.ARMOR;
+                    oldPlayerItemStat = player.getArmor();
+                }
+
+                if(itemType == null){
+                    String msg = "r!crate weapon 1 or r!crate armor 1";
+                    sendDefaultEmbedMessage(user, msg, messageHandler, channel);
+                } else{
+                    int playerGold = player.getGold();
+                    int newPlayerItemStat = 0;
+
+                    try{
+                        int numBuys = Integer.parseInt(msgArr[2]);
+
+                        if(numBuys > 10 && numBuys > 0){
+                            String msg = "You can only buy a max of 10 crates at a time.";
+                            sendDefaultEmbedMessage(user, msg, messageHandler, channel);
+                            return;
+                        }
+
+                        int totalCost = crateCost * numBuys;
+                        DecimalFormat format = new DecimalFormat("#,###.##");
+                        if(playerGold >= totalCost){
+                            StringBuilder sb = new StringBuilder();
+                            String suffix = (itemType == Item.Type.WEAPON) ? "attack" : "defense";
+
+                            for(int i = 0; i < numBuys; i++){
+                                Item.Rarity rarity = Item.rollItemRarity();
+                                int itemRoll = Item.rollItemStat(playerLevel, rarity);
+                                newPlayerItemStat = Integer.max(itemRoll, newPlayerItemStat);
+
+                                sb.append(String.format("The crate contained a %s %s with %s %s.\n", rarity.toString(), itemType.toString().toLowerCase(), format.format(itemRoll), suffix));
+                            }
+
+                            if(itemType == Item.Type.WEAPON){
+                                player.setWeapon(Math.max(oldPlayerItemStat, newPlayerItemStat));
+                            } else{
+                                player.setArmor(Math.max(oldPlayerItemStat, newPlayerItemStat));
+                            }
+                            playerGold -= totalCost;
+                            player.setGold(playerGold);
+
+                            if(Item.getItemRarity(playerLevel, newPlayerItemStat) != null && Item.getItemRarity(playerLevel, newPlayerItemStat) == Item.Rarity.LEGENDARY){
+                                double oldStatTotal = player.getTotalStats();
+                                player.applyLegendaryEffect();
+                                double statsGained = player.getTotalStats() - oldStatTotal;
+
+                                sb.append("\nLegendary effect is applied. Total stats will increase by 5% permanently. Your total stats increased by " + format.format(statsGained) + "\n");
+
+                            }
+
+                            playerDatabase.insertPlayer(player);
+
+                            channel.sendMessage(messageHandler.createCrateOpeningEmbed(user, player, sb.toString(), oldPlayerItemStat, newPlayerItemStat, Item.getItemRarity(playerLevel, newPlayerItemStat), itemType)).queue();
+
+                        } else{
+                            String msg = String.format("Failed to buy %s crates. Each crate costs %s and you only have %s gold.", numBuys, format.format(crateCost), format.format(playerGold));
+                            sendDefaultEmbedMessage(user, msg, messageHandler, channel);
+                        }
+                    } catch (NumberFormatException e){
+                        String msg = "Please provide a valid number.";
+                        sendDefaultEmbedMessage(user, msg, messageHandler, channel);
+                    }
+                }
+            } else{
+                String msg = "Invalid format. r!crate weapon 1 or r!crate armor 1";
+                sendDefaultEmbedMessage(user, msg, messageHandler, channel);
+            }
         }
     }
 
@@ -99,8 +202,11 @@ public class CommandHandler {
     }
 
     public void commands(MessageChannel channel, User user){
-        channel.sendMessage(messageHandler.createDefaultEmbedMessage(user, ApplicationConstants.VERBOSE_COMMANDS)).queue();;
-    }
+        user.openPrivateChannel().queue((privateChannel) -> {
+            privateChannel.sendMessage(messageHandler.createDefaultEmbedMessage(user, ApplicationConstants.VERBOSE_COMMANDS)).queue();;
+        });
+
+        channel.sendMessage(messageHandler.createDefaultEmbedMessage(user, "Messaged you the list of commands.")).queue();    }
 
     public void train( MessageChannel channel, String[] msgArr, User user){
         if(msgArr.length < 3){
@@ -129,7 +235,6 @@ public class CommandHandler {
                     }
                 }
             } catch(Exception e){
-                e.printStackTrace();
                 channel.sendMessage(messageHandler.createDefaultEmbedMessage(user, "Please include a valid number between 1 and 20. e.g. r!train speed 10")).queue();
             }
         }
@@ -202,8 +307,14 @@ public class CommandHandler {
         }
     }
 
-    public void monsters(){
+    public void monsters(MessageChannel channel, User user){
+        Player player = playerDatabase.grabPlayer(user.getId());
 
+        user.openPrivateChannel().queue((privateChannel) -> {
+            privateChannel.sendMessage(messageHandler.createEmbedMonsterListMessage(user, player.getLevel())).queue();
+        });
+
+        channel.sendMessage(messageHandler.createDefaultEmbedMessage(user, "Messaged you the list of monsters within 100 levels.")).queue();
     }
 
     public void highscore(MessageChannel channel, String[] msgArr, User user, JDA jda){
@@ -245,7 +356,6 @@ public class CommandHandler {
                     return;
             }
         }
-        System.out.println(highscoreType);
         channel.sendMessage(messageHandler.createHighscoreEmbedMessage(user, players, jda, highscoreType)).queue();
     }
 

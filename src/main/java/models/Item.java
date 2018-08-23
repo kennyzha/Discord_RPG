@@ -1,7 +1,9 @@
 package models;
 
+import java.util.Random;
+
 public class Item {
-    public enum Type {WEAPON, SHIELD, BODY, HELMET, GLOVES, BOOTS, LEG, CONSUMABLE};
+    public enum Type {WEAPON, ARMOR, CONSUMABLE};
     public enum Rarity{COMMON, RARE, EPIC, LEGENDARY, MYTH};
 
     private String name;
@@ -58,19 +60,98 @@ public class Item {
         this.sellValue = sellValue;
     }
 
-    public double getDropRate(){
-        switch(getRarity()){
+    public static int rollItemStat(int level, Rarity rarity){
+        int lowerBoundStat = getLowerBoundStat(level);
+        int upperBoundStat = getUpperBoundStat(level);
+        int diff = upperBoundStat - lowerBoundStat;
+
+        switch(rarity){
             case COMMON:
-                return .15;
+                return lowerBoundStat;
             case RARE:
-                return .05;
-             case EPIC:
-                return .01;
+                diff /= 2;
+                diff--;
+                break;
+            case EPIC:
+                diff /= 2;
+                lowerBoundStat += diff;
+                lowerBoundStat--;
+                break;
             case LEGENDARY:
-                return .005;
-            case MYTH:
-                return 0;
+                return upperBoundStat;
         }
-        return 0;
+        return (int) (Math.random() * diff) + lowerBoundStat + 1;
+    }
+
+    public static Rarity getItemRarity(int level, int statValue){
+        int lowerBound = getLowerBoundStat(level);
+        int upperBound = getUpperBoundStat(level);
+        int diff = upperBound - lowerBound;
+
+        if(statValue < lowerBound || statValue > upperBound){
+            return null;
+        }
+
+        if(statValue == lowerBound){
+            return Rarity.COMMON;
+        } else if(statValue == upperBound){
+            return Rarity.LEGENDARY;
+        } else if (statValue >= lowerBound + diff/2){
+            return Rarity.EPIC;
+        } else{
+            return Rarity.RARE;
+        }
+    }
+
+    public static int getLowerBoundStat(int level){
+        return getLowerBoundLevel(level) * getLevelMultiplier(level - 50);
+    }
+
+    public static int getUpperBoundStat(int level){
+        return getUpperBoundLevel(level) * getLevelMultiplier(level);
+    }
+
+    public static int getUpperBoundLevel(int level){
+        return getLevelBracket(level + 50) * 50;
+    }
+
+    public static int getLowerBoundLevel(int level){
+        return getLevelBracket(level) * 50;
+    }
+
+    public static int getLevelMultiplier(int level){
+        int levelBracket = getLevelBracket(level);
+
+        if(levelBracket == 0){
+            return 1;
+        } else if(levelBracket >= 9){
+            levelBracket += (levelBracket - 8);
+        }
+
+        int levelMultiplier = levelBracket * 5;
+
+        return levelMultiplier;
+    }
+
+    public static int getLevelBracket(int level){
+        return level/50;
+    }
+
+    public static Rarity rollItemRarity(){
+        int roll = generateNumber();
+
+        if(roll > 45){
+            return Rarity.COMMON;
+        } else if(roll > 15){
+            return Rarity.RARE;
+        } else if(roll > 3){
+            return Rarity.EPIC;
+        } else{
+            return Rarity.LEGENDARY;
+        }
+    }
+
+    public static int generateNumber(){
+        return (int) (Math.random() * 100) + 1;
     }
 }

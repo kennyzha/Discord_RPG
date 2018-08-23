@@ -2,10 +2,7 @@ package handlers;
 
 import config.ApplicationConstants;
 import config.MonsterConstants;
-import models.CombatResult;
-import models.Monster;
-import models.Player;
-import models.Stamina;
+import models.*;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.entities.MessageEmbed;
@@ -25,7 +22,7 @@ public class MessageHandler {
         EmbedBuilder eb = new EmbedBuilder();
         setEmbedMessageDefaults(eb, user);
 
-        eb.setTitle("Level: " + player.getLevel() + " (" + format.format(player.getLevelExp()) + "/" + format.format(player.calcExpToNextLevel()) + ")");
+        eb.setTitle("Level " + player.getLevel() + " (" + format.format(player.getLevelExp()) + "/" + format.format(player.calcExpToNextLevel()) + ")");
 
         eb.addField("Health", format.format(player.getHealth()), true);
         eb.addField("Gold", format.format(player.getGold()), true);
@@ -34,6 +31,13 @@ public class MessageHandler {
         eb.addField("Speed", format.format(player.getSpeed()) + " (" + player.getSpeedPercentage() + "%)", true);
         eb.addField("Strength", format.format(player.getStrength()) + " (" + player.getStrengthPercentage() + "%)", true);
 
+        if(player.getLevel() >= 50){
+            eb.addField("Weapon", format.format(player.getWeapon()), true);
+            eb.addBlankField(true);
+            eb.addField("Armor", format.format(player.getArmor()), true);
+        }
+
+        eb.setFooter("Stamina: " + stamina.getStamina() + " / 20", null);
         return eb.build();
     }
 
@@ -63,14 +67,17 @@ public class MessageHandler {
         return eb.build();
     }
 
-    public MessageEmbed createEmbedMonsterListMessage(User user){
+    public MessageEmbed createEmbedMonsterListMessage(User user, int playerLevel){
         EmbedBuilder eb = new EmbedBuilder();
         setEmbedMessageDefaults(eb , user);
 
         ArrayList<Monster> monsters = MonsterConstants.getMonsters();
-
         for(Monster m: monsters){
-            eb.addField(m.getName() + " (Level " + m.getLevel() + ")", m.toString(), false);
+            int levelDiff = Math.abs(m.getLevel() - playerLevel);
+
+            if(levelDiff <= 100){
+                eb.addField(m.getName() + " (Level " + m.getLevel() + ")", m.toString(), false);
+            }
         }
 
         return eb.build();
@@ -93,6 +100,8 @@ public class MessageHandler {
         EmbedBuilder eb = new EmbedBuilder();
         setEmbedMessageDefaults(eb , user);
         eb.setTitle(highscoreType + " Highscore");
+        eb.setFooter("Updated daily", null);
+
         int rankCounter = 1;
         for(Player p: players){
             User curUser = jda.getUserById(p.getId());
@@ -101,7 +110,7 @@ public class MessageHandler {
             }
             
             eb.appendDescription(rankCounter + ". " + curUser.getName() + "#" + curUser.getDiscriminator() + " (Level " + p.getLevel() + ")\n");
-            eb.appendDescription(String.format("Power: %s Speed: %s Strength: %s Total: %s\n\n", format.format(p.getPower()), format.format(p.getSpeed()), format.format(p.getStrength()), format.format(p.getTotalStats())));
+            eb.appendDescription(String.format("   Power: %s Speed: %s Strength: %s Total: %s\n\n", format.format(p.getPower()), format.format(p.getSpeed()), format.format(p.getStrength()), format.format(p.getTotalStats())));
             rankCounter++;
         }
 
@@ -112,6 +121,7 @@ public class MessageHandler {
         EmbedBuilder eb = new EmbedBuilder();
         setEmbedMessageDefaults(eb, user);
         eb.setTitle(highscoreType + " Highscore");
+        eb.setFooter("Updated daily", null);
 
         int rankCounter = 1;
         for (Player p : players) {
@@ -120,7 +130,8 @@ public class MessageHandler {
                 continue;
             }
 
-            eb.addField(rankCounter + ". " + curUser.getName() + "#" + curUser.getDiscriminator() + " (Level " + p.getLevel() + ")", " Total Stats: " + format.format(p.getTotalStats()), false);
+            eb.appendDescription(rankCounter + ". " + curUser.getName() + "#" + curUser.getDiscriminator() + " (Level " + p.getLevel() + ")" + "\n" +
+                        "   Total Stats: " + format.format(p.getTotalStats()) + "\n\n");
             rankCounter++;
         }
 
@@ -131,6 +142,7 @@ public class MessageHandler {
         EmbedBuilder eb = new EmbedBuilder();
         setEmbedMessageDefaults(eb, user);
         eb.setTitle(highscoreType + " Highscore");
+        eb.setFooter("Updated daily", null);
 
         int rankCounter = 1;
         for (Player p : players) {
@@ -139,9 +151,59 @@ public class MessageHandler {
                 continue;
             }
 
-            eb.addField(rankCounter + ". " + curUser.getName() + "#" + curUser.getDiscriminator() + " (Level " + p.getLevel() + ")", " Total Gold: " + format.format(p.getGold()), false);
+            eb.appendDescription(rankCounter + ". " + curUser.getName() + "#" + curUser.getDiscriminator() + " (Level " + p.getLevel() + ")" + "\n"
+                                + "   Total Gold: " + format.format(p.getGold()) + "\n\n");
             rankCounter++;
         }
+
+        return eb.build();
+    }
+
+    public MessageEmbed createCrateEmbedMessage(User user, Player player, int cost, int itemLowerBound, int itemUpperBound){
+        EmbedBuilder eb = new EmbedBuilder();
+        setEmbedMessageDefaults(eb, user);
+
+        eb.appendDescription(String.format("Your crate currently costs %s each.\nYour item can roll %s ~ %s ATK/DEF.\n\nThe cost and stat range increases every 50 level interval.\nOne Attack/Defense is similar to half a point of power/strength.\nLegendary items give 5 percent permanent stats.",
+                format.format(cost) , format.format(itemLowerBound), format.format(itemUpperBound)));
+        eb.setThumbnail("https://i.imgur.com/OYIWNY7.png");
+        eb.setFooter(String.format("Weapon: %s ATK  Armor: %s DEF", format.format(player.getWeapon()), format.format(player.getArmor())), null);
+        return eb.build();
+    }
+
+    public MessageEmbed createCrateOpeningEmbed(User user, Player player, String crateSummary, int oldItemRoll, int itemRoll, Item.Rarity rarity, Item.Type itemType){
+        EmbedBuilder eb = new EmbedBuilder();
+        setEmbedMessageDefaults(eb, user);
+
+        String suffix = itemType == Item.Type.WEAPON ? "attack" : "defense";
+
+        eb.appendDescription(crateSummary);
+
+        String itemTypeString = itemType.toString().toLowerCase();
+        if(oldItemRoll >= itemRoll){
+            eb.appendDescription(String.format("\nYou decided to keep using your %s %s %s.",  format.format(oldItemRoll), suffix, itemTypeString));
+        } else{
+            eb.appendDescription(String.format("\nYou replaced your old %s %s %s with a shiny new %s %s %s %s.", format.format(oldItemRoll), suffix, itemTypeString, format.format(itemRoll), suffix, Item.getItemRarity(player.getLevel(), itemRoll), itemTypeString));
+        }
+
+        String img = "https://i.imgur.com/OYIWNY7.png";
+
+        switch(rarity){
+            case COMMON:
+                img = (itemType == Item.Type.WEAPON) ? ApplicationConstants.WEAPON_COMMON_IMG : ApplicationConstants.ARMOR_COMMON_IMG;
+                break;
+            case RARE:
+                img = (itemType == Item.Type.WEAPON) ? ApplicationConstants.WEAPON_RARE_IMG : ApplicationConstants.ARMOR_RARE_IMG;
+                break;
+            case EPIC:
+                img = (itemType == Item.Type.WEAPON) ? ApplicationConstants.WEAPON_EPIC_IMG : ApplicationConstants.ARMOR_EPIC_IMG;
+                break;
+            case LEGENDARY:
+                img = (itemType == Item.Type.WEAPON) ? ApplicationConstants.WEAPON_LEGENDARY_IMG : ApplicationConstants.ARMOR_LEGENDARY_IMG;
+                break;
+        }
+
+        eb.setThumbnail(img);
+        eb.setFooter(String.format("Min Roll: %s Max Roll: %s", format.format(Item.getLowerBoundStat(player.getLevel())), format.format(Item.getUpperBoundStat(player.getLevel()))), null);
 
         return eb.build();
     }
