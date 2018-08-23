@@ -4,7 +4,7 @@ import java.util.Random;
 
 public class Item {
     public enum Type {WEAPON, ARMOR, CONSUMABLE};
-    public enum Rarity{COMMON, RARE, EPIC, LEGENDARY, MYTH};
+    public enum Rarity{COMMON, UNCOMMON, RARE, EPIC, LEGENDARY, MYTH};
 
     private String name;
     private int statValue;
@@ -68,8 +68,13 @@ public class Item {
         switch(rarity){
             case COMMON:
                 return lowerBoundStat;
+            case UNCOMMON:
+                diff /= 4;
+                diff--;
+                break;
             case RARE:
-                diff /= 2;
+                diff /= 4;
+                lowerBoundStat += diff;
                 diff--;
                 break;
             case EPIC:
@@ -98,17 +103,19 @@ public class Item {
             return Rarity.LEGENDARY;
         } else if (statValue >= lowerBound + diff/2){
             return Rarity.EPIC;
-        } else{
+        } else if(statValue >= lowerBound + diff/4){
             return Rarity.RARE;
+        } else{
+            return Rarity.UNCOMMON;
         }
     }
 
     public static int getLowerBoundStat(int level){
-        return getLowerBoundLevel(level) * getLevelMultiplier(level - 50);
+        return getLowerBoundLevel(level) * getLevelMultiplier(level - 50) * 2;
     }
 
     public static int getUpperBoundStat(int level){
-        return getUpperBoundLevel(level) * getLevelMultiplier(level);
+        return getUpperBoundLevel(level) * getLevelMultiplier(level) * 2;
     }
 
     public static int getUpperBoundLevel(int level){

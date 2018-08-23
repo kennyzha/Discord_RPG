@@ -13,7 +13,7 @@ public class ItemRollTest {
     public void itemStatRollNormalTest(){
 
         int level = 88;
-        int itemStat = 50;
+        int itemStat = 100;
 
         assertEquals(itemStat, Item.rollItemStat(level, Item.Rarity.COMMON));
         assertEquals(Item.Rarity.COMMON, Item.getItemRarity(level, itemStat));
@@ -22,23 +22,57 @@ public class ItemRollTest {
     @Test
     public void itemStatRollNormalTest2(){
         int level = 100;
-        int itemStat = 500;
+        int itemStat = 1000;
         assertEquals(itemStat, Item.rollItemStat(level, Item.Rarity.COMMON));
     }
 
     @Test
     public void itemStatRollNormalTest3(){
-        assertEquals(1500, Item.rollItemStat(177, Item.Rarity.COMMON));
+        assertEquals(3000, Item.rollItemStat(177, Item.Rarity.COMMON));
     }
 
     @Test
     public void itemStatRollNormalTest4(){
-        assertEquals(25000, Item.rollItemStat(543, Item.Rarity.COMMON));
+        assertEquals(50000, Item.rollItemStat(543, Item.Rarity.COMMON));
     }
 
     @Test
     public void itemStatRollNormalTest5(){
-        assertEquals(33000, Item.rollItemStat(550, Item.Rarity.COMMON));
+        assertEquals(66000, Item.rollItemStat(550, Item.Rarity.COMMON));
+    }
+
+    @Test
+    public void itemStatRollBoundsUncommonTest(){
+        int lowest = Integer.MAX_VALUE;
+        int highest = Integer.MIN_VALUE;
+
+        int level = 109;
+        for(int i = 0; i < 100000; i++){
+            int itemRoll = Item.rollItemStat(level, Item.Rarity.UNCOMMON);
+            lowest = Integer.min(itemRoll, lowest);
+            highest = Integer.max(itemRoll, highest);
+
+            assertEquals(Item.Rarity.UNCOMMON, Item.getItemRarity(level, itemRoll));
+        }
+        System.out.println(lowest + " " + highest);
+        assertTrue(lowest == 1001 && highest == 1499);
+    }
+
+    @Test
+    public void itemStatRollBoundsUncommonTest2(){
+        int lowest = Integer.MAX_VALUE;
+        int highest = Integer.MIN_VALUE;
+
+        int level = 150;
+        for(int i = 0; i < 100000; i++){
+            int itemRoll = Item.rollItemStat(level, Item.Rarity.UNCOMMON);
+            lowest = Integer.min(itemRoll, lowest);
+            highest = Integer.max(itemRoll, highest);
+
+            assertEquals(Item.Rarity.UNCOMMON, Item.getItemRarity(level, itemRoll));
+        }
+        System.out.println(lowest + " " + highest);
+        assertTrue(lowest == 3001 && highest == 3749);
     }
 
     @Test
@@ -55,7 +89,7 @@ public class ItemRollTest {
             assertEquals(Item.Rarity.RARE, Item.getItemRarity(level, itemRoll));
         }
         System.out.println(lowest + " " + highest);
-        assertTrue(lowest == 501 && highest == 999);
+        assertTrue(lowest == 1501 && highest == 1999);
     }
 
     @Test
@@ -73,7 +107,7 @@ public class ItemRollTest {
             assertEquals(Item.Rarity.RARE, Item.getItemRarity(level, itemRoll));
 
         }
-        assertTrue(lowest == 51 && highest == 274);
+        assertTrue(lowest == 326 && highest == 549);
     }
 
     @Test
@@ -86,7 +120,7 @@ public class ItemRollTest {
             lowest = Integer.min(itemRoll, lowest);
             highest = Integer.max(itemRoll, highest);
         }
-        assertTrue(lowest == 25001 && highest == 28999);
+        assertTrue(lowest == 54001 && highest == 57999);
     }
     @Test
     public void itemStatRollBoundsEpicTest(){
@@ -102,7 +136,7 @@ public class ItemRollTest {
             assertEquals(Item.Rarity.EPIC, Item.getItemRarity(level, itemRoll));
 
         }
-        assertTrue(lowest == 275 && highest == 499);
+        assertTrue(lowest == 550 && highest == 999);
     }
 
     @Test
@@ -119,7 +153,7 @@ public class ItemRollTest {
             assertEquals(Item.Rarity.EPIC, Item.getItemRarity(level, itemRoll));
 
         }
-        assertTrue(lowest == 1000 && highest == 1499);
+        assertTrue(lowest == 2000 && highest == 2999);
     }
 
     @Test
@@ -137,7 +171,7 @@ public class ItemRollTest {
             assertEquals(Item.Rarity.EPIC, Item.getItemRarity(level, itemRoll));
 
         }
-        assertTrue(lowest == 4000 && highest == 4999);
+        assertTrue(lowest == 8000 && highest == 9999);
     }
 
     @Test
@@ -154,7 +188,7 @@ public class ItemRollTest {
             assertEquals(Item.Rarity.EPIC, Item.getItemRarity(level, itemRoll));
 
         }
-        assertTrue(lowest == 29000 && highest == 32999);
+        assertTrue(lowest == 58000 && highest == 65999);
     }
 
     @Test
@@ -162,7 +196,7 @@ public class ItemRollTest {
         int level = 50;
         int itemRoll = Item.rollItemStat(50, Item.Rarity.LEGENDARY);
 
-        assertTrue(500 == itemRoll);
+        assertTrue(1000 == itemRoll);
         assertTrue(Item.Rarity.LEGENDARY == Item.getItemRarity(level , itemRoll));
     }
 
@@ -171,7 +205,7 @@ public class ItemRollTest {
         int level = 147;
         int itemRoll = Item.rollItemStat(level, Item.Rarity.LEGENDARY);
 
-        assertTrue(1500 == itemRoll);
+        assertTrue(3000 == itemRoll);
         assertTrue(Item.Rarity.LEGENDARY == Item.getItemRarity(level , itemRoll));
     }
 
@@ -180,7 +214,7 @@ public class ItemRollTest {
         int level = 150;
         int itemRoll = Item.rollItemStat(level, Item.Rarity.LEGENDARY);
 
-        assertTrue(3000 == itemRoll);
+        assertTrue(6000 == itemRoll);
         assertTrue(Item.Rarity.LEGENDARY == Item.getItemRarity(level , itemRoll));
     }
 
@@ -189,7 +223,7 @@ public class ItemRollTest {
         int level = 151;
         int itemRoll = Item.rollItemStat(level, Item.Rarity.LEGENDARY);
 
-        assertTrue(3000 == itemRoll);
+        assertTrue(6000 == itemRoll);
         assertTrue(Item.Rarity.LEGENDARY == Item.getItemRarity(level , itemRoll));
     }
 
@@ -198,7 +232,7 @@ public class ItemRollTest {
         int level = 333;
         int itemRoll = Item.rollItemStat(level, Item.Rarity.LEGENDARY);
 
-        assertTrue(10500 == itemRoll);
+        assertTrue(21000 == itemRoll);
         assertTrue(Item.Rarity.LEGENDARY == Item.getItemRarity(level , itemRoll));
     }
 
@@ -207,7 +241,7 @@ public class ItemRollTest {
         int level = 541;
         int itemRoll = Item.rollItemStat(level, Item.Rarity.LEGENDARY);
 
-        assertTrue(33000 == itemRoll);
+        assertTrue(66000 == itemRoll);
         assertTrue(Item.Rarity.LEGENDARY == Item.getItemRarity(level , itemRoll));
     }
 }
