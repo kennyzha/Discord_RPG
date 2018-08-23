@@ -30,9 +30,12 @@ public class MessageHandler {
         eb.addField("Power", format.format(player.getPower()) + " (" + player.getPowerPercentage() + "%)", true);
         eb.addField("Speed", format.format(player.getSpeed()) + " (" + player.getSpeedPercentage() + "%)", true);
         eb.addField("Strength", format.format(player.getStrength()) + " (" + player.getStrengthPercentage() + "%)", true);
-        eb.addField("Weapon", format.format(player.getWeapon()), true);
-        eb.addBlankField(true);
-        eb.addField("Armor", format.format(player.getArmor()), true);
+
+        if(player.getLevel() >= 50){
+            eb.addField("Weapon", format.format(player.getWeapon()), true);
+            eb.addBlankField(true);
+            eb.addField("Armor", format.format(player.getArmor()), true);
+        }
 
         eb.setFooter("Stamina: " + stamina.getStamina() + " / 20", null);
         return eb.build();
@@ -64,14 +67,17 @@ public class MessageHandler {
         return eb.build();
     }
 
-    public MessageEmbed createEmbedMonsterListMessage(User user){
+    public MessageEmbed createEmbedMonsterListMessage(User user, int playerLevel){
         EmbedBuilder eb = new EmbedBuilder();
         setEmbedMessageDefaults(eb , user);
 
         ArrayList<Monster> monsters = MonsterConstants.getMonsters();
-
         for(Monster m: monsters){
-            eb.addField(m.getName() + " (Level " + m.getLevel() + ")", m.toString(), false);
+            int levelDiff = Math.abs(m.getLevel() - playerLevel);
+
+            if(levelDiff <= 100){
+                eb.addField(m.getName() + " (Level " + m.getLevel() + ")", m.toString(), false);
+            }
         }
 
         return eb.build();
@@ -157,9 +163,10 @@ public class MessageHandler {
         EmbedBuilder eb = new EmbedBuilder();
         setEmbedMessageDefaults(eb, user);
 
-        eb.appendDescription(String.format("Your crate currently costs %s each.\nYour item can roll %s ~ %s ATK/DEF.\nThe cost and stat range increases every 50 level interval.\n1 Attack/Defense is similar to 1 point of power/strength.\nLegendary items give 5 percent permanent stats.", format.format(cost) , format.format(itemLowerBound), format.format(itemUpperBound)));
+        eb.appendDescription(String.format("Your crate currently costs %s each.\nYour item can roll %s ~ %s ATK/DEF.\n\nThe cost and stat range increases every 50 level interval.\nOne Attack/Defense is similar to half a point of power/strength.\nLegendary items give 5 percent permanent stats.",
+                format.format(cost) , format.format(itemLowerBound), format.format(itemUpperBound)));
         eb.setThumbnail("https://i.imgur.com/OYIWNY7.png");
-        eb.setFooter(String.format("Weapon: %s ATK  Armor: %s DEF", player.getWeapon(), player.getArmor()), null);
+        eb.setFooter(String.format("Weapon: %s ATK  Armor: %s DEF", format.format(player.getWeapon()), format.format(player.getArmor())), null);
         return eb.build();
     }
 
@@ -173,9 +180,9 @@ public class MessageHandler {
 
         String itemTypeString = itemType.toString().toLowerCase();
         if(oldItemRoll >= itemRoll){
-            eb.appendDescription(String.format("\nYou decided to keep using your %s %s %s.",  oldItemRoll, suffix, itemTypeString));
+            eb.appendDescription(String.format("\nYou decided to keep using your %s %s %s.",  format.format(oldItemRoll), suffix, itemTypeString));
         } else{
-            eb.appendDescription(String.format("\nYou replaced your old %s %s %s with a shiny new %s %s %s %s.", oldItemRoll, suffix, itemTypeString, itemRoll, suffix, Item.getItemRarity(player.getLevel(), itemRoll), itemTypeString));
+            eb.appendDescription(String.format("\nYou replaced your old %s %s %s with a shiny new %s %s %s %s.", format.format(oldItemRoll), suffix, itemTypeString, format.format(itemRoll), suffix, Item.getItemRarity(player.getLevel(), itemRoll), itemTypeString));
         }
 
         String img = "https://i.imgur.com/OYIWNY7.png";
@@ -196,7 +203,7 @@ public class MessageHandler {
         }
 
         eb.setThumbnail(img);
-        eb.setFooter(String.format("Min Roll: %s Max Roll: %s", Item.getLowerBoundStat(player.getLevel()), Item.getUpperBoundStat(player.getLevel())), null);
+        eb.setFooter(String.format("Min Roll: %s Max Roll: %s", format.format(Item.getLowerBoundStat(player.getLevel())), format.format(Item.getUpperBoundStat(player.getLevel()))), null);
 
         return eb.build();
     }

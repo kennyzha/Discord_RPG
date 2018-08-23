@@ -11,11 +11,13 @@ database\DynamoClient.class
 models\Monster.class
 handlers\CommandHandler.class
 handlers\TrainingHandler.class
+handlers\MessageHandler$1.class
 listeners\MessageListener.class
 Rpg.class
 simulators\CombatSimulator.class
 models\Player$Stat.class
 models\Item.class
+models\Crate.class
 models\CombatStatistic.class
 database\DynamoClient$1.class
 models\Item$Rarity.class

@@ -11,6 +11,7 @@ import net.dv8tion.jda.core.entities.*;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 
 import java.awt.*;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 public class CommandHandler {
@@ -62,7 +63,7 @@ public class CommandHandler {
                 hunt(channel, msgArr, user);
                 break;
             case "r!monsters":
-                channel.sendMessage(messageHandler.createEmbedMonsterListMessage(user)).queue();
+                monsters(channel, user);
                 break;
             case"r!highscore":
                 highscore(channel, msgArr, user, event.getJDA());
@@ -126,6 +127,7 @@ public class CommandHandler {
                         }
 
                         int totalCost = crateCost * numBuys;
+                        DecimalFormat format = new DecimalFormat("#,###.##");
                         if(playerGold >= totalCost){
                             StringBuilder sb = new StringBuilder();
                             String suffix = (itemType == Item.Type.WEAPON) ? "attack" : "defense";
@@ -135,7 +137,7 @@ public class CommandHandler {
                                 int itemRoll = Item.rollItemStat(playerLevel, rarity);
                                 newPlayerItemStat = Integer.max(itemRoll, newPlayerItemStat);
 
-                                sb.append(String.format("The crate contained a %s %s with %s %s.\n", rarity.toString(), itemType.toString().toLowerCase(), itemRoll, suffix));
+                                sb.append(String.format("The crate contained a %s %s with %s %s.\n", rarity.toString(), itemType.toString().toLowerCase(), format.format(itemRoll), suffix));
                             }
 
                             if(itemType == Item.Type.WEAPON){
@@ -151,7 +153,7 @@ public class CommandHandler {
                                 player.applyLegendaryEffect();
                                 double statsGained = player.getTotalStats() - oldStatTotal;
 
-                                sb.append("\nLegendary effect is applied. Total stats will increase by 5% permanently. You total stats increased by " + statsGained + "\n");
+                                sb.append("\nLegendary effect is applied. Total stats will increase by 5% permanently. Your total stats increased by " + format.format(statsGained) + "\n");
 
                             }
 
@@ -160,7 +162,7 @@ public class CommandHandler {
                             channel.sendMessage(messageHandler.createCrateOpeningEmbed(user, player, sb.toString(), oldPlayerItemStat, newPlayerItemStat, Item.getItemRarity(playerLevel, newPlayerItemStat), itemType)).queue();
 
                         } else{
-                            String msg = String.format("Failed to buy %s crates. Each crate costs %s and you only have %s gold.", numBuys, crateCost, playerGold);
+                            String msg = String.format("Failed to buy %s crates. Each crate costs %s and you only have %s gold.", numBuys, format.format(crateCost), format.format(playerGold));
                             sendDefaultEmbedMessage(user, msg, messageHandler, channel);
                         }
                     } catch (NumberFormatException e){
@@ -305,8 +307,14 @@ public class CommandHandler {
         }
     }
 
-    public void monsters(){
+    public void monsters(MessageChannel channel, User user){
+        Player player = playerDatabase.grabPlayer(user.getId());
 
+        user.openPrivateChannel().queue((privateChannel) -> {
+            privateChannel.sendMessage(messageHandler.createEmbedMonsterListMessage(user, player.getLevel())).queue();
+        });
+
+        channel.sendMessage(messageHandler.createDefaultEmbedMessage(user, "Messaged you the list of monsters within 100 levels.")).queue();
     }
 
     public void highscore(MessageChannel channel, String[] msgArr, User user, JDA jda){
