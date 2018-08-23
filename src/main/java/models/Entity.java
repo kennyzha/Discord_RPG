@@ -7,6 +7,16 @@ public class Entity {
     private double speed, power, strength;
     private int weapon, armor;
 
+    public Entity(){
+        this.level = 1;
+        this.health = 200;
+        this.speed = 1;
+        this.power = 1;
+        this.strength = 1;
+        this.weapon = 0;
+        this.armor = 0;
+    }
+
     public Entity(int level, int health, double speed, double power, double strength) {
         this.level = level;
         this.health = health;

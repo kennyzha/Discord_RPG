@@ -62,10 +62,12 @@ public class CommandHandler {
             case "r!h":
                 hunt(channel, msgArr, user);
                 break;
+            case "r!monster":
             case "r!monsters":
                 monsters(channel, user);
                 break;
             case"r!highscore":
+            case"r!highscores":
                 highscore(channel, msgArr, user, event.getJDA());
                 break;
             case "r!server":
@@ -73,7 +75,13 @@ public class CommandHandler {
                 sendDefaultEmbedMessage(user,link, messageHandler, channel);
                 break;
             case "r!crate":
+            case"r!crates":
                 crate(channel, msgArr, user);
+                break;
+            case "r!credits":
+                String credits = "The concept of power, speed, and strength is based on an old school RPG game called hobowars. " +
+                        "The game icons used in this are available on https://game-icons.net";
+                sendDefaultEmbedMessage(user, credits, messageHandler, channel);
                 break;
             default:
                 String str = "Command not recognized: " + message.getContentDisplay() + ". Type r!commands for list of commands.";
