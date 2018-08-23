@@ -5,6 +5,8 @@ import config.MonsterConstants;
 import java.util.ArrayList;
 
 public class Monster extends Entity {
+
+    public enum Build {SPEED, STRENGTH};
     private String name;
     private int baseExpGiven, basedGoldDropped;
     private ArrayList<Item> itemDropList;
@@ -15,6 +17,34 @@ public class Monster extends Entity {
         this.baseExpGiven = baseExpGiven;
         this.basedGoldDropped = basedGoldDropped;
         this.itemDropList = itemDropList;
+    }
+
+    public Monster(String name, int level, int health, int totalStats, int baseExpGiven, int basedGoldDropped, Build build){
+        this.name = name;
+        this.baseExpGiven = baseExpGiven;
+        this.basedGoldDropped = basedGoldDropped;
+        this.itemDropList = new ArrayList<>();
+
+        this.setLevel(level);
+        this.setHealth(health);
+
+        if(build == Build.SPEED){
+            setSpeedBuild(totalStats);
+        } else {
+            setStrengthBuild(totalStats);
+        }
+    }
+
+    private void setSpeedBuild(int totalStats) {
+        setPower(totalStats * .3);
+        setSpeed(totalStats * .5);
+        setStrength(totalStats * .2);
+    }
+
+    private void setStrengthBuild(int totalStats) {
+        setPower(totalStats * .2);
+        setSpeed(totalStats * .3);
+        setStrength(totalStats * .5);
     }
 
     public String getName() {

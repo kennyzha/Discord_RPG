@@ -132,22 +132,22 @@ public class CombatHandler {
     }
 
     public double calcLowDamage(double str, double pow, double weap, double arm){
-        double effectiveStrength = calcEffectiveStr(str + arm/2);
-        double effectivePower = calcEffectivePow(pow + weap/2);
+        double effectiveStrength = calcEffectiveStr(str + arm/4);
+        double effectivePower = calcEffectivePow(pow + weap/4);
 
         return effectiveStrength/6 + effectivePower/2;
     }
 
     public double calcHighDamage(double str, double pow, double weap, double arm){
-        return calcEffectiveStr(str + arm)/4 + 3*calcEffectivePow(pow + weap/2)/4;
+        return calcEffectiveStr(str + arm/4)/4 + 3*calcEffectivePow(pow + weap/4)/4;
     }
 
     public double calcLowDefense(double str, double armor){
-        return (calcEffectiveStr(str + armor/2)/3 );
+        return (calcEffectiveStr(str + armor/4)/3 );
     }
 
     public double calcHighDefense(double str, double armor){
-        return (calcEffectiveStr(str + armor/2)/2);
+        return (calcEffectiveStr(str + armor/4)/2);
     }
 
     public double calcLowSpeed(double speed){

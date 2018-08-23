@@ -163,7 +163,7 @@ public class MessageHandler {
         EmbedBuilder eb = new EmbedBuilder();
         setEmbedMessageDefaults(eb, user);
 
-        eb.appendDescription(String.format("Your crate currently costs %s each.\nYour item can roll %s ~ %s ATK/DEF.\n\nThe cost and stat range increases every 50 level interval.\nOne Attack/Defense is similar to half a point of power/strength.\nLegendary items give 5 percent permanent stats.",
+        eb.appendDescription(String.format("Your crate currently costs %s each.\nYour item can roll %s ~ %s ATK/DEF.\n\nThe cost and stat range increases every 50 level interval.\nOne Attack/Defense is similar to 1/4 point of power/strength.\nLegendary items give 5 percent permanent stats.",
                 format.format(cost) , format.format(itemLowerBound), format.format(itemUpperBound)));
         eb.setThumbnail("https://i.imgur.com/OYIWNY7.png");
         eb.setFooter(String.format("Weapon: %s ATK  Armor: %s DEF", format.format(player.getWeapon()), format.format(player.getArmor())), null);
@@ -190,6 +190,9 @@ public class MessageHandler {
         switch(rarity){
             case COMMON:
                 img = (itemType == Item.Type.WEAPON) ? ApplicationConstants.WEAPON_COMMON_IMG : ApplicationConstants.ARMOR_COMMON_IMG;
+                break;
+            case UNCOMMON:
+                img = (itemType == Item.Type.WEAPON) ? ApplicationConstants.WEAPON_UNCOMMON_IMG : ApplicationConstants.ARMOR_UNCOMMON_IMG;
                 break;
             case RARE:
                 img = (itemType == Item.Type.WEAPON) ? ApplicationConstants.WEAPON_RARE_IMG : ApplicationConstants.ARMOR_RARE_IMG;

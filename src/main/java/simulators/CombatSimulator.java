@@ -52,7 +52,7 @@ public class CombatSimulator {
 //
 //        System.out.println(total);
 
-        System.out.println(simulator.monstersNeededToLevel(simulator.player1, MonsterConstants.GNOME, 100, 200));
+        System.out.println(simulator.monstersNeededToLevel(simulator.player1, MonsterConstants.ORC, 100, 150));
 
     }
 

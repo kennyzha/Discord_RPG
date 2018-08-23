@@ -69,37 +69,37 @@ public class ItemTest {
     @Test
     public void itemLowerBoundStatTest(){
         int level = 222;
-        assertEquals(3000, Item.getLowerBoundStat(level));
+        assertEquals(6000, Item.getLowerBoundStat(level));
     }
 
     @Test
     public void itemLowerBoundStatTest2(){
         int level = 76;
-        assertEquals(50, Item.getLowerBoundStat(level));
+        assertEquals(100, Item.getLowerBoundStat(level));
     }
 
     @Test
     public void itemLowerBoundStatTest3(){
         int level = 558;
-        assertEquals(33000, Item.getLowerBoundStat(level));
+        assertEquals(66000, Item.getLowerBoundStat(level));
     }
 
     @Test
     public void itemUpperBoundStatTest(){
         int level = 222;
-        assertEquals(5000, Item.getUpperBoundStat(level));
+        assertEquals(10000, Item.getUpperBoundStat(level));
     }
 
     @Test
     public void itemUpperBoundStatTest2(){
         int level = 76;
-        assertEquals(500, Item.getUpperBoundStat(level));
+        assertEquals(1000, Item.getUpperBoundStat(level));
     }
 
     @Test
     public void itemUpperBoundStatTest3(){
         int level = 558;
-        assertEquals(42000, Item.getUpperBoundStat(level));
+        assertEquals(84000, Item.getUpperBoundStat(level));
     }
 
     @Test
@@ -139,47 +139,79 @@ public class ItemTest {
 
     @Test
     public void itemRarityTest(){
-        assertEquals(Item.Rarity.COMMON, Item.getItemRarity(100, 500));
+        assertEquals(Item.Rarity.COMMON, Item.getItemRarity(100, 1000));
     }
 
     @Test
     public void itemRarityTest2(){
-        assertEquals(Item.Rarity.RARE, Item.getItemRarity(100, 555));
+        assertEquals(Item.Rarity.UNCOMMON, Item.getItemRarity(100, 1111));
     }
 
     @Test
     public void itemRarityTest3(){
-        assertEquals(Item.Rarity.RARE, Item.getItemRarity(100, 999));
+        assertEquals(Item.Rarity.RARE, Item.getItemRarity(100, 1500));
+    }
+
+    @Test
+    public void itemRarityTest10(){
+        assertEquals(Item.Rarity.RARE, Item.getItemRarity(359, 24499));
     }
 
     @Test
     public void itemRarityTest4(){
-        assertEquals(Item.Rarity.EPIC, Item.getItemRarity(100, 1000));
+        assertEquals(Item.Rarity.EPIC, Item.getItemRarity(100, 2000));
     }
 
     @Test
     public void itemRarityTest5(){
-        assertEquals(Item.Rarity.EPIC, Item.getItemRarity(100, 1400));
+        assertEquals(Item.Rarity.EPIC, Item.getItemRarity(100, 2800));
     }
 
     @Test
     public void itemRarityTest6(){
-        assertEquals(Item.Rarity.LEGENDARY, Item.getItemRarity(100, 1500));
+        assertEquals(Item.Rarity.LEGENDARY, Item.getItemRarity(100, 3000));
     }
 
     @Test
     public void itemRarityTest7(){
-        assertEquals(null, Item.getItemRarity(100, 1555));
+        assertEquals(null, Item.getItemRarity(100, 3555));
     }
 
     @Test
     public void itemRarityTest8(){
-        assertEquals(Item.Rarity.EPIC, Item.getItemRarity(359, 12250));
+        assertEquals(Item.Rarity.EPIC, Item.getItemRarity(359, 24555));
     }
 
     @Test
     public void itemRarityTest9(){
-        assertEquals(Item.Rarity.RARE, Item.getItemRarity(359, 12249));
+        assertEquals(Item.Rarity.EPIC, Item.getItemRarity(359, 24500));
     }
+
+    @Test
+    public void itemRarityUncommonTest(){
+        assertEquals(Item.Rarity.UNCOMMON, Item.getItemRarity(100, 1001));
+    }
+
+    @Test
+    public void itemRarityUncommonTest2(){
+        assertEquals(Item.Rarity.UNCOMMON, Item.getItemRarity(144, 1001));
+    }
+    @Test
+    public void itemRarityUncommonTest3(){
+        assertEquals(Item.Rarity.UNCOMMON, Item.getItemRarity(107, 1499));
+    }
+    @Test
+    public void itemRarityUncommonTest4(){
+        assertEquals(Item.Rarity.UNCOMMON, Item.getItemRarity(155, 3001));
+    }
+    @Test
+    public void itemRarityUncommonTest5(){
+        assertEquals(Item.Rarity.UNCOMMON, Item.getItemRarity(155, 3749));
+    }
+    @Test
+    public void itemRarityUncommonTest6(){
+        assertEquals(Item.Rarity.UNCOMMON, Item.getItemRarity(155, 3666));
+    }
+
 }
 
