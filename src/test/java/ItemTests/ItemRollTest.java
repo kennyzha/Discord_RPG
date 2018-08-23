@@ -244,4 +244,41 @@ public class ItemRollTest {
         assertTrue(66000 == itemRoll);
         assertTrue(Item.Rarity.LEGENDARY == Item.getItemRarity(level , itemRoll));
     }
+
+    @Test
+    public void itemRollTest(){
+        int common = 0;
+        int uncommon = 0;
+        int rare = 0;
+        int epic = 0;
+        int legendary = 0;
+
+        for(int i = 0; i < 100000; i++){
+            Item.Rarity rarity = Item.rollItemRarity();
+
+            switch(rarity){
+                case COMMON:
+                    common++;
+                    break;
+                case UNCOMMON:
+                    uncommon++;
+                    break;
+                case RARE:
+                    rare++;
+                    break;
+                case EPIC:
+                    epic++;
+                    break;
+                case LEGENDARY:
+                    legendary++;
+                    break;
+            }
+        }
+
+        assertEquals(50000, common, 2500);
+        assertEquals(30000, uncommon, 1500);
+        assertEquals(15000, rare, 750);
+        assertEquals(4000, epic, 200);
+        assertEquals(1000, legendary, 50);
+    }
 }

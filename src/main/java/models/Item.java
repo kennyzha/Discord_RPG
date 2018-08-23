@@ -147,11 +147,13 @@ public class Item {
     public static Rarity rollItemRarity(){
         int roll = generateNumber();
 
-        if(roll > 45){
+        if(roll > 50){
             return Rarity.COMMON;
-        } else if(roll > 15){
+        } else if(roll > 20){
+            return Rarity.UNCOMMON;
+        } else if(roll > 5){
             return Rarity.RARE;
-        } else if(roll > 3){
+        } else if (roll > 1){
             return Rarity.EPIC;
         } else{
             return Rarity.LEGENDARY;
