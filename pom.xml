@@ -14,6 +14,10 @@
             <name>jcenter-bintray</name>
             <url>http://jcenter.bintray.com</url>
         </repository>
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
     </repositories>
 
     <dependencyManagement>
@@ -66,6 +70,11 @@
             <version>1.0.0</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.discordbots</groupId>
+            <artifactId>DBL-Java-Library</artifactId>
+            <version>2.0.1</version>
+        </dependency>
     </dependencies>
 
     <build>
