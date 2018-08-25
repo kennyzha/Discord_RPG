@@ -1,10 +1,11 @@
-# Discord_RPG
 [<img src="https://discordapp.com/api/guilds/449610753566048277/widget.png?style=shield">](https://discord.gg/3Gq4kAr)
 [![Discord Bots](https://discordbots.org/api/widget/status/449444515548495882.svg)](https://discordbots.org/bot/449444515548495882)
 [![Discord Bots](https://discordbots.org/api/widget/servers/449444515548495882.svg)](https://discordbots.org/bot/449444515548495882)
 [![Discord Bots](https://discordbots.org/api/widget/upvotes/449444515548495882.svg)](https://discordbots.org/bot/449444515548495882)
 [![Discord Bots](https://discordbots.org/api/widget/owner/449444515548495882.svg)](https://discordbots.org/bot/449444515548495882)
 
+
+# Discord_RPG
 
 Discord bot that allows users to do things typical in RPG games such as fighting, training and leveling up.
 
