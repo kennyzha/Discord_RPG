@@ -5,6 +5,7 @@ import models.Item;
 import org.junit.Test;
 
 import static junit.framework.TestCase.assertEquals;
+import static junit.framework.TestCase.assertNull;
 import static junit.framework.TestCase.assertTrue;
 
 public class ItemTest {
@@ -144,74 +145,12 @@ public class ItemTest {
 
     @Test
     public void itemRarityTest2(){
-        assertEquals(Item.Rarity.UNCOMMON, Item.getItemRarity(100, 1111));
-    }
-
-    @Test
-    public void itemRarityTest3(){
-        assertEquals(Item.Rarity.RARE, Item.getItemRarity(100, 1500));
-    }
-
-    @Test
-    public void itemRarityTest10(){
-        assertEquals(Item.Rarity.RARE, Item.getItemRarity(359, 24499));
-    }
-
-    @Test
-    public void itemRarityTest4(){
-        assertEquals(Item.Rarity.EPIC, Item.getItemRarity(100, 2000));
-    }
-
-    @Test
-    public void itemRarityTest5(){
-        assertEquals(Item.Rarity.EPIC, Item.getItemRarity(100, 2800));
-    }
-
-    @Test
-    public void itemRarityTest6(){
         assertEquals(Item.Rarity.LEGENDARY, Item.getItemRarity(100, 3000));
     }
 
     @Test
-    public void itemRarityTest7(){
-        assertEquals(null, Item.getItemRarity(100, 3555));
+    public void itemRarityTest3(){
+        assertNull(Item.getItemRarity(100, 3555));
     }
-
-    @Test
-    public void itemRarityTest8(){
-        assertEquals(Item.Rarity.EPIC, Item.getItemRarity(359, 24555));
-    }
-
-    @Test
-    public void itemRarityTest9(){
-        assertEquals(Item.Rarity.EPIC, Item.getItemRarity(359, 24500));
-    }
-
-    @Test
-    public void itemRarityUncommonTest(){
-        assertEquals(Item.Rarity.UNCOMMON, Item.getItemRarity(100, 1001));
-    }
-
-    @Test
-    public void itemRarityUncommonTest2(){
-        assertEquals(Item.Rarity.UNCOMMON, Item.getItemRarity(144, 1001));
-    }
-    @Test
-    public void itemRarityUncommonTest3(){
-        assertEquals(Item.Rarity.UNCOMMON, Item.getItemRarity(107, 1499));
-    }
-    @Test
-    public void itemRarityUncommonTest4(){
-        assertEquals(Item.Rarity.UNCOMMON, Item.getItemRarity(155, 3001));
-    }
-    @Test
-    public void itemRarityUncommonTest5(){
-        assertEquals(Item.Rarity.UNCOMMON, Item.getItemRarity(155, 3749));
-    }
-    @Test
-    public void itemRarityUncommonTest6(){
-        assertEquals(Item.Rarity.UNCOMMON, Item.getItemRarity(155, 3666));
-    }
-
 }
 
