@@ -144,12 +144,12 @@ public class ItemTest {
     }
 
     @Test
-    public void itemRarityTest6(){
+    public void itemRarityTest2(){
         assertEquals(Item.Rarity.LEGENDARY, Item.getItemRarity(100, 3000));
     }
 
     @Test
-    public void itemRarityTest7(){
+    public void itemRarityTest3(){
         assertNull(Item.getItemRarity(100, 3555));
     }
 }
