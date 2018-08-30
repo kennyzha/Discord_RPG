@@ -11,7 +11,7 @@ public class Simulator {
 
         DiscordBotListAPI api = new DiscordBotListAPI.Builder().token(token).botId("449444515548495882").build();
 
-        String userId = "134457842731188224"; // ID of the user you're checking
+        String userId = "190556636312633344"; // ID of the user you're checking
         api.hasVoted(userId).whenComplete((hasVoted, e) -> {
             if(hasVoted)
                 System.out.println("This person has voted!");

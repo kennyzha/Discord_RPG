@@ -1,4 +1,4 @@
-package models;
+package utils;
 
 public class CombatStatistic {
     private int totalDamageDealt, minDmgDealt, maxDmgDealt, numHitsGiven, roundsPassed;

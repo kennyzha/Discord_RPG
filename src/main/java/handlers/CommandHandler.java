@@ -2,15 +2,12 @@ package handlers;
 
 import config.ApplicationConstants;
 import database.PlayerDatabase;
-import listeners.MessageListener;
 import models.*;
-import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.JDA;
-import net.dv8tion.jda.core.MessageBuilder;
 import net.dv8tion.jda.core.entities.*;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
+import utils.CombatResult;
 
-import java.awt.*;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
@@ -87,6 +84,10 @@ public class CommandHandler {
                 String str = "Command not recognized: " + message.getContentDisplay() + ". Type r!commands for list of commands.";
                 sendDefaultEmbedMessage(user, str, messageHandler, channel);
         }
+    }
+
+    public void vote(MessageChannel channel, String[] msgArr, User user) {
+
     }
 
     public void crate(MessageChannel channel, String[] msgArr, User user){

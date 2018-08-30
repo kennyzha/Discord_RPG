@@ -1,8 +1,10 @@
+ItemTests\ItemRollTest$1.class
 MonsterTests\MonsterExpGivenTest.class
 PlayerTests\HealthGainedTests.class
 PlayerTests\LevelUpTests.class
 ItemTests\ItemTest.class
 PlayerTests\LevelExpTests.class
+MonsterTests\MonsterBuildTest.class
 JunitTestSuite.class
 ItemTests\ItemRollTest.class
 PlayerTests\PlayerStatsTest.class

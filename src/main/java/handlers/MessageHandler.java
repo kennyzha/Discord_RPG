@@ -7,6 +7,7 @@ import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.entities.MessageEmbed;
 import net.dv8tion.jda.core.entities.User;
+import utils.CombatResult;
 
 import java.awt.*;
 import java.text.DecimalFormat;

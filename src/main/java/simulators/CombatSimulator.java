@@ -2,11 +2,9 @@ package simulators;
 
 import config.MonsterConstants;
 import handlers.CombatHandler;
-import models.CombatResult;
+import utils.CombatResult;
 import models.Monster;
 import models.Player;
-
-import java.text.DecimalFormat;
 
 public class CombatSimulator {
 

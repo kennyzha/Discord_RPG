@@ -1,9 +1,9 @@
 package handlers;
 
-import com.github.kennedyoliveira.pastebin4j.*;
-import config.ApplicationConstants;
 import models.*;
 import net.dv8tion.jda.core.entities.MessageChannel;
+import utils.CombatStatistic;
+import utils.CombatResult;
 
 public class CombatHandler {
 
