@@ -6,6 +6,8 @@ import utils.CombatResult;
 import models.Monster;
 import models.Player;
 
+import java.text.DecimalFormat;
+
 public class CombatSimulator {
 
     CombatHandler combatHandler;
@@ -30,27 +32,27 @@ public class CombatSimulator {
 //
 //        simulator = new CombatSimulator();
 //
-//        CombatResult pvmResults = simulator.pvm(simulator.player1, MonsterConstants.ORC, 2000);
-//        System.out.println(pvmResults.getCombatString());
-//        System.out.println(pvmResults.getCombatResultString());
+        CombatResult pvmResults = simulator.pvm(simulator.player1, MonsterConstants.ZOMBIE, 200);
+        System.out.println(pvmResults.getCombatString());
+        System.out.println(pvmResults.getCombatResultString());
 
-//       int total = 0;
-//        for(int i = 1; i < 700; i++){
-//            simulator.player1.setLevel(i);
-//            System.out.println("Level " + i);
-//            total += simulator.player1.calcExpToNextLevel();
-//
-//            DecimalFormat format = new DecimalFormat("#,###");
-//            double exp = simulator.player1.calcExpToNextLevel();
-//
-//            int hpGained = simulator.player1.calcActualHealthGained(simulator.player1.calcBaseHealthGained());
-//            simulator.player1.increHealth(hpGained);
-//            System.out.println("Exp to level: " + format.format(exp) + " | HP: " + format.format((double) simulator.player1.getHealth()) + " | HP GAIN: " + hpGained);
-//        }
-//
-//        System.out.println(total);
+/*       int total = 0;
+        for(int i = 1; i < 700; i++){
+            simulator.player1.setLevel(i);
+            System.out.println("Level " + i);
+            total += simulator.player1.calcExpToNextLevel();
 
-        System.out.println(simulator.monstersNeededToLevel(simulator.player1, MonsterConstants.ORC, 100, 150));
+            DecimalFormat format = new DecimalFormat("#,###");
+            double exp = simulator.player1.calcExpToNextLevel();
+
+            int hpGained = simulator.player1.calcActualHealthGained(simulator.player1.calcBaseHealthGained());
+            simulator.player1.increHealth(hpGained);
+            System.out.println("Exp to level: " + format.format(exp) + " | HP: " + format.format((double) simulator.player1.getHealth()) + " | HP GAIN: " + hpGained);
+        }
+
+        System.out.println(total);*/
+
+//        System.out.println(simulator.monstersNeededToLevel(simulator.player1, MonsterConstants.ZOmbi, 100, 150));
 
     }
 
@@ -60,13 +62,14 @@ public class CombatSimulator {
         player2 = new Player("2");
 
 //        player1.setStats(30000,40000,30000);
-        player1.setStats(60000,60000,30000);
-
-
+        player1.setStats(3000,5000,1100);
+        player1.setWeapon(4000);
+        player1.setArmor(3000);
+        player1.setLevel(500);
+        player1.setHealth(29000);
 
         player2.setStats(15000,45000,90000);
  //       player2.setStats(20000, 30000, 50000);
-        player2.setHealth(450000);
 
 
     }

@@ -17,7 +17,6 @@ handlers\TrainingHandler.class
 handlers\MessageHandler$1.class
 listeners\MessageListener.class
 models\Vote.class
-handlers\VoteRewardHandler.class
 Rpg.class
 simulators\CombatSimulator.class
 models\Player$Stat.class

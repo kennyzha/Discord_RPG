@@ -76,7 +76,7 @@ public class CommandHandler {
                 break;
             case "r!credits":
                 String credits = "The concept of power, speed, and strength is based on an old school RPG game called hobowars. " +
-                        "The game icons used in this are available on https://game-icons.net";
+                        "The item icons used in this are available on https://game-icons.net";
                 sendDefaultEmbedMessage(user, credits, messageHandler, channel);
                 break;
             case "r!vote":
@@ -91,9 +91,11 @@ public class CommandHandler {
     }
 
     public void vote(MessageChannel channel, User user) {
-        String msg = "You may vote for the bot every 12 hours. Your stamina will reset to 20 each time you vote. In addition to the " +
-                "stamina reset, on Friday, Saturday, and Sunday's you will get a crate worth of gold added to your account. + \n\n " +
-                " Vote Link: https://discordbots.org/bot/449444515548495882";
+        String msg = "You may vote for the bot every 12 hours. As a reward, your stamina will refresh to 20 each time you vote." +
+                " On Friday, Saturday, and Sunday, you will also get a crate worth of gold added to your account. Thanks for supporting Discord RPG!\n\n " +
+                "https://discordbots.org/bot/449444515548495882";
+
+        sendDefaultEmbedMessage(user, msg, messageHandler, channel);
     }
 
     public void crate(MessageChannel channel, String[] msgArr, User user){
