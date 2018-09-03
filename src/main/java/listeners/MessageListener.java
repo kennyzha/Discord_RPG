@@ -1,5 +1,6 @@
 package listeners;
 
+import config.ApplicationConstants;
 import database.PlayerDatabase;
 import handlers.*;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
@@ -17,9 +18,11 @@ public class MessageListener extends ListenerAdapter {
     }
     @Override
     public void onMessageReceived(MessageReceivedEvent event) {
-        if(event.getAuthor().isBot()){
+        if(event.getAuthor().isBot() || ApplicationConstants.getBlackList().contains(event.getAuthor().getId())){
             return;
         }
         new CommandHandler(playerDatabase, messageHandler, highscoreHandler).handleCommand(event);
     }
+
+
 }
