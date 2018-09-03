@@ -28,7 +28,6 @@ public class CommandHandler {
         User user = event.getAuthor();                //The user that sent the message
         Message message = event.getMessage();           //The message that was received.
         MessageChannel channel = event.getChannel();    //This is the MessageChannel that the message was sent to.
-
         String msg = message.getContentDisplay().toLowerCase();
         String[] msgArr = msg.split(" ");
 
@@ -41,9 +40,6 @@ public class CommandHandler {
                 break;
             case "r!help":
                 help(channel, user);
-                break;
-            case "r!commands":
-                commands(channel, user);
                 break;
             case "r!train":
             case "r!t":
@@ -67,18 +63,26 @@ public class CommandHandler {
             case"r!highscores":
                 highscore(channel, msgArr, user, event.getJDA());
                 break;
-            case "r!server":
-                String link = "Link to official RPG server.  Join for update announcements and to give feedback to help shape the development of the game.\n\nhttps://discord.gg/3Gq4kAr";
-                sendDefaultEmbedMessage(user,link, messageHandler, channel);
-                break;
             case "r!crate":
             case"r!crates":
                 crate(channel, msgArr, user);
+                break;
+             case "r!server":
+                String link = "Link to official RPG server.  Join for update announcements and to give feedback to help shape the development of the game.\n\nhttps://discord.gg/3Gq4kAr";
+                sendDefaultEmbedMessage(user,link, messageHandler, channel);
+                break;
+            case "r!commands":
+                commands(channel, user);
                 break;
             case "r!credits":
                 String credits = "The concept of power, speed, and strength is based on an old school RPG game called hobowars. " +
                         "The game icons used in this are available on https://game-icons.net";
                 sendDefaultEmbedMessage(user, credits, messageHandler, channel);
+                break;
+            case "r!vote":
+            case "r!votes":
+            case "r!daily":
+                vote(channel, user);
                 break;
             default:
                 String str = "Command not recognized: " + message.getContentDisplay() + ". Type r!commands for list of commands.";
@@ -86,8 +90,10 @@ public class CommandHandler {
         }
     }
 
-    public void vote(MessageChannel channel, String[] msgArr, User user) {
-
+    public void vote(MessageChannel channel, User user) {
+        String msg = "You may vote for the bot every 12 hours. Your stamina will reset to 20 each time you vote. In addition to the " +
+                "stamina reset, on Friday, Saturday, and Sunday's you will get a crate worth of gold added to your account. + \n\n " +
+                " Vote Link: https://discordbots.org/bot/449444515548495882";
     }
 
     public void crate(MessageChannel channel, String[] msgArr, User user){
@@ -101,7 +107,7 @@ public class CommandHandler {
                 return;
             }
 
-            int crateCost = Crate.cost[Item.getLevelBracket(playerLevel) - 1];
+            int crateCost = Crate.cost[Item.getLevelBracket(playerLevel)];
             int lowerBound = Item.getLowerBoundStat(playerLevel);
             int upperBound = Item.getUpperBoundStat(playerLevel);
 
