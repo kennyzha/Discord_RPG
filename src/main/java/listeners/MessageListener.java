@@ -1,18 +1,10 @@
 package listeners;
 
 import config.ApplicationConstants;
-import config.MonsterConstants;
 import database.PlayerDatabase;
 import handlers.*;
-import models.CombatResult;
-import models.Monster;
-import models.Player;
-import models.Stamina;
-import net.dv8tion.jda.core.entities.*;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
-
-import java.util.List;
 
 public class MessageListener extends ListenerAdapter {
     private PlayerDatabase playerDatabase;
@@ -26,9 +18,11 @@ public class MessageListener extends ListenerAdapter {
     }
     @Override
     public void onMessageReceived(MessageReceivedEvent event) {
-        if(event.getAuthor().isBot()){
+        if(event.getAuthor().isBot() || ApplicationConstants.getBlackList().contains(event.getAuthor().getId())){
             return;
         }
         new CommandHandler(playerDatabase, messageHandler, highscoreHandler).handleCommand(event);
     }
+
+
 }

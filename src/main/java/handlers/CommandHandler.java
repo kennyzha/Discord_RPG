@@ -2,15 +2,12 @@ package handlers;
 
 import config.ApplicationConstants;
 import database.PlayerDatabase;
-import listeners.MessageListener;
 import models.*;
-import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.JDA;
-import net.dv8tion.jda.core.MessageBuilder;
 import net.dv8tion.jda.core.entities.*;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
+import utils.CombatResult;
 
-import java.awt.*;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
@@ -31,10 +28,8 @@ public class CommandHandler {
         User user = event.getAuthor();                //The user that sent the message
         Message message = event.getMessage();           //The message that was received.
         MessageChannel channel = event.getChannel();    //This is the MessageChannel that the message was sent to.
-
         String msg = message.getContentDisplay().toLowerCase();
         String[] msgArr = msg.split(" ");
-
         if(msgArr.length == 0 || !msgArr[0].startsWith(COMMAND_PREFIX))
             return;
 
@@ -44,9 +39,6 @@ public class CommandHandler {
                 break;
             case "r!help":
                 help(channel, user);
-                break;
-            case "r!commands":
-                commands(channel, user);
                 break;
             case "r!train":
             case "r!t":
@@ -70,23 +62,39 @@ public class CommandHandler {
             case"r!highscores":
                 highscore(channel, msgArr, user, event.getJDA());
                 break;
-            case "r!server":
-                String link = "Link to official RPG server.  Join for update announcements and to give feedback to help shape the development of the game.\n\nhttps://discord.gg/3Gq4kAr";
-                sendDefaultEmbedMessage(user,link, messageHandler, channel);
-                break;
             case "r!crate":
             case"r!crates":
                 crate(channel, msgArr, user);
                 break;
+             case "r!server":
+                String link = "Link to official RPG server.  Join for update announcements and to give feedback to help shape the development of the game.\n\nhttps://discord.gg/3Gq4kAr";
+                sendDefaultEmbedMessage(user,link, messageHandler, channel);
+                break;
+            case "r!commands":
+                commands(channel, user);
+                break;
             case "r!credits":
                 String credits = "The concept of power, speed, and strength is based on an old school RPG game called hobowars. " +
-                        "The game icons used in this are available on https://game-icons.net";
+                        "The item icons used in this are available on https://game-icons.net";
                 sendDefaultEmbedMessage(user, credits, messageHandler, channel);
+                break;
+            case "r!vote":
+            case "r!votes":
+            case "r!daily":
+                vote(channel, user);
                 break;
             default:
                 String str = "Command not recognized: " + message.getContentDisplay() + ". Type r!commands for list of commands.";
                 sendDefaultEmbedMessage(user, str, messageHandler, channel);
         }
+    }
+
+    public void vote(MessageChannel channel, User user) {
+        String msg = "You may vote for the bot every 12 hours. As a reward, your stamina will refresh to 20 each time you vote." +
+                " On Friday, Saturday, and Sunday, you will also get a crate worth of gold added to your account. Thanks for supporting Discord RPG!\n\n " +
+                "https://discordbots.org/bot/449444515548495882";
+
+        sendDefaultEmbedMessage(user, msg, messageHandler, channel);
     }
 
     public void crate(MessageChannel channel, String[] msgArr, User user){
@@ -100,7 +108,7 @@ public class CommandHandler {
                 return;
             }
 
-            int crateCost = Crate.cost[Item.getLevelBracket(playerLevel) - 1];
+            int crateCost = Crate.cost[Item.getLevelBracket(playerLevel)];
             int lowerBound = Item.getLowerBoundStat(playerLevel);
             int upperBound = Item.getUpperBoundStat(playerLevel);
 
@@ -156,13 +164,15 @@ public class CommandHandler {
                             playerGold -= totalCost;
                             player.setGold(playerGold);
 
+
                             if(Item.getItemRarity(playerLevel, newPlayerItemStat) != null && Item.getItemRarity(playerLevel, newPlayerItemStat) == Item.Rarity.LEGENDARY){
                                 double oldStatTotal = player.getTotalStats();
                                 player.applyLegendaryEffect();
                                 double statsGained = player.getTotalStats() - oldStatTotal;
 
-                                sb.append("\nLegendary effect is applied. Total stats will increase by 5% permanently. Your total stats increased by " + format.format(statsGained) + "\n");
-
+                                String legendaryEffect = "Legendary effect is applied. Total stats will increase by 5% permanently. \n Your total stats increased by " + format.format(statsGained) + ".";
+                                sb.append("\n" +  legendaryEffect + "\n");
+                                channel.getJDA().getGuildById("449610753566048277").getTextChannelById("486328955415298060").sendMessage(messageHandler.createDefaultEmbedMessage(user, legendaryEffect)).queue();
                             }
 
                             playerDatabase.insertPlayer(player);

@@ -1,4 +1,4 @@
-package models;
+package utils;
 
 public class CombatResult {
     private StringBuilder combatString;
