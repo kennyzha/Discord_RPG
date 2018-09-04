@@ -7,8 +7,6 @@
 
 # Discord_RPG
 
-[<img src="https://discordapp.com/api/guilds/449610753566048277/widget.png?style=shield">](https://discord.gg/3Gq4kAr)
-
 Discord bot that allows users to do things typical in RPG games such as fighting, training and leveling up.
 
 The game has 3 stats that you can train with stamina which you gain every 5 minutes. Power gives you more damage, speed allows you to get more hits in, and strength gives you more defense while also adding a little bit more damage. 
