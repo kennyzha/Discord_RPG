@@ -56,7 +56,9 @@ public class MessageHandler {
     public MessageEmbed createEmbedTrainMessage(User user, double statGained, String statType, int staminaUsed, int staminaLeft){
         EmbedBuilder eb = new EmbedBuilder();
         setEmbedMessageDefaults(eb , user);
-        eb.setDescription(String.format("You gained " + statGained + " %s. You used %s stamina and now have %s stamina left.", statType, staminaUsed, staminaLeft));
+
+        eb.setDescription(String.format("You gained " + statGained + " %s.", statType));
+        eb.setFooter(String.format("Stamina: %s / 20 (-%s)", staminaLeft + staminaUsed, staminaUsed), null);
 
         if(statType.equals("power"))
             eb.setThumbnail(ApplicationConstants.POWER_IMG);

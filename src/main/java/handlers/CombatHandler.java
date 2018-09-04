@@ -5,11 +5,16 @@ import net.dv8tion.jda.core.entities.MessageChannel;
 import utils.CombatStatistic;
 import utils.CombatResult;
 
+import java.text.DecimalFormat;
+
 public class CombatHandler {
 
     private CombatResult combatResult;
+    private DecimalFormat format;
+
     public CombatHandler() {
         this.combatResult = new CombatResult();
+        this.format = new DecimalFormat("#,###.##");
     }
 
     public CombatResult fightMonster(Player player, Monster monster, int numTimes){
@@ -31,7 +36,7 @@ public class CombatHandler {
             }
         }
 
-        combatResult.appendToCombatResult(String.format("\nYou won %d/%d times and gained %s exp and %s gold.", numWins, numTimes, totalExpEarned, totalGoldEarned));
+        combatResult.appendToCombatResult(String.format("\nYou won %d/%d times and gained %s exp and %s gold.", numWins, numTimes, format.format(totalExpEarned), format.format(totalGoldEarned)));
 
         player.increGold(totalGoldEarned);
         playerLevelUp(player, totalExpEarned);
@@ -65,13 +70,13 @@ public class CombatHandler {
                 curHealth2 = curHealth2 - hitDmg > 0 ? (curHealth2 - hitDmg) : 0;
 
                 entityOneStats.updateDamageStats(hitDmg);
-                combatResult.appendToCombatString(String.format(roundNumber + ". You did %s dmg (%s left)\n", hitDmg, curHealth2));
+                combatResult.appendToCombatString(String.format(roundNumber + ". You did %s dmg (%s left)\n", format.format(hitDmg), format.format(curHealth2)));
             } else{
                 int hitDmg = calcHitDamage(p2, p1, p2.getWeapon(),p1.getArmor());
                 curHealth = (curHealth - hitDmg) > 0 ? (curHealth - hitDmg) : 0;
 
                 entityTwoStats.updateDamageStats(hitDmg);
-                combatResult.appendToCombatString(String.format(roundNumber + ". He did %s dmg (%s left)\n", hitDmg, curHealth));
+                combatResult.appendToCombatString(String.format(roundNumber + ". He did %s dmg (%s left)\n", format.format(hitDmg), format.format(curHealth)));
             }
 
             entityOneStats.increRoundsPassed(1);
@@ -79,7 +84,7 @@ public class CombatHandler {
         }
 
         if(curHealth > 0 && curHealth2 > 0){
-            combatResult.appendToCombatResult(String.format("The fight ended with a draw because 200 rounds have gone by. You have %s health remaining while the enemy has %s health remaining.\n", curHealth, curHealth2));
+            combatResult.appendToCombatResult(String.format("The fight ended with a draw because 200 rounds have gone by. You have %s health remaining while the enemy has %s health remaining.\n", format.format(curHealth), format.format(curHealth2)));
             combatResult.setWinner(false);
         }
     }
@@ -95,7 +100,7 @@ public class CombatHandler {
         int healthGained = player.getHealth() - oldHealth;
 
         if(lvlsGained == 1){
-            combatResult.appendToCombatResult( String.format(" You have gained a level and %s health. You are now level %s.", healthGained, player.getLevel()));
+            combatResult.appendToCombatResult( String.format(" You have gained a level and %s health. You are now level %s.",healthGained, player.getLevel()));
         } else if(lvlsGained > 1){
             combatResult.appendToCombatResult( String.format(" You have gained %s levels and %s health. You are now level %s.", lvlsGained, healthGained, player.getLevel()));
         }
@@ -103,11 +108,11 @@ public class CombatHandler {
 
     public boolean isFightOver(int health, int health2, int round){
         if(health <= 0){
-            combatResult.appendToCombatResult(String.format("The enemy won the fight with %s health left on round %s.\n", health2, round));
+            combatResult.appendToCombatResult(String.format("The enemy won the fight with %s health left on round %s.\n", format.format(health2), round));
             combatResult.setWinner(false);
             return true;
         } else if(health2 <= 0){
-            combatResult.appendToCombatResult(String.format("You won the fight with %s health left on round %s.\n", health, round));
+            combatResult.appendToCombatResult(String.format("You won the fight with %s health left on round %s.\n", format.format(health), round));
             combatResult.setWinner(true);
             return true;
         }
