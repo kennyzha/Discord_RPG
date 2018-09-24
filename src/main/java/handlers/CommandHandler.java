@@ -58,8 +58,10 @@ public class CommandHandler {
             case "r!monsters":
                 monsters(channel, user);
                 break;
-            case"r!highscore":
-            case"r!highscores":
+            case "r!highscore":
+            case "r!highscores":
+            case "r!leaderboards":
+            case "r!leaderboard":
                 highscore(channel, msgArr, user, event.getJDA());
                 break;
             case "r!crate":
@@ -83,6 +85,7 @@ public class CommandHandler {
             case "r!daily":
                 vote(channel, user);
                 break;
+
             default:
                 String str = "Command not recognized: " + message.getContentDisplay() + ". Type r!commands for list of commands.";
                 sendDefaultEmbedMessage(user, str, messageHandler, channel);
@@ -242,11 +245,11 @@ public class CommandHandler {
 
                     TrainingHandler trainingHandler = new TrainingHandler(player, user, curStamina, channel, playerDatabase);
 
-                    if(statToTrain.equals("speed")){
+                    if(statToTrain.equals("speed") || statToTrain.equals("spd")){
                         trainingHandler.trainSpeed(numTimesToTrain);
-                    }else if(statToTrain.equals("power")){
+                    }else if(statToTrain.equals("power")  || statToTrain.equals("pwr") || statToTrain.equals("pow")){
                         trainingHandler.trainPower(numTimesToTrain);
-                    }else if(statToTrain.equals("strength")){
+                    }else if(statToTrain.equals("strength") || statToTrain.equals("str")){
                         trainingHandler.trainStrength(numTimesToTrain);
                     } else{
                         channel.sendMessage(messageHandler.createDefaultEmbedMessage(user, "Invalid argument. Failed to train:" + statToTrain + ". You can only train power, speed and strength.")).queue();

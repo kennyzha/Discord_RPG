@@ -158,10 +158,8 @@ public class Player extends Entity{
             multiplier = 2.5;
         } else if(getLevel() <= 200){
             multiplier = 2.25;
-        } else if(getLevel() <= 300){
+        } else {
             multiplier = 2;
-        } else{
-            return 600;
         }
         return (int) (multiplier * getLevel());
     }

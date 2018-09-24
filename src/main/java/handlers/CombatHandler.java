@@ -100,9 +100,9 @@ public class CombatHandler {
         int healthGained = player.getHealth() - oldHealth;
 
         if(lvlsGained == 1){
-            combatResult.appendToCombatResult( String.format(" You have gained a level and %s health. You are now level %s.",healthGained, player.getLevel()));
+            combatResult.appendToCombatResult( String.format("\nYou have gained a level and %s health.\nYou are now level %s.",healthGained, player.getLevel()));
         } else if(lvlsGained > 1){
-            combatResult.appendToCombatResult( String.format(" You have gained %s levels and %s health. You are now level %s.", lvlsGained, healthGained, player.getLevel()));
+            combatResult.appendToCombatResult( String.format("\nYou have gained %s levels and %s health.\nYou are now level %s.", lvlsGained, healthGained, player.getLevel()));
         }
     }
 
