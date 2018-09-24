@@ -282,6 +282,13 @@ public class CommandHandler {
 
                 Player player = playerDatabase.grabPlayer(user.getId());
                 CombatResult pvpResults = combatHandler.fightPlayer(player, mentionedPlayer);
+
+                StringBuilder customMessage = new StringBuilder();
+                for(int i = 2; i < msgArr.length; i++){
+                    customMessage.append(msgArr[i]);
+                }
+
+                customMessage.setLength(50);
                 channel.sendMessage(messageHandler.createEmbedFightMessage(user, enemyName, pvpResults)).queue();
             }
         }

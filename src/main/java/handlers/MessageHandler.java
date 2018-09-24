@@ -43,15 +43,23 @@ public class MessageHandler {
     }
 
     public MessageEmbed createEmbedFightMessage(User user, String enemyName, CombatResult combatResult){
+        return createEmbedFightMessage(user, enemyName, combatResult, "");
+    }
+
+    public MessageEmbed createEmbedFightMessage(User user, String enemyName, CombatResult combatResult, String customMessage) {
         EmbedBuilder eb = new EmbedBuilder();
         setEmbedMessageDefaults(eb , user);
 
         eb.setTitle(user.getName() + " vs " + enemyName);
         eb.setDescription(combatResult.getCombatResultString() + "\n" + combatResult.getEntityOneStats().toString());
         eb.setThumbnail(ApplicationConstants.FIGHT_IMG);
+
+        if(!customMessage.equals("")){
+            eb.appendDescription("\n" + customMessage);
+        }
+
         return eb.build();
     }
-
 
     public MessageEmbed createEmbedTrainMessage(User user, double statGained, String statType, int staminaUsed, int staminaLeft){
         EmbedBuilder eb = new EmbedBuilder();
