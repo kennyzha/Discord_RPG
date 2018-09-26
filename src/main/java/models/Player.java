@@ -152,17 +152,16 @@ public class Player extends Entity{
     }
 
     public int calcBaseHealthGained(){
-        double multiplier = 1;
+        double multiplier;
 
         if(getLevel() <= 100){
             multiplier = 2.5;
         } else if(getLevel() <= 200){
             multiplier = 2.25;
-        } else if(getLevel() <= 300){
+        } else {
             multiplier = 2;
-        } else{
-            return 600;
         }
+
         return (int) (multiplier * getLevel());
     }
 

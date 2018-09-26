@@ -66,7 +66,11 @@ public class CommandHandler {
             case"r!crates":
                 crate(channel, msgArr, user);
                 break;
-             case "r!server":
+            case "r!gamble": 
+            case "r!bet":
+                gamble(channel, msgArr, user);
+                break;
+            case "r!server":
                 String link = "Link to official RPG server.  Join for update announcements and to give feedback to help shape the development of the game.\n\nhttps://discord.gg/3Gq4kAr";
                 sendDefaultEmbedMessage(user,link, messageHandler, channel);
                 break;
@@ -86,6 +90,47 @@ public class CommandHandler {
             default:
                 String str = "Command not recognized: " + message.getContentDisplay() + ". Type r!commands for list of commands.";
                 sendDefaultEmbedMessage(user, str, messageHandler, channel);
+        }
+    }
+
+    private void gamble(MessageChannel channel, String[] msgArr, User user) {
+
+        if(msgArr.length == 1){
+            sendDefaultEmbedMessage(user, "A random number will be generated between 0 and 100. You win twice your bet amount if the number is greater than or equal to 50. r!gamble 500", messageHandler, channel);
+            return;
+        }
+
+        try{
+            int betAmount = Integer.parseInt(msgArr[1]);
+
+            if(betAmount < 100 || betAmount > 500000){
+                sendDefaultEmbedMessage(user, "Minimum wager is 100 gold and maximum wager is 500,000 gold.", messageHandler, channel);
+                return;
+            }
+
+            Player player = playerDatabase.grabPlayer(user.getId());
+            int playerGold = player.getGold();
+
+            if(playerGold < betAmount){
+                sendDefaultEmbedMessage(user, String.format("Unable to wage %s due to insufficient gold. You only have %s gold.", betAmount, playerGold), messageHandler, channel);
+            } else{
+                int roll = (int) (Math.random() * 101);
+                String result = "";
+                if(roll >= 50){
+                    playerGold += betAmount;
+                    result = String.format("You rolled a %s. You won %s gold! You now have %s gold.", roll, betAmount, playerGold);
+                } else{
+                    playerGold -= betAmount;
+                    result = String.format("You rolled a %s. You lost %s gold! You now have %s gold.", roll, betAmount, playerGold);
+                }
+
+                player.setGold(playerGold);
+                playerDatabase.insertPlayer(player);
+                sendDefaultEmbedMessage(user, result, messageHandler, channel);
+            }
+        } catch(NumberFormatException e){
+            sendDefaultEmbedMessage(user, "Please enter a number. r!gamble NUMBER", messageHandler, channel);
+
         }
     }
 
