@@ -10,6 +10,9 @@ public class Player extends Entity{
     private int levelExp, woodCuttingExp;
     private boolean alive;
 
+    private String forageDate;
+    private int forageAmount;
+
     public enum Stat {POWER, SPEED, STRENGTH};
     public Player(String id) {
         super(1, 200, 1, 1, 1);
@@ -19,9 +22,25 @@ public class Player extends Entity{
         this.levelExp = 0;
         this.woodCuttingExp = 0;
         this.alive = true;
-
+        this.forageDate = "";
+        this.forageAmount = 0;
     }
 
+    public String getForageDate() {
+        return forageDate;
+    }
+
+    public void setForageDate(String forageDate) {
+        this.forageDate = forageDate;
+    }
+
+    public int getForageAmount() {
+        return forageAmount;
+    }
+
+    public void setForageAmount(int forageAmount) {
+        this.forageAmount = forageAmount;
+    }
     public int getGold() {
         return gold;
     }

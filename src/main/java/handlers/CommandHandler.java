@@ -9,6 +9,7 @@ import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import utils.CombatResult;
 
 import java.text.DecimalFormat;
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 public class CommandHandler {
@@ -66,10 +67,12 @@ public class CommandHandler {
             case"r!crates":
                 crate(channel, msgArr, user);
                 break;
-            case "r!gamble": 
-            case "r!bet":
-                gamble(channel, msgArr, user);
-                break;
+//            case "r!gamble":
+//            case "r!bet":
+//                gamble(channel, msgArr, user);
+//                break;
+//            case "r!forage":
+//                forage(channel, msgArr, user);
             case "r!server":
                 String link = "Link to official RPG server.  Join for update announcements and to give feedback to help shape the development of the game.\n\nhttps://discord.gg/3Gq4kAr";
                 sendDefaultEmbedMessage(user,link, messageHandler, channel);
@@ -91,6 +94,32 @@ public class CommandHandler {
                 String str = "Command not recognized: " + message.getContentDisplay() + ". Type r!commands for list of commands.";
                 sendDefaultEmbedMessage(user, str, messageHandler, channel);
         }
+    }
+
+    private void forage(MessageChannel channel, String[] msgArr, User user){
+        LocalDate date = LocalDate.now();
+
+        Player player = playerDatabase.grabPlayer(user.getId());
+
+        try{
+            int amount = Integer.parseInt(msgArr[1]);
+
+
+            if(amount <= 0 || (player.getForageDate().equals(date.toString()) && player.getForageAmount() + amount > 20)){
+                String msg = String.format("You can only forage 20 times a day. You have already foraged %s times today.", player.getForageAmount());
+                sendDefaultEmbedMessage(user, msg, messageHandler, channel);
+            }
+
+            StringBuilder sb = new StringBuilder();
+
+            for(int i = 0; i < amount; i++){
+
+            }
+
+        } catch(NumberFormatException e){
+
+        }
+
     }
 
     private void gamble(MessageChannel channel, String[] msgArr, User user) {
@@ -181,7 +210,7 @@ public class CommandHandler {
                     try{
                         int numBuys = Integer.parseInt(msgArr[2]);
 
-                        if(numBuys > 10 && numBuys > 0){
+                        if(numBuys > 10 || numBuys <= 0){
                             String msg = "You can only buy a max of 10 crates at a time.";
                             sendDefaultEmbedMessage(user, msg, messageHandler, channel);
                             return;
