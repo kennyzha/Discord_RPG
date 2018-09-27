@@ -142,7 +142,7 @@ public class CommandHandler {
     private void gamble(MessageChannel channel, String[] msgArr, User user) {
 
         if(msgArr.length == 1){
-            sendDefaultEmbedMessage(user, "A random number will be generated between 0 and 100. You win twice your bet amount if the number is greater than or equal to 50. r!gamble 500", messageHandler, channel);
+            sendDefaultEmbedMessage(user, "A random number will be generated between 0 and 100. You win twice your bet amount if the number is greater than 50. r!gamble 500", messageHandler, channel);
             return;
         }
 
@@ -162,7 +162,7 @@ public class CommandHandler {
             } else{
                 int roll = (int) (Math.random() * 101);
                 String result = "";
-                if(roll >= 50){
+                if(roll > 50){
                     playerGold += betAmount;
                     result = String.format("You rolled a %s. You won %s gold! You now have %s gold.", roll, betAmount, playerGold);
                 } else{
@@ -299,7 +299,6 @@ public class CommandHandler {
 
             if(mentionedPlayer != null){
                 User mentionedUser = message.getMentionedMembers().get(0).getUser();
-                Stamina mentionedUserStamina = playerDatabase.retreivePlayerStamina(mentionedUser.getId());
                 channel.sendMessage(messageHandler.createProfileEmbed(mentionedUser, mentionedPlayer)).queue();
             }
         }
@@ -328,7 +327,6 @@ public class CommandHandler {
                     channel.sendMessage(messageHandler.createDefaultEmbedMessage(user, "Please include a number between 1 and 20 and the type of stat you would like to train. e.g. r!train power 10")).queue();
                 } else{
                     Player player = playerDatabase.grabPlayer(user.getId());
-                    Stamina curStamina = playerDatabase.retreivePlayerStamina(user.getId());
 
                     TrainingHandler trainingHandler = new TrainingHandler(player, user, channel, playerDatabase);
 
@@ -349,13 +347,10 @@ public class CommandHandler {
     }
 
     public void stamina(MessageChannel channel, User user){
-        Stamina curStamina = playerDatabase.retreivePlayerStamina(user.getId());
-        if(curStamina == null)
-        {
-            channel.sendMessage(messageHandler.createDefaultEmbedMessage(user, "Please register an account into the system with !profile.")).queue();
-        } else{
-            channel.sendMessage(messageHandler.createDefaultEmbedMessage(user, "You currently have " + curStamina.getStamina() + " stamina.")).queue();
-        }
+        int curStamina = playerDatabase.grabPlayer(user.getId()).getStamina();
+
+        channel.sendMessage(messageHandler.createDefaultEmbedMessage(user, "You currently have " + curStamina + " stamina.")).queue();
+
     }
 
     public void fight(MessageChannel channel, Message message, User user){
@@ -398,21 +393,22 @@ public class CommandHandler {
             sendDefaultEmbedMessage(user, inputtedName + " is not a valid monster name. Please type a valid name of the monster you wish to hunt e.g. r!!hunt slime. r!monsters for list of monsters.", messageHandler, channel);
         } else{
             Player player = playerDatabase.grabPlayer(user.getId());
-            Stamina curStamina = playerDatabase.retreivePlayerStamina(user.getId());
 
             try{
-                int numTimesToHunt = Math.min(Integer.parseInt(msgArr[2]), curStamina.getStamina());
+                int numTimesToHunt = Math.min(Integer.parseInt(msgArr[2]), player.getStamina());
 
                 if(numTimesToHunt == 0){
                     sendDefaultEmbedMessage(user, "You are too tired to hunt monsters. You recover 1 stamina every 5 minutes.", messageHandler, channel);
                     return;
+                } else if(numTimesToHunt > 20 || numTimesToHunt < 0){
+                    sendDefaultEmbedMessage(user, "You can only hunt a maximum of 20 monsters at a time. If you hunt too many at once they might go extinct!", messageHandler, channel);
+                    return;
                 }
 
-                curStamina.setStamina(curStamina.getStamina() - numTimesToHunt);
+                player.setStamina(player.getStamina() - numTimesToHunt);
                 CombatResult pvmResults = handler.fightMonster(player, monster, numTimesToHunt);
 
                 playerDatabase.insertPlayer(player);
-                playerDatabase.insertPlayerStamina(curStamina);
 
                 channel.sendMessage(messageHandler.createEmbedFightMessage(user, monster.getName(), pvmResults)).queue();
 
