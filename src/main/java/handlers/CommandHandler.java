@@ -69,7 +69,7 @@ public class CommandHandler {
                 break;
             case "r!crate":
             case"r!crates":
-                crate(channel, msgArr, user);
+                crate(channel, msgArr, user, false);
                 break;
             case "r!gamble":
             case "r!bet":
@@ -126,24 +126,27 @@ public class CommandHandler {
         Player player = playerDatabase.grabPlayer(user.getId());
         String msg = "";
 
+        if(!player.getForageDate().equals(date.toString())){
+            player.setForageAmount(0);
+            player.setForageDate(date.toString());
+        }
+
         if(msgArr.length == 1){
-            msg = "foraging default msg";
+            msg = String.format("You can only forage 20 times a day. You have already foraged %s times today.", player.getForageAmount());
             sendDefaultEmbedMessage(user, msg, messageHandler, channel);
             return;
         }
         try{
             int amount = Integer.parseInt(msgArr[1]);
 
-
-            if(amount <= 0 || (player.getForageDate().equals(date.toString()) && player.getForageAmount() + amount > 20)){
+            if(amount > 20 || amount <= 0 || player.getForageAmount() + amount > 20){
                 msg = String.format("You can only forage 20 times a day. You have already foraged %s times today.", player.getForageAmount());
                 sendDefaultEmbedMessage(user, msg, messageHandler, channel);
                 return;
             }
 
             StringBuilder sb = new StringBuilder();
-            HashMap<String, Integer> inventory = player.getInventory();
-
+            int accessoryCratesFound = 0;
             for(int i = 0; i < amount; i++){
                 int roll = (int) (Math.random() * 1000) + 1;
                 Item itemRolled;
@@ -158,25 +161,35 @@ public class CommandHandler {
                         itemRolled = ItemConstants.STRENGTH_POTION;
                     }
                     player.addItem(itemRolled.toString());
-                    sb.append(String.format("You found a %s!", itemRolled.toString()));
+                    sb.append(String.format("You searched high and low and found a %s!\n", itemRolled.toString()));
                 } else if(roll > 100){
                     itemRolled = ItemConstants.STAMINA_POTION;
                     player.addItem(itemRolled.toString());
-                    sb.append(String.format("You found a %s!", itemRolled.toString()));
+                    sb.append(String.format("You searched high and low and found a %s!\n", itemRolled.toString()));
                 } else if(roll > 50){
                     player.increExp(player.calcExpToNextLevel());
                     player.updateLevelAndExp();
-                    sb.append("You gained a level! \n");
+                    sb.append("You wandered around aimlessly and magically gained a level!\n");
                 } else{
-                    crate();
+                    if(player.getLevel() < 50){
+                        player.increExp(player.calcExpToNextLevel());
+                        player.updateLevelAndExp();
+                        sb.append("You wandered around aimlessly and magically gained a level!\n");
+                    } else{
+                        sb.append("You found an accessory crate lying on the floor!\n");
+                        accessoryCratesFound++;
+                    }
                 }
-
             }
-            sendDefaultEmbedMessage(user, msg, messageHandler, channel);
+            sendDefaultEmbedMessage(user, sb.toString(), messageHandler, channel);
 
             player.setForageAmount(player.getForageAmount() + amount);
             player.setForageDate(LocalDate.now().toString());
             playerDatabase.insertPlayer(player);
+
+
+            crate(channel, new String[]{"r!crate", "accessory", Integer.toString(accessoryCratesFound)}, user, true);
+
 
         } catch(NumberFormatException e){
             msg = String.format("Please enter a a valid number. You can only forage 20 times a day. You have already foraged %s times today.", player.getForageAmount());
@@ -234,7 +247,7 @@ public class CommandHandler {
         sendDefaultEmbedMessage(user, msg, messageHandler, channel);
     }
 
-    public void crate(MessageChannel channel, String[] msgArr, User user){
+    public void crate(MessageChannel channel, String[] msgArr, User user, boolean forage){
         Player player = playerDatabase.grabPlayer(user.getId());
 
         if(player != null){
@@ -261,6 +274,11 @@ public class CommandHandler {
                 } else if(msgArr[1].equals("arm") || msgArr[1].equals("armor")){
                     itemType = Item.Type.ARMOR;
                     oldPlayerItemStat = player.getArmor();
+                } else if(forage && msgArr[1].equals("accessory")){
+                    itemType = Item.Type.ACCESSORY;
+                    oldPlayerItemStat = player.getAccessory();
+                    player.increGold(crateCost);
+                    System.out.println("speed acc");
                 }
 
                 if(itemType == null){
@@ -283,7 +301,13 @@ public class CommandHandler {
                         DecimalFormat format = new DecimalFormat("#,###.##");
                         if(playerGold >= totalCost){
                             StringBuilder sb = new StringBuilder();
-                            String suffix = (itemType == Item.Type.WEAPON) ? "attack" : "defense";
+                            String suffix;
+
+                            if(forage){
+                                suffix = "speed";
+                            } else{
+                                suffix = (itemType == Item.Type.WEAPON) ? "attack" : "defense";
+                            }
 
                             for(int i = 0; i < numBuys; i++){
                                 Item.Rarity rarity = Item.rollItemRarity();
@@ -295,8 +319,10 @@ public class CommandHandler {
 
                             if(itemType == Item.Type.WEAPON){
                                 player.setWeapon(Math.max(oldPlayerItemStat, newPlayerItemStat));
-                            } else{
+                            } else if(itemType == Item.Type.ARMOR){
                                 player.setArmor(Math.max(oldPlayerItemStat, newPlayerItemStat));
+                            } else{
+                                player.setAccessory(Math.max(oldPlayerItemStat, newPlayerItemStat));
                             }
                             playerGold -= totalCost;
                             player.setGold(playerGold);

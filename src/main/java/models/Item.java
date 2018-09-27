@@ -3,7 +3,7 @@ package models;
 import java.util.Random;
 
 public class Item {
-    public enum Type {WEAPON, ARMOR, CONSUMABLE};
+    public enum Type {WEAPON, ARMOR, ACCESSORY, CONSUMABLE};
     public enum Rarity{COMMON, UNCOMMON, RARE, EPIC, LEGENDARY, MYTH};
 
     private String name;

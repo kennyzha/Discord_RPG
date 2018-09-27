@@ -3,7 +3,6 @@ package models;
 import config.ApplicationConstants;
 
 import java.text.DecimalFormat;
-import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Player extends Entity{

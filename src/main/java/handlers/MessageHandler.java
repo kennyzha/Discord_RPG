@@ -34,7 +34,7 @@ public class MessageHandler {
 
         if(player.getLevel() >= 50){
             eb.addField("Weapon", format.format(player.getWeapon()), true);
-            eb.addBlankField(true);
+            eb.addField("Accessory", format.format(player.getAccessory()), true);
             eb.addField("Armor", format.format(player.getArmor()), true);
         }
 
@@ -172,10 +172,10 @@ public class MessageHandler {
         EmbedBuilder eb = new EmbedBuilder();
         setEmbedMessageDefaults(eb, user);
 
-        eb.appendDescription(String.format("Your crate currently costs %s each.\nYour item can roll %s ~ %s ATK/DEF.\n\nThe cost and stat range increases every 50 level interval.\nOne Attack/Defense is similar to 1/4 point of power/strength.\nLegendary items give 5 percent permanent stats.",
+        eb.appendDescription(String.format("Your crate currently costs %s each.\nYour item can roll %s ~ %s ATK/DEF/SPD.\n\nThe cost and stat range increases every 50 level interval.\nOne item stat is similar to 1/4 point of power/strength.\nLegendary items give 5 percent permanent stats.",
                 format.format(cost) , format.format(itemLowerBound), format.format(itemUpperBound)));
         eb.setThumbnail("https://i.imgur.com/OYIWNY7.png");
-        eb.setFooter(String.format("Weapon: %s ATK  Armor: %s DEF", format.format(player.getWeapon()), format.format(player.getArmor())), null);
+        eb.setFooter(String.format("Weapon: %s ATK  Accessory: %s SPD Armor: %s DEF", format.format(player.getWeapon()), format.format(player.getAccessory()), format.format(player.getArmor())), null);
         return eb.build();
     }
 
