@@ -45,7 +45,10 @@ public class PlayerDatabase {
         if(item == null)
             return null;
 
-        return gson.fromJson(item.toJSON(), Player.class);
+        Player player = gson.fromJson(item.toJSON(), Player.class);
+        player.updateStamina();
+
+        return player;
     }
 
     public Player grabPlayer(String id){

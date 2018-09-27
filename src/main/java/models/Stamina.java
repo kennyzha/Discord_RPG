@@ -9,7 +9,7 @@ public class Stamina {
 
     public Stamina(String playerId){
         this.playerId = playerId;
-        this.stamina = 20;
+        this.stamina = ApplicationConstants.MAX_STAMINA;
         timeSinceUpdated = System.currentTimeMillis();
     }
 

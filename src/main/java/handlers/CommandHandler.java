@@ -34,6 +34,8 @@ public class CommandHandler {
         if(msgArr.length == 0 || !msgArr[0].startsWith(COMMAND_PREFIX))
             return;
 
+        System.out.println(user.getName() + "#" + user.getDiscriminator() + ": " + msg);
+
         switch(msgArr[0]){
             case "r!profile":
                 profile(channel, user, message);
@@ -67,12 +69,13 @@ public class CommandHandler {
             case"r!crates":
                 crate(channel, msgArr, user);
                 break;
-//            case "r!gamble":
-//            case "r!bet":
-//                gamble(channel, msgArr, user);
-//                break;
-//            case "r!forage":
-//                forage(channel, msgArr, user);
+            case "r!gamble":
+            case "r!bet":
+                gamble(channel, msgArr, user);
+                break;
+            case "r!forage":
+                forage(channel, msgArr, user);
+                break;
             case "r!server":
                 String link = "Link to official RPG server.  Join for update announcements and to give feedback to help shape the development of the game.\n\nhttps://discord.gg/3Gq4kAr";
                 sendDefaultEmbedMessage(user,link, messageHandler, channel);
@@ -100,24 +103,38 @@ public class CommandHandler {
         LocalDate date = LocalDate.now();
 
         Player player = playerDatabase.grabPlayer(user.getId());
+        String msg = "";
 
+        if(msgArr.length == 1){
+            msg = "foraging default msg";
+            sendDefaultEmbedMessage(user, msg, messageHandler, channel);
+            return;
+        }
         try{
             int amount = Integer.parseInt(msgArr[1]);
 
 
             if(amount <= 0 || (player.getForageDate().equals(date.toString()) && player.getForageAmount() + amount > 20)){
-                String msg = String.format("You can only forage 20 times a day. You have already foraged %s times today.", player.getForageAmount());
+                msg = String.format("You can only forage 20 times a day. You have already foraged %s times today.", player.getForageAmount());
                 sendDefaultEmbedMessage(user, msg, messageHandler, channel);
+                return;
             }
 
             StringBuilder sb = new StringBuilder();
 
             for(int i = 0; i < amount; i++){
-
+                int roll = (int) (Math.random() * 100) + 1;
+                sendDefaultEmbedMessage(user, msg, messageHandler, channel);
             }
+            msg = "foraging " + amount;
+
+            player.setForageAmount(player.getForageAmount() + amount);
+            player.setForageDate(LocalDate.now().toString());
+            playerDatabase.insertPlayer(player);
 
         } catch(NumberFormatException e){
-
+            msg = String.format("Please enter a a valid number. You can only forage 20 times a day. You have already foraged %s times today.", player.getForageAmount());
+            sendDefaultEmbedMessage(user, msg, messageHandler, channel);
         }
 
     }
@@ -273,10 +290,9 @@ public class CommandHandler {
         String[] msgArr = message.getContentDisplay().split(" ");
         if(msgArr.length == 1){
             Player player = playerDatabase.grabPlayer(user.getId());
-            Stamina curStamina = playerDatabase.retreivePlayerStamina(user.getId());
 
-            if(curStamina != null){
-                channel.sendMessage(messageHandler.createProfileEmbed(user, player, curStamina)).queue();
+            if(player != null){
+                channel.sendMessage(messageHandler.createProfileEmbed(user, player)).queue();
             }
         } else{
             Player mentionedPlayer = playerDatabase.grabMentionedPlayer(message, channel, "profile");
@@ -284,7 +300,7 @@ public class CommandHandler {
             if(mentionedPlayer != null){
                 User mentionedUser = message.getMentionedMembers().get(0).getUser();
                 Stamina mentionedUserStamina = playerDatabase.retreivePlayerStamina(mentionedUser.getId());
-                channel.sendMessage(messageHandler.createProfileEmbed(mentionedUser, mentionedPlayer, mentionedUserStamina)).queue();
+                channel.sendMessage(messageHandler.createProfileEmbed(mentionedUser, mentionedPlayer)).queue();
             }
         }
     }
@@ -314,13 +330,13 @@ public class CommandHandler {
                     Player player = playerDatabase.grabPlayer(user.getId());
                     Stamina curStamina = playerDatabase.retreivePlayerStamina(user.getId());
 
-                    TrainingHandler trainingHandler = new TrainingHandler(player, user, curStamina, channel, playerDatabase);
+                    TrainingHandler trainingHandler = new TrainingHandler(player, user, channel, playerDatabase);
 
-                    if(statToTrain.equals("speed")){
+                    if(statToTrain.equals("speed") || statToTrain.equals("spd")){
                         trainingHandler.trainSpeed(numTimesToTrain);
-                    }else if(statToTrain.equals("power")){
+                    }else if(statToTrain.equals("power") || statToTrain.equals("pow") || statToTrain.equals("pwr")){
                         trainingHandler.trainPower(numTimesToTrain);
-                    }else if(statToTrain.equals("strength")){
+                    }else if(statToTrain.equals("strength") || statToTrain.equals("str")){
                         trainingHandler.trainStrength(numTimesToTrain);
                     } else{
                         channel.sendMessage(messageHandler.createDefaultEmbedMessage(user, "Invalid argument. Failed to train:" + statToTrain + ". You can only train power, speed and strength.")).queue();
@@ -359,10 +375,10 @@ public class CommandHandler {
 
                 StringBuilder customMessage = new StringBuilder();
                 for(int i = 2; i < msgArr.length; i++){
-                    customMessage.append(msgArr[i]);
+                    customMessage.append(msgArr[i] + " ");
                 }
 
-                customMessage.setLength(50);
+                pvpResults.appendToCombatResult("\n" + customMessage.substring(0, Math.min(50, customMessage.length())));
                 channel.sendMessage(messageHandler.createEmbedFightMessage(user, enemyName, pvpResults)).queue();
             }
         }

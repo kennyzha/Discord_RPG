@@ -19,7 +19,7 @@ public class MessageHandler {
         format = new DecimalFormat("#,###.##");
     }
 
-    public MessageEmbed createProfileEmbed(User user, Player player, Stamina stamina){
+    public MessageEmbed createProfileEmbed(User user, Player player){
         EmbedBuilder eb = new EmbedBuilder();
         setEmbedMessageDefaults(eb, user);
 
@@ -38,7 +38,7 @@ public class MessageHandler {
             eb.addField("Armor", format.format(player.getArmor()), true);
         }
 
-        eb.setFooter("Stamina: " + stamina.getStamina() + " / 20", null);
+        eb.setFooter("Stamina: " + player.getStamina() + " / " + ApplicationConstants.MAX_STAMINA, null);
         return eb.build();
     }
 

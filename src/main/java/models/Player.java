@@ -1,5 +1,7 @@
 package models;
 
+import config.ApplicationConstants;
+
 import java.text.DecimalFormat;
 
 public class Player extends Entity{
@@ -9,6 +11,9 @@ public class Player extends Entity{
     private double intelligence, woodcutting;
     private int levelExp, woodCuttingExp;
     private boolean alive;
+
+    private int stamina;
+    private long staminaLastUpdateTime;
 
     private String forageDate;
     private int forageAmount;
@@ -24,9 +29,47 @@ public class Player extends Entity{
         this.alive = true;
         this.forageDate = "";
         this.forageAmount = 0;
+        this.stamina = ApplicationConstants.MAX_STAMINA;
+        this.staminaLastUpdateTime = System.currentTimeMillis();
+    }
+
+    public int getStamina() {
+        return stamina;
+    }
+
+    public void setStamina(int stamina) {
+        this.stamina = stamina;
+    }
+
+    public long getStaminaLastUpdateTime() {
+        return staminaLastUpdateTime;
+    }
+
+    public void setStaminaLastUpdateTime(long staminaLastUpdateTime) {
+        this.staminaLastUpdateTime = staminaLastUpdateTime;
+    }
+
+    public void updateStamina(){
+        Long updatedTime = System.currentTimeMillis();
+
+        if(this.stamina < ApplicationConstants.MAX_STAMINA){
+            Long elapsedTime = updatedTime - this.staminaLastUpdateTime;
+            Long leftOverTime = elapsedTime % ApplicationConstants.STAMINA_REFRESH_RATE;
+            updatedTime -= leftOverTime;
+
+            int staminaGained = (int) (elapsedTime / ApplicationConstants.STAMINA_REFRESH_RATE);
+
+            setStamina(Math.min(this.stamina + staminaGained, ApplicationConstants.MAX_STAMINA));
+        }
+
+        setStaminaLastUpdateTime(updatedTime);
+
     }
 
     public String getForageDate() {
+        if(this.forageDate == null){
+            this.forageDate = "";
+        }
         return forageDate;
     }
 
