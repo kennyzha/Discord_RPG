@@ -48,6 +48,7 @@ public class PlayerDatabase {
         Player player = gson.fromJson(item.toJSON(), Player.class);
         player.updateStamina();
 
+        player.getInventory();
         return player;
     }
 

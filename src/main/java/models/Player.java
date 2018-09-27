@@ -3,6 +3,8 @@ package models;
 import config.ApplicationConstants;
 
 import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Player extends Entity{
     private String id;
@@ -18,6 +20,8 @@ public class Player extends Entity{
     private String forageDate;
     private int forageAmount;
 
+    private HashMap<String, Integer> inventory;
+
     public enum Stat {POWER, SPEED, STRENGTH};
     public Player(String id) {
         super(1, 200, 1, 1, 1);
@@ -31,6 +35,33 @@ public class Player extends Entity{
         this.forageAmount = 0;
         this.stamina = ApplicationConstants.MAX_STAMINA;
         this.staminaLastUpdateTime = System.currentTimeMillis();
+        this.inventory = new HashMap<>();
+    }
+
+    public HashMap<String, Integer> getInventory() {
+        if(inventory == null){
+            this.inventory = new HashMap<>();
+        }
+        return this.inventory;
+    }
+
+    public void setInventory(HashMap<String, Integer> inventory) {
+        if(inventory == null){
+            this.inventory = new HashMap<>();
+        } else {
+            this.inventory = inventory;
+        }
+    }
+
+    public boolean addItem(String item){
+        int amountOwned =  inventory.getOrDefault(item, 0);
+
+        if(amountOwned == 999){
+            return false;
+        }
+
+        inventory.put(item, amountOwned + 1);
+        return true;
     }
 
     public int getStamina() {

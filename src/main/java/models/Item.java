@@ -163,4 +163,9 @@ public class Item {
     public static int generateNumber(){
         return (int) (Math.random() * 100) + 1;
     }
+
+    @Override
+    public String toString(){
+        return this.getName();
+    }
 }

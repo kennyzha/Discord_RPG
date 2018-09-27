@@ -1,6 +1,7 @@
 package handlers;
 
 import config.ApplicationConstants;
+import config.ItemConstants;
 import database.PlayerDatabase;
 import models.*;
 import net.dv8tion.jda.core.JDA;
@@ -11,6 +12,7 @@ import utils.CombatResult;
 import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class CommandHandler {
 
@@ -76,6 +78,9 @@ public class CommandHandler {
             case "r!forage":
                 forage(channel, msgArr, user);
                 break;
+            case "r!inventory":
+                inventory(channel, user);
+                break;
             case "r!server":
                 String link = "Link to official RPG server.  Join for update announcements and to give feedback to help shape the development of the game.\n\nhttps://discord.gg/3Gq4kAr";
                 sendDefaultEmbedMessage(user,link, messageHandler, channel);
@@ -97,6 +102,22 @@ public class CommandHandler {
                 String str = "Command not recognized: " + message.getContentDisplay() + ". Type r!commands for list of commands.";
                 sendDefaultEmbedMessage(user, str, messageHandler, channel);
         }
+    }
+
+    private void inventory(MessageChannel channel, User user) {
+        Player player = playerDatabase.grabPlayer(user.getId());
+
+        HashMap<String, Integer> inventory = player.getInventory();
+
+        StringBuilder inven = new StringBuilder();
+
+        for(String item : inventory.keySet()){
+            int amount = inventory.get(item);
+            inven.append(item + ": " + amount + "\n");
+        }
+
+        playerDatabase.insertPlayer(player);
+        sendDefaultEmbedMessage(user, inven.toString(), messageHandler, channel);
     }
 
     private void forage(MessageChannel channel, String[] msgArr, User user){
@@ -121,12 +142,37 @@ public class CommandHandler {
             }
 
             StringBuilder sb = new StringBuilder();
+            HashMap<String, Integer> inventory = player.getInventory();
 
             for(int i = 0; i < amount; i++){
-                int roll = (int) (Math.random() * 100) + 1;
-                sendDefaultEmbedMessage(user, msg, messageHandler, channel);
+                int roll = (int) (Math.random() * 1000) + 1;
+                Item itemRolled;
+                if(roll > 200){
+                    int potionRoll = (int) (Math.random() * 3);
+
+                    if(potionRoll == 0){
+                        itemRolled = ItemConstants.SPEED_POTION;
+                    } else if(potionRoll == 1){
+                        itemRolled = ItemConstants.POWER_POTION;
+                    } else{
+                        itemRolled = ItemConstants.STRENGTH_POTION;
+                    }
+                    player.addItem(itemRolled.toString());
+                    sb.append(String.format("You found a %s!", itemRolled.toString()));
+                } else if(roll > 100){
+                    itemRolled = ItemConstants.STAMINA_POTION;
+                    player.addItem(itemRolled.toString());
+                    sb.append(String.format("You found a %s!", itemRolled.toString()));
+                } else if(roll > 50){
+                    player.increExp(player.calcExpToNextLevel());
+                    player.updateLevelAndExp();
+                    sb.append("You gained a level! \n");
+                } else{
+                    crate();
+                }
+
             }
-            msg = "foraging " + amount;
+            sendDefaultEmbedMessage(user, msg, messageHandler, channel);
 
             player.setForageAmount(player.getForageAmount() + amount);
             player.setForageDate(LocalDate.now().toString());
