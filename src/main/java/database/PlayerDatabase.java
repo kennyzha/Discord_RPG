@@ -26,6 +26,7 @@ public class PlayerDatabase {
 
     private Gson gson;
 
+
     public PlayerDatabase(){
         this.dynamoClient = new DynamoClient();
         this.dynamoDB = dynamoClient.getDynamoDb();
@@ -56,6 +57,17 @@ public class PlayerDatabase {
         Player player = selectPlayer(id);
         if(player == null){
             Player newPlayer = new Player(id);
+
+            if(ApplicationConstants.TEST_SERVER){
+                newPlayer.setLevel(100);
+                newPlayer.setHealth(13335);
+                newPlayer.setGold(500000);
+                newPlayer.setPower(4000);
+                newPlayer.setSpeed(4000);
+                newPlayer.setStrength(4000);
+
+            }
+
             insertPlayer(newPlayer);
             player = newPlayer;
 

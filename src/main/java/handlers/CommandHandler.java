@@ -20,11 +20,14 @@ public class CommandHandler {
     private MessageHandler messageHandler;
     private HighscoreHandler highscoreHandler;
 
+    private DecimalFormat format;
+
     private final String COMMAND_PREFIX = "r!";
     public CommandHandler(PlayerDatabase playerDatabase, MessageHandler messageHandler, HighscoreHandler highscoreHandler){
         this.playerDatabase = playerDatabase;
         this.messageHandler = messageHandler;
         this.highscoreHandler = highscoreHandler;
+        format = new DecimalFormat("#,###.##");
     }
 
     public void handleCommand(MessageReceivedEvent event){
@@ -35,6 +38,15 @@ public class CommandHandler {
         String[] msgArr = msg.split(" ");
         if(msgArr.length == 0 || !msgArr[0].startsWith(COMMAND_PREFIX))
             return;
+
+
+        if(ApplicationConstants.TEST_SERVER &&
+                (!event.getMessage().getChannelType().isGuild() ||
+                        !event.getGuild().getId().equals(ApplicationConstants.OFFICIAL_GUILD_ID) ||
+                        !event.getChannel().getId().equals("495015240124203019"))){
+            System.out.println("not official server channel");
+            return;
+        }
 
         System.out.println(user.getName() + "#" + user.getDiscriminator() + ": " + msg);
 
@@ -81,6 +93,10 @@ public class CommandHandler {
             case "r!inventory":
                 inventory(channel, user);
                 break;
+            case "r!consume":
+            case "r!item":
+                consume(channel, msgArr, user);
+                break;
             case "r!server":
                 String link = "Link to official RPG server.  Join for update announcements and to give feedback to help shape the development of the game.\n\nhttps://discord.gg/3Gq4kAr";
                 sendDefaultEmbedMessage(user,link, messageHandler, channel);
@@ -107,17 +123,51 @@ public class CommandHandler {
     private void inventory(MessageChannel channel, User user) {
         Player player = playerDatabase.grabPlayer(user.getId());
 
-        HashMap<String, Integer> inventory = player.getInventory();
+        channel.sendMessage(messageHandler.createEmbedInventory(user, player)).queue();
+    }
 
-        StringBuilder inven = new StringBuilder();
-
-        for(String item : inventory.keySet()){
-            int amount = inventory.get(item);
-            inven.append(item + ": " + amount + "\n");
+    public void consume(MessageChannel channel, String[] msgArr, User user){
+        if(msgArr.length != 4){
+            sendDefaultEmbedMessage(user, "Invalid format. Please type the item full name as it appears in your inventory with spaces. If you would like to consume 5 stamina potions you would type :r!consume stamina potion 5", messageHandler, channel);
+            return;
         }
 
-        playerDatabase.insertPlayer(player);
-        sendDefaultEmbedMessage(user, inven.toString(), messageHandler, channel);
+        StringBuilder message = new StringBuilder();
+        String item = msgArr[1];
+
+        try{
+            int amount = Integer.parseInt(msgArr[3]);
+
+            if(amount == 0){
+                message.append("You can't consume nothing!");
+                sendDefaultEmbedMessage(user, message.toString(), messageHandler, channel);
+                return;
+            }
+            Player player = playerDatabase.grabPlayer(user.getId());
+            double playerTotalStat = player.getTotalStats();
+
+            if(item.equals("speed") && player.consumeItems(ItemConstants.SPEED_POTION.toString(), amount)){
+                player.increSpeed(amount);
+                double statGained = player.getTotalStats() - playerTotalStat;
+                message.append(String.format("You consumed %s %ss and gained %s speed", amount, ItemConstants.SPEED_POTION.toString(), format.format(statGained)));
+            } else if(item.equals("power") && player.consumeItems(ItemConstants.POWER_POTION.toString(), amount)){
+                player.increPower(amount);
+                double statGained = player.getTotalStats() - playerTotalStat;
+                message.append(String.format("You consumed %s %ss and gained %s power", amount, ItemConstants.POWER_POTION.toString(),  format.format(statGained)));
+            } else if(item.equals("strength") && player.consumeItems(ItemConstants.STRENGTH_POTION.toString(), amount)){
+                player.increStrength(amount);
+                double statGained = player.getTotalStats() - playerTotalStat;
+                message.append(String.format("You consumed %s %ss and gained %s strength", amount, ItemConstants.STRENGTH_POTION.toString(),  format.format(statGained)));
+            } else{
+                message.append(String.format("You are trying to consume more than you have! Check your inventory with r!inventory."));
+            }
+
+            sendDefaultEmbedMessage(user, message.toString(), messageHandler, channel);
+            playerDatabase.insertPlayer(player);
+        } catch(NumberFormatException e){
+            sendDefaultEmbedMessage(user, "Invalid number. Please type the item full name as it appears in your inventory with spaces. If you would like to consume 5 stamina potions you would type :r!consume stamina potion 5", messageHandler, channel);
+        }
+
     }
 
     private void forage(MessageChannel channel, String[] msgArr, User user){
@@ -132,21 +182,29 @@ public class CommandHandler {
         }
 
         if(msgArr.length == 1){
-            msg = String.format("You can only forage 20 times a day. You have already foraged %s times today.", player.getForageAmount());
+            msg = String.format("You can forage 20 times a day. You have already foraged %s times today.", player.getForageAmount());
             sendDefaultEmbedMessage(user, msg, messageHandler, channel);
             return;
         }
         try{
             int amount = Integer.parseInt(msgArr[1]);
 
+            if(amount > player.getStamina()){
+                amount = player.getStamina();
+            }
+
             if(amount > 20 || amount <= 0 || player.getForageAmount() + amount > 20){
-                msg = String.format("You can only forage 20 times a day. You have already foraged %s times today.", player.getForageAmount());
+                msg = String.format("You can only forage 20 times a day and each time uses up 1 stamina. You have already foraged %s times today.", player.getForageAmount());
                 sendDefaultEmbedMessage(user, msg, messageHandler, channel);
                 return;
             }
 
             StringBuilder sb = new StringBuilder();
             int accessoryCratesFound = 0;
+            int speedPotionsFound = 0;
+            int powerPotionsFound = 0;
+            int strengthPotionsFound = 0;
+
             for(int i = 0; i < amount; i++){
                 int roll = (int) (Math.random() * 1000) + 1;
                 Item itemRolled;
@@ -154,18 +212,16 @@ public class CommandHandler {
                     int potionRoll = (int) (Math.random() * 3);
 
                     if(potionRoll == 0){
-                        itemRolled = ItemConstants.SPEED_POTION;
+                        speedPotionsFound++;
                     } else if(potionRoll == 1){
-                        itemRolled = ItemConstants.POWER_POTION;
+                        powerPotionsFound++;
                     } else{
-                        itemRolled = ItemConstants.STRENGTH_POTION;
+                        strengthPotionsFound++;
                     }
-                    player.addItem(itemRolled.toString());
-                    sb.append(String.format("You searched high and low and found a %s!\n", itemRolled.toString()));
                 } else if(roll > 100){
                     itemRolled = ItemConstants.STAMINA_POTION;
-                    player.addItem(itemRolled.toString());
-                    sb.append(String.format("You searched high and low and found a %s!\n", itemRolled.toString()));
+                    player.addItem(itemRolled.toString(), 1);
+                    sb.append(String.format("You searched around and found a %s!\n", itemRolled.toString()));
                 } else if(roll > 50){
                     player.increExp(player.calcExpToNextLevel());
                     player.updateLevelAndExp();
@@ -181,16 +237,33 @@ public class CommandHandler {
                     }
                 }
             }
+
+            if(speedPotionsFound > 0){
+                player.addItem(ItemConstants.SPEED_POTION.toString(), speedPotionsFound);
+                sb.append(String.format("You searched around and found %s %s!\n", speedPotionsFound, ItemConstants.SPEED_POTION.toString()));
+            }
+
+            if(powerPotionsFound > 0){
+                player.addItem(ItemConstants.POWER_POTION.toString(), powerPotionsFound);
+                sb.append(String.format("You searched around and found %s %s!\n", powerPotionsFound, ItemConstants.POWER_POTION.toString()));
+            }
+
+            if(strengthPotionsFound > 0){
+                player.addItem(ItemConstants.STRENGTH_POTION.toString(), strengthPotionsFound);
+                sb.append(String.format("You searched around and found %s %s!\n", strengthPotionsFound, ItemConstants.STRENGTH_POTION.toString()));
+            }
+
+
             sendDefaultEmbedMessage(user, sb.toString(), messageHandler, channel);
 
             player.setForageAmount(player.getForageAmount() + amount);
             player.setForageDate(LocalDate.now().toString());
+            player.setStamina(player.getStamina() - amount);
             playerDatabase.insertPlayer(player);
 
-
-            crate(channel, new String[]{"r!crate", "accessory", Integer.toString(accessoryCratesFound)}, user, true);
-
-
+            if(accessoryCratesFound > 0){
+                crate(channel, new String[]{"r!crate", "accessory", Integer.toString(accessoryCratesFound)}, user, true);
+            }
         } catch(NumberFormatException e){
             msg = String.format("Please enter a a valid number. You can only forage 20 times a day. You have already foraged %s times today.", player.getForageAmount());
             sendDefaultEmbedMessage(user, msg, messageHandler, channel);
@@ -277,7 +350,6 @@ public class CommandHandler {
                 } else if(forage && msgArr[1].equals("accessory")){
                     itemType = Item.Type.ACCESSORY;
                     oldPlayerItemStat = player.getAccessory();
-                    player.increGold(crateCost);
                     System.out.println("speed acc");
                 }
 
@@ -291,7 +363,9 @@ public class CommandHandler {
                     try{
                         int numBuys = Integer.parseInt(msgArr[2]);
 
-                        if(numBuys > 10 || numBuys <= 0){
+                        if(forage){
+                            playerGold += (crateCost * numBuys);
+                        } else if(numBuys > 10 || numBuys <= 0){
                             String msg = "You can only buy a max of 10 crates at a time.";
                             sendDefaultEmbedMessage(user, msg, messageHandler, channel);
                             return;
@@ -364,14 +438,14 @@ public class CommandHandler {
             Player player = playerDatabase.grabPlayer(user.getId());
 
             if(player != null){
-                channel.sendMessage(messageHandler.createProfileEmbed(user, player)).queue();
+                channel.sendMessage(messageHandler.createEmbedProfile(user, player)).queue();
             }
         } else{
             Player mentionedPlayer = playerDatabase.grabMentionedPlayer(message, channel, "profile");
 
             if(mentionedPlayer != null){
                 User mentionedUser = message.getMentionedMembers().get(0).getUser();
-                channel.sendMessage(messageHandler.createProfileEmbed(mentionedUser, mentionedPlayer)).queue();
+                channel.sendMessage(messageHandler.createEmbedProfile(mentionedUser, mentionedPlayer)).queue();
             }
         }
     }

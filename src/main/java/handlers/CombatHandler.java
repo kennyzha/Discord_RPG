@@ -46,8 +46,8 @@ public class CombatHandler {
     public void simulateCombat(Entity p1, Entity p2, MessageChannel channel){
         int curHealth = p1.getHealth();
         int curHealth2 = p2.getHealth();
-        double lowSpeed = calcLowSpeed(p1.getSpeed());
-        double lowSpeed2 = calcLowSpeed(p2.getSpeed());
+        double lowSpeed = calcLowSpeed(p1.getSpeed() + p1.getAccessory() / 4);
+        double lowSpeed2 = calcLowSpeed(p2.getSpeed() + p2.getAccessory() / 4);
 
         CombatStatistic entityOneStats = combatResult.getEntityOneStats();
         CombatStatistic entityTwoStats = combatResult.getEntityTwoStats();
@@ -57,11 +57,11 @@ public class CombatHandler {
                 break;
             }
 
-            double speedRoll = generateRoll(lowSpeed, p1.getSpeed());
-            double speedRoll2 = generateRoll(lowSpeed2, p2.getSpeed());
+            double speedRoll = generateRoll(lowSpeed, p1.getSpeed() + p1.getAccessory() / 4);
+            double speedRoll2 = generateRoll(lowSpeed2, p2.getSpeed() + p2.getAccessory() / 4);
 
             if(speedRoll > speedRoll2){
-                int hitDmg = calcHitDamage(p1, p2, p1.getWeapon(),p2.getArmor());
+                int hitDmg = calcHitDamage(p1, p2, p1.getWeapon(), p2.getArmor());
                 curHealth2 = curHealth2 - hitDmg > 0 ? (curHealth2 - hitDmg) : 0;
 
                 entityOneStats.updateDamageStats(hitDmg);

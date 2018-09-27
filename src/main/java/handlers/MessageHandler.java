@@ -12,6 +12,7 @@ import utils.CombatResult;
 import java.awt.*;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class MessageHandler {
     private DecimalFormat format;
@@ -19,7 +20,7 @@ public class MessageHandler {
         format = new DecimalFormat("#,###.##");
     }
 
-    public MessageEmbed createProfileEmbed(User user, Player player){
+    public MessageEmbed createEmbedProfile(User user, Player player){
         EmbedBuilder eb = new EmbedBuilder();
         setEmbedMessageDefaults(eb, user);
 
@@ -42,7 +43,22 @@ public class MessageHandler {
         return eb.build();
     }
 
-    public MessageEmbed createEmbedFightMessage(User user, String enemyName, CombatResult combatResult){
+    public MessageEmbed createEmbedInventory(User user, Player player) {
+        EmbedBuilder eb = new EmbedBuilder();
+        setEmbedMessageDefaults(eb, user);
+
+        eb.setTitle(user.getName() + "'s inventory");
+        eb.setThumbnail(ApplicationConstants.INVENTORY_IMG);
+
+        HashMap<String, Integer> inventory = player.getInventory();
+
+        for(String key : inventory.keySet()){
+            eb.addField(key, Integer.toString(inventory.get(key)), true);
+        }
+
+        return  eb.build();
+    }
+        public MessageEmbed createEmbedFightMessage(User user, String enemyName, CombatResult combatResult){
         return createEmbedFightMessage(user, enemyName, combatResult, "");
     }
 
