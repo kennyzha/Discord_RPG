@@ -225,7 +225,7 @@ public class Player extends Entity{
     }
 
     public boolean leveledUp(){
-        return getLevelExp() > calcExpToNextLevel();
+        return getLevelExp() >= calcExpToNextLevel();
     }
 
     public void updateLevelAndExp(){
@@ -284,9 +284,9 @@ public class Player extends Entity{
     }
 
     public void applyLegendaryEffect(){
-        this.setSpeed((this.getSpeed() * .05) + this.getSpeed());
-        this.setPower((this.getPower() * .05) + this.getPower());
-        this.setStrength((this.getStrength() * .05) + this.getStrength());
+        this.setSpeed((this.getSpeed() * .05) + this.getSpeed() + 33.333);
+        this.setPower((this.getPower() * .05) + this.getPower() + 33.333);
+        this.setStrength((this.getStrength() * .05) + this.getStrength() + 33.333);
     }
 
     @Override

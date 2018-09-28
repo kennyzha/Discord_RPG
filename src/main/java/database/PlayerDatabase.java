@@ -65,7 +65,6 @@ public class PlayerDatabase {
                 newPlayer.setPower(4000);
                 newPlayer.setSpeed(4000);
                 newPlayer.setStrength(4000);
-
             }
 
             insertPlayer(newPlayer);
