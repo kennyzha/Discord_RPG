@@ -139,7 +139,7 @@ public class CommandHandler {
                     try{
                         int numBuys = Integer.parseInt(msgArr[2]);
 
-                        if(numBuys > 10 && numBuys > 0){
+                        if(numBuys > 10 || numBuys < 0){
                             String msg = "You can only buy a max of 10 crates at a time.";
                             sendDefaultEmbedMessage(user, msg, messageHandler, channel);
                             return;
@@ -309,6 +309,10 @@ public class CommandHandler {
             try{
                 int numTimesToHunt = Math.min(Integer.parseInt(msgArr[2]), curStamina.getStamina());
 
+                if(numTimesToHunt < 0){
+                    sendDefaultEmbedMessage(user, "Please enter a valid number.", messageHandler, channel);
+                    return;
+                }
                 if(numTimesToHunt == 0){
                     sendDefaultEmbedMessage(user, "You are too tired to hunt monsters. You recover 1 stamina every 5 minutes.", messageHandler, channel);
                     return;
