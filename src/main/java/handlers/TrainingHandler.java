@@ -2,7 +2,6 @@ package handlers;
 
 import database.PlayerDatabase;
 import models.Player;
-import models.Stamina;
 import net.dv8tion.jda.core.entities.MessageChannel;
 import net.dv8tion.jda.core.entities.User;
 

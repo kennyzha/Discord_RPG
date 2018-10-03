@@ -52,6 +52,8 @@ public class CommandHandler {
 
         switch(msgArr[0]){
             case "r!profile":
+            case "r!prof":
+            case "r!p":
                 profile(channel, user, message);
                 break;
             case "r!help":
@@ -75,8 +77,8 @@ public class CommandHandler {
             case "r!monsters":
                 monsters(channel, user);
                 break;
-            case"r!highscore":
-            case"r!highscores":
+            case "r!highscore":
+            case "r!highscores":
                 highscore(channel, msgArr, user, event.getJDA());
                 break;
             case "r!crate":
@@ -91,10 +93,13 @@ public class CommandHandler {
                 forage(channel, msgArr, user);
                 break;
             case "r!inventory":
+            case "r!inven":
+            case "r!i":
                 inventory(channel, user);
                 break;
             case "r!consume":
             case "r!item":
+            case "r!use":
                 consume(channel, msgArr, user);
                 break;
             case "r!server":
@@ -128,7 +133,7 @@ public class CommandHandler {
 
     public void consume(MessageChannel channel, String[] msgArr, User user){
         if(msgArr.length != 4){
-            sendDefaultEmbedMessage(user, "Invalid format. Please type the item full name as it appears in your inventory with spaces. If you would like to consume 5 stamina potions you would type :r!consume stamina potion 5", messageHandler, channel);
+            sendDefaultEmbedMessage(user, "Invalid format. Please type the item full name as it appears in your inventory with spaces. If you would like to use 5 stamina potions you would type: r!use stamina potion 5", messageHandler, channel);
             return;
         }
 
@@ -149,23 +154,28 @@ public class CommandHandler {
             if(item.equals("speed") && player.consumeItems(ItemConstants.SPEED_POTION.toString(), amount)){
                 player.increSpeed(amount);
                 double statGained = player.getTotalStats() - playerTotalStat;
-                message.append(String.format("You consumed %s %ss and gained %s speed", amount, ItemConstants.SPEED_POTION.toString(), format.format(statGained)));
+                message.append(String.format("You consumed %s %s and gained %s speed.", amount, ItemConstants.SPEED_POTION.toString(), format.format(statGained)));
             } else if(item.equals("power") && player.consumeItems(ItemConstants.POWER_POTION.toString(), amount)){
                 player.increPower(amount);
                 double statGained = player.getTotalStats() - playerTotalStat;
-                message.append(String.format("You consumed %s %ss and gained %s power", amount, ItemConstants.POWER_POTION.toString(),  format.format(statGained)));
+                message.append(String.format("You consumed %s %s and gained %s power.", amount, ItemConstants.POWER_POTION.toString(),  format.format(statGained)));
             } else if(item.equals("strength") && player.consumeItems(ItemConstants.STRENGTH_POTION.toString(), amount)){
                 player.increStrength(amount);
                 double statGained = player.getTotalStats() - playerTotalStat;
-                message.append(String.format("You consumed %s %ss and gained %s strength", amount, ItemConstants.STRENGTH_POTION.toString(),  format.format(statGained)));
+                message.append(String.format("You consumed %s %s and gained %s strength.", amount, ItemConstants.STRENGTH_POTION.toString(),  format.format(statGained)));
+            } else if(item.equals("stamina") && player.consumeItems(ItemConstants.STAMINA_POTION.toString(), amount)){
+                int staminaGained = amount * 2;
+                player.setStamina(player.getStamina() + staminaGained);
+
+                message.append(String.format("You consumed %s %s and gained %s stamina", amount, ItemConstants.STAMINA_POTION.toString(),  format.format(staminaGained)));
             } else{
-                message.append(String.format("You are trying to consume more than you have! Check your inventory with r!inventory."));
+                message.append(String.format("You are trying to consume more than you have or you entered the wrong item name! Check your inventory with r!inventory."));
             }
 
             sendDefaultEmbedMessage(user, message.toString(), messageHandler, channel);
             playerDatabase.insertPlayer(player);
         } catch(NumberFormatException e){
-            sendDefaultEmbedMessage(user, "Invalid number. Please type the item full name as it appears in your inventory with spaces. If you would like to consume 5 stamina potions you would type :r!consume stamina potion 5", messageHandler, channel);
+            sendDefaultEmbedMessage(user, "Invalid number. Please type the item full name as it appears in your inventory with spaces. If you would like to consume 5 stamina potions you would type :r!consume stamina potion 5.", messageHandler, channel);
         }
 
     }

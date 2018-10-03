@@ -15,6 +15,7 @@ public class Stamina {
     }
 */
 
+/*
     public String getPlayerId() {
         return playerId;
     }
@@ -52,4 +53,7 @@ public class Stamina {
         }
         setStamina(Math.min(ApplicationConstants.MAX_STAMINA, getStamina() + staminaGained));
     }
+
+*/
+
 }

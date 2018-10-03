@@ -10,7 +10,6 @@ import com.amazonaws.services.dynamodbv2.model.ScanResult;
 import com.google.gson.Gson;
 import config.ApplicationConstants;
 import models.Player;
-import models.Stamina;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.MessageChannel;
 import net.dv8tion.jda.core.entities.User;
@@ -111,10 +110,10 @@ public class PlayerDatabase {
 //        return stamina;
 //    }
 
-    public void insertPlayerStamina(Stamina stamina){
-        Table staminaTable = dynamoDB.getTable(dynamoClient.getStaminaTableName());
-        staminaTable.putItem(Item.fromJSON(gson.toJson(stamina)));
-    }
+//    public void insertPlayerStamina(Stamina stamina){
+//        Table staminaTable = dynamoDB.getTable(dynamoClient.getStaminaTableName());
+//        staminaTable.putItem(Item.fromJSON(gson.toJson(stamina)));
+//    }
 
     public List<Player> retreivePlayers(){
         ArrayList<Player> players = new ArrayList<>();

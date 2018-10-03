@@ -1,5 +1,6 @@
 package handlers;
 
+import config.ApplicationConstants;
 import models.*;
 import net.dv8tion.jda.core.entities.MessageChannel;
 import utils.CombatStatistic;
@@ -46,8 +47,8 @@ public class CombatHandler {
     public void simulateCombat(Entity p1, Entity p2, MessageChannel channel){
         int curHealth = p1.getHealth();
         int curHealth2 = p2.getHealth();
-        double lowSpeed = calcLowSpeed(p1.getSpeed() + p1.getAccessory() / 4);
-        double lowSpeed2 = calcLowSpeed(p2.getSpeed() + p2.getAccessory() / 4);
+        double lowSpeed = calcLowSpeed(p1.getSpeed() + p1.getAccessory() / ApplicationConstants.ITEM_RATIO);
+        double lowSpeed2 = calcLowSpeed(p2.getSpeed() + p2.getAccessory() / ApplicationConstants.ITEM_RATIO);
 
         CombatStatistic entityOneStats = combatResult.getEntityOneStats();
         CombatStatistic entityTwoStats = combatResult.getEntityTwoStats();
@@ -57,8 +58,8 @@ public class CombatHandler {
                 break;
             }
 
-            double speedRoll = generateRoll(lowSpeed, p1.getSpeed() + p1.getAccessory() / 4);
-            double speedRoll2 = generateRoll(lowSpeed2, p2.getSpeed() + p2.getAccessory() / 4);
+            double speedRoll = generateRoll(lowSpeed, p1.getSpeed() + p1.getAccessory() / ApplicationConstants.ITEM_RATIO);
+            double speedRoll2 = generateRoll(lowSpeed2, p2.getSpeed() + p2.getAccessory() / ApplicationConstants.ITEM_RATIO);
 
             if(speedRoll > speedRoll2){
                 int hitDmg = calcHitDamage(p1, p2, p1.getWeapon(), p2.getArmor());
@@ -132,22 +133,22 @@ public class CombatHandler {
     }
 
     public double calcLowDamage(double str, double pow, double weap, double arm){
-        double effectiveStrength = calcEffectiveStr(str + arm/4);
-        double effectivePower = calcEffectivePow(pow + weap/4);
+        double effectiveStrength = calcEffectiveStr(str + arm/ApplicationConstants.ITEM_RATIO);
+        double effectivePower = calcEffectivePow(pow + weap/ApplicationConstants.ITEM_RATIO);
 
         return effectiveStrength/6 + effectivePower/2;
     }
 
     public double calcHighDamage(double str, double pow, double weap, double arm){
-        return calcEffectiveStr(str + arm/4)/4 + 3*calcEffectivePow(pow + weap/4)/4;
+        return calcEffectiveStr(str + arm/ApplicationConstants.ITEM_RATIO)/4 + 3*calcEffectivePow(pow + weap/ApplicationConstants.ITEM_RATIO)/4;
     }
 
     public double calcLowDefense(double str, double armor){
-        return (calcEffectiveStr(str + armor/4)/3 );
+        return (calcEffectiveStr(str + armor/ApplicationConstants.ITEM_RATIO)/3 );
     }
 
     public double calcHighDefense(double str, double armor){
-        return (calcEffectiveStr(str + armor/4)/2);
+        return (calcEffectiveStr(str + armor/ApplicationConstants.ITEM_RATIO)/2);
     }
 
     public double calcLowSpeed(double speed){

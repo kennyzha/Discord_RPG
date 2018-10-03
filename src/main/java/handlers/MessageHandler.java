@@ -188,7 +188,7 @@ public class MessageHandler {
         EmbedBuilder eb = new EmbedBuilder();
         setEmbedMessageDefaults(eb, user);
 
-        eb.appendDescription(String.format("Your crate currently costs %s each.\nYour item can roll %s ~ %s ATK/DEF/SPD.\n\nThe cost and stat range increases every 50 level interval.\nOne item stat is similar to 1/4 point of power/strength.\nLegendary items give 5 percent permanent stats.",
+        eb.appendDescription(String.format("Your crate currently costs %s each.\nYour item can roll %s ~ %s ATK/DEF.\n\nThe cost and stat range increases every 50 level interval.\nOne item stat is equivalent to .2 point of power/strength.\nLegendary items give 5 percent permanent stats.",
                 format.format(cost) , format.format(itemLowerBound), format.format(itemUpperBound)));
         eb.setThumbnail("https://i.imgur.com/OYIWNY7.png");
         eb.setFooter(String.format("Weapon: %s ATK  Accessory: %s SPD Armor: %s DEF", format.format(player.getWeapon()), format.format(player.getAccessory()), format.format(player.getArmor())), null);
@@ -214,19 +214,39 @@ public class MessageHandler {
 
         switch(rarity){
             case COMMON:
-                img = (itemType == Item.Type.WEAPON) ? ApplicationConstants.WEAPON_COMMON_IMG : ApplicationConstants.ARMOR_COMMON_IMG;
+                if(itemType == Item.Type.ACCESSORY){
+                    img = ApplicationConstants.NECKLACE_COMMON_IMG;
+                } else{
+                    img = (itemType == Item.Type.WEAPON) ? ApplicationConstants.WEAPON_COMMON_IMG : ApplicationConstants.ARMOR_COMMON_IMG;
+                }
                 break;
             case UNCOMMON:
-                img = (itemType == Item.Type.WEAPON) ? ApplicationConstants.WEAPON_UNCOMMON_IMG : ApplicationConstants.ARMOR_UNCOMMON_IMG;
+                if(itemType == Item.Type.ACCESSORY){
+                    img = ApplicationConstants.NECKLACE_UNCOMMON_IMG;
+                } else {
+                    img = (itemType == Item.Type.WEAPON) ? ApplicationConstants.WEAPON_UNCOMMON_IMG : ApplicationConstants.ARMOR_UNCOMMON_IMG;
+                }
                 break;
             case RARE:
-                img = (itemType == Item.Type.WEAPON) ? ApplicationConstants.WEAPON_RARE_IMG : ApplicationConstants.ARMOR_RARE_IMG;
+                if(itemType == Item.Type.ACCESSORY){
+                    img = ApplicationConstants.NECKLACE_RARE_IMG;
+                } else {
+                    img = (itemType == Item.Type.WEAPON) ? ApplicationConstants.WEAPON_RARE_IMG : ApplicationConstants.ARMOR_RARE_IMG;
+                }
                 break;
             case EPIC:
-                img = (itemType == Item.Type.WEAPON) ? ApplicationConstants.WEAPON_EPIC_IMG : ApplicationConstants.ARMOR_EPIC_IMG;
+                if(itemType == Item.Type.ACCESSORY){
+                    img = ApplicationConstants.NECKLACE_EPIC_IMG;
+                } else {
+                    img = (itemType == Item.Type.WEAPON) ? ApplicationConstants.WEAPON_EPIC_IMG : ApplicationConstants.ARMOR_EPIC_IMG;
+                }
                 break;
             case LEGENDARY:
-                img = (itemType == Item.Type.WEAPON) ? ApplicationConstants.WEAPON_LEGENDARY_IMG : ApplicationConstants.ARMOR_LEGENDARY_IMG;
+                if(itemType == Item.Type.ACCESSORY){
+                    img = ApplicationConstants.NECKLACE_LEGENDARY_IMG;
+                } else {
+                    img = (itemType == Item.Type.WEAPON) ? ApplicationConstants.WEAPON_LEGENDARY_IMG : ApplicationConstants.ARMOR_LEGENDARY_IMG;
+                }
                 break;
         }
 
