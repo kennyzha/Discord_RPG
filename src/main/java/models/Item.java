@@ -93,8 +93,10 @@ public class Item {
         int upperBound = getUpperBoundStat(level);
         int diff = upperBound - lowerBound;
 
-        if(statValue < lowerBound || statValue > upperBound){
-            return null;
+        if(statValue < lowerBound){
+            return Rarity.COMMON;
+        } else if (statValue > upperBound){
+            return Rarity.LEGENDARY;
         }
 
         if(statValue == lowerBound){

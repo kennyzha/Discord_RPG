@@ -158,10 +158,8 @@ public class Player extends Entity{
             multiplier = 2.5;
         } else if(getLevel() <= 200){
             multiplier = 2.25;
-        } else if(getLevel() <= 300){
+        } else {
             multiplier = 2;
-        } else{
-            return 600;
         }
         return (int) (multiplier * getLevel());
     }
@@ -180,9 +178,9 @@ public class Player extends Entity{
     }
 
     public void applyLegendaryEffect(){
-        this.setSpeed((this.getSpeed() * .05) + this.getSpeed());
-        this.setPower((this.getPower() * .05) + this.getPower());
-        this.setStrength((this.getStrength() * .05) + this.getStrength());
+        this.setSpeed((this.getSpeed() * .05) + this.getSpeed() + 33.333);
+        this.setPower((this.getPower() * .05) + this.getPower() + 33.333);
+        this.setStrength((this.getStrength() * .05) + this.getStrength() + 33.333);
     }
 
     @Override

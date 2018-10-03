@@ -150,7 +150,7 @@ public class ItemTest {
 
     @Test
     public void itemRarityTest3(){
-        assertNull(Item.getItemRarity(100, 3555));
+        assertEquals(Item.Rarity.LEGENDARY, Item.getItemRarity(100, 3555));
     }
 }
 
