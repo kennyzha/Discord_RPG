@@ -12,6 +12,7 @@ import utils.CombatResult;
 import java.awt.*;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class MessageHandler {
     private DecimalFormat format;
@@ -19,7 +20,7 @@ public class MessageHandler {
         format = new DecimalFormat("#,###.##");
     }
 
-    public MessageEmbed createProfileEmbed(User user, Player player, Stamina stamina){
+    public MessageEmbed createEmbedProfile(User user, Player player){
         EmbedBuilder eb = new EmbedBuilder();
         setEmbedMessageDefaults(eb, user);
 
@@ -34,24 +35,47 @@ public class MessageHandler {
 
         if(player.getLevel() >= 50){
             eb.addField("Weapon", format.format(player.getWeapon()), true);
-            eb.addBlankField(true);
+            eb.addField("Accessory", format.format(player.getAccessory()), true);
             eb.addField("Armor", format.format(player.getArmor()), true);
         }
 
-        eb.setFooter("Stamina: " + stamina.getStamina() + " / 20", null);
+        eb.setFooter("Stamina: " + player.getStamina() + " / " + ApplicationConstants.MAX_STAMINA, null);
         return eb.build();
     }
 
-    public MessageEmbed createEmbedFightMessage(User user, String enemyName, CombatResult combatResult){
+    public MessageEmbed createEmbedInventory(User user, Player player) {
+        EmbedBuilder eb = new EmbedBuilder();
+        setEmbedMessageDefaults(eb, user);
+
+        eb.setTitle(user.getName() + "'s inventory");
+        eb.setThumbnail(ApplicationConstants.INVENTORY_IMG);
+
+        HashMap<String, Integer> inventory = player.getInventory();
+
+        for(String key : inventory.keySet()){
+            eb.addField(key, Integer.toString(inventory.get(key)), true);
+        }
+
+        return  eb.build();
+    }
+        public MessageEmbed createEmbedFightMessage(User user, String enemyName, CombatResult combatResult){
+        return createEmbedFightMessage(user, enemyName, combatResult, "");
+    }
+
+    public MessageEmbed createEmbedFightMessage(User user, String enemyName, CombatResult combatResult, String customMessage) {
         EmbedBuilder eb = new EmbedBuilder();
         setEmbedMessageDefaults(eb , user);
 
         eb.setTitle(user.getName() + " vs " + enemyName);
         eb.setDescription(combatResult.getCombatResultString() + "\n" + combatResult.getEntityOneStats().toString());
         eb.setThumbnail(ApplicationConstants.FIGHT_IMG);
+
+        if(!customMessage.equals("")){
+            eb.appendDescription("\n" + customMessage);
+        }
+
         return eb.build();
     }
-
 
     public MessageEmbed createEmbedTrainMessage(User user, double statGained, String statType, int staminaUsed, int staminaLeft){
         EmbedBuilder eb = new EmbedBuilder();
@@ -166,10 +190,10 @@ public class MessageHandler {
         EmbedBuilder eb = new EmbedBuilder();
         setEmbedMessageDefaults(eb, user);
 
-        eb.appendDescription(String.format("Your crate currently costs %s each.\nYour item can roll %s ~ %s ATK/DEF.\n\nThe cost and stat range increases every 50 level interval.\nOne Attack/Defense is similar to 1/4 point of power/strength.\nLegendary items give 5 percent permanent stats.",
+        eb.appendDescription(String.format("Your crate currently costs %s each.\nYour item can roll %s ~ %s ATK/DEF.\n\nThe cost and stat range increases every 50 level interval.\nOne item stat is equivalent to .2 point of power/strength.\nLegendary items give 5 percent permanent stats.",
                 format.format(cost) , format.format(itemLowerBound), format.format(itemUpperBound)));
         eb.setThumbnail("https://i.imgur.com/OYIWNY7.png");
-        eb.setFooter(String.format("Weapon: %s ATK  Armor: %s DEF", format.format(player.getWeapon()), format.format(player.getArmor())), null);
+        eb.setFooter(String.format("Weapon: %s ATK  Accessory: %s SPD Armor: %s DEF", format.format(player.getWeapon()), format.format(player.getAccessory()), format.format(player.getArmor())), null);
         return eb.build();
     }
 
@@ -192,19 +216,39 @@ public class MessageHandler {
 
         switch(rarity){
             case COMMON:
-                img = (itemType == Item.Type.WEAPON) ? ApplicationConstants.WEAPON_COMMON_IMG : ApplicationConstants.ARMOR_COMMON_IMG;
+                if(itemType == Item.Type.ACCESSORY){
+                    img = ApplicationConstants.NECKLACE_COMMON_IMG;
+                } else{
+                    img = (itemType == Item.Type.WEAPON) ? ApplicationConstants.WEAPON_COMMON_IMG : ApplicationConstants.ARMOR_COMMON_IMG;
+                }
                 break;
             case UNCOMMON:
-                img = (itemType == Item.Type.WEAPON) ? ApplicationConstants.WEAPON_UNCOMMON_IMG : ApplicationConstants.ARMOR_UNCOMMON_IMG;
+                if(itemType == Item.Type.ACCESSORY){
+                    img = ApplicationConstants.NECKLACE_UNCOMMON_IMG;
+                } else {
+                    img = (itemType == Item.Type.WEAPON) ? ApplicationConstants.WEAPON_UNCOMMON_IMG : ApplicationConstants.ARMOR_UNCOMMON_IMG;
+                }
                 break;
             case RARE:
-                img = (itemType == Item.Type.WEAPON) ? ApplicationConstants.WEAPON_RARE_IMG : ApplicationConstants.ARMOR_RARE_IMG;
+                if(itemType == Item.Type.ACCESSORY){
+                    img = ApplicationConstants.NECKLACE_RARE_IMG;
+                } else {
+                    img = (itemType == Item.Type.WEAPON) ? ApplicationConstants.WEAPON_RARE_IMG : ApplicationConstants.ARMOR_RARE_IMG;
+                }
                 break;
             case EPIC:
-                img = (itemType == Item.Type.WEAPON) ? ApplicationConstants.WEAPON_EPIC_IMG : ApplicationConstants.ARMOR_EPIC_IMG;
+                if(itemType == Item.Type.ACCESSORY){
+                    img = ApplicationConstants.NECKLACE_EPIC_IMG;
+                } else {
+                    img = (itemType == Item.Type.WEAPON) ? ApplicationConstants.WEAPON_EPIC_IMG : ApplicationConstants.ARMOR_EPIC_IMG;
+                }
                 break;
             case LEGENDARY:
-                img = (itemType == Item.Type.WEAPON) ? ApplicationConstants.WEAPON_LEGENDARY_IMG : ApplicationConstants.ARMOR_LEGENDARY_IMG;
+                if(itemType == Item.Type.ACCESSORY){
+                    img = ApplicationConstants.NECKLACE_LEGENDARY_IMG;
+                } else {
+                    img = (itemType == Item.Type.WEAPON) ? ApplicationConstants.WEAPON_LEGENDARY_IMG : ApplicationConstants.ARMOR_LEGENDARY_IMG;
+                }
                 break;
         }
 

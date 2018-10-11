@@ -3,7 +3,7 @@ package models;
 import java.util.Random;
 
 public class Item {
-    public enum Type {WEAPON, ARMOR, CONSUMABLE};
+    public enum Type {WEAPON, ARMOR, ACCESSORY, CONSUMABLE};
     public enum Rarity{COMMON, UNCOMMON, RARE, EPIC, LEGENDARY, MYTH};
 
     private String name;
@@ -164,5 +164,10 @@ public class Item {
 
     public static int generateNumber(){
         return (int) (Math.random() * 100) + 1;
+    }
+
+    @Override
+    public String toString(){
+        return this.getName();
     }
 }

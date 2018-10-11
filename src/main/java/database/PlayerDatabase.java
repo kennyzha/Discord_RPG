@@ -10,7 +10,6 @@ import com.amazonaws.services.dynamodbv2.model.ScanResult;
 import com.google.gson.Gson;
 import config.ApplicationConstants;
 import models.Player;
-import models.Stamina;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.MessageChannel;
 import net.dv8tion.jda.core.entities.User;
@@ -26,6 +25,7 @@ public class PlayerDatabase {
 
     private Gson gson;
 
+
     public PlayerDatabase(){
         this.dynamoClient = new DynamoClient();
         this.dynamoDB = dynamoClient.getDynamoDb();
@@ -38,25 +38,39 @@ public class PlayerDatabase {
         playerTable.putItem(Item.fromJSON(gson.toJson(player)));
     }
 
-    public Player selectPlayer(String id){
+    private Player selectPlayer(String id){
         Table playerTable = dynamoDB.getTable(dynamoClient.getPlayerTableName());
         Item item = playerTable.getItem(ApplicationConstants.PLAYER_PRIMARY_KEY, id);
 
         if(item == null)
             return null;
 
-        return gson.fromJson(item.toJSON(), Player.class);
+        Player player = gson.fromJson(item.toJSON(), Player.class);
+        player.updateStamina();
+
+        player.getInventory();
+        return player;
     }
 
     public Player grabPlayer(String id){
         Player player = selectPlayer(id);
         if(player == null){
             Player newPlayer = new Player(id);
+
+            if(ApplicationConstants.TEST_SERVER){
+                newPlayer.setLevel(100);
+                newPlayer.setHealth(13335);
+                newPlayer.setGold(500000);
+                newPlayer.setPower(4000);
+                newPlayer.setSpeed(4000);
+                newPlayer.setStrength(4000);
+            }
+
             insertPlayer(newPlayer);
             player = newPlayer;
 
-            Stamina stamina = new Stamina(id);
-            insertPlayerStamina(stamina);
+//            Stamina stamina = new Stamina(id);
+//            insertPlayerStamina(stamina);
         }
 
         return player;
@@ -79,27 +93,27 @@ public class PlayerDatabase {
         return player;
     }
 
-    public Stamina retreivePlayerStamina(String id){
-        Table staminaTable = dynamoDB.getTable(dynamoClient.getStaminaTableName());
-        Item item = staminaTable.getItem(ApplicationConstants.STAMINA_PRIMARY_KEY, id);
+//    public Stamina retreivePlayerStamina(String id){
+//        Table staminaTable = dynamoDB.getTable(dynamoClient.getStaminaTableName());
+//        Item item = staminaTable.getItem(ApplicationConstants.STAMINA_PRIMARY_KEY, id);
+//
+//        if(item == null)
+//            return null;
+//
+//        Stamina stamina = gson.fromJson(item.toJSON(), Stamina.class);
+//
+//        if(stamina == null)
+//            return null;
+//
+//        stamina.updateStamina();
+//
+//        return stamina;
+//    }
 
-        if(item == null)
-            return null;
-
-        Stamina stamina = gson.fromJson(item.toJSON(), Stamina.class);
-
-        if(stamina == null)
-            return null;
-
-        stamina.updateStamina();
-
-        return stamina;
-    }
-
-    public void insertPlayerStamina(Stamina stamina){
-        Table staminaTable = dynamoDB.getTable(dynamoClient.getStaminaTableName());
-        staminaTable.putItem(Item.fromJSON(gson.toJson(stamina)));
-    }
+//    public void insertPlayerStamina(Stamina stamina){
+//        Table staminaTable = dynamoDB.getTable(dynamoClient.getStaminaTableName());
+//        staminaTable.putItem(Item.fromJSON(gson.toJson(stamina)));
+//    }
 
     public List<Player> retreivePlayers(){
         ArrayList<Player> players = new ArrayList<>();

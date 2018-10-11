@@ -15,47 +15,73 @@ As you level up, your health increases and you get an increase in stats each tim
 
 ## Getting Started
 
-To add the bot to your discord server, please click on this [invite link](https://discordapp.com/api/oauth2/authorize?client_id=449444515548495882&permissions=8&scope=bot). To register yourself to the bot, please type in any of the valid commands list below on any server which contains the bot.
+To add the bot to your discord server, please click on the discord button on top which contains the invite link. To register yourself to the bot, please type r!profile on any server which contains the bot.
 
 ## List of Commands
 ```
-!help - Lists out available commands.
-```
-```
-!profile - Lists out a player's level, stats, and amount of gold owned.
+r!help - Explains the basic concept of the game.
 ```
 
 ```
-!stamina - Displays the amount of stamina the player currently has.
+r!commands - Lists all available commands.
 ```
 
 ```
-!train power X - Trains power X amount of times.
+r!profile - Lists out a player's level, stamina, stats, and amount of gold owned.
 ```
 
 ```
-!train strength X - Trains strength X amount of times.
+r!stamina - Displays the amount of stamina the player currently has.
 ```
 
 ```
-!train speed X - Trains speed X amount of times. 
+r!train power X - Trains power X amount of times.
 ```
 
 ```
-!fight @name - Fights the person on the server that is mentioned.
+r!train strength X - Trains strength X amount of times.
 ```
 
 ```
-!monsters - Lists out all available monsters to hunt and their levels.
+r!train speed X - Trains speed X amount of times. 
 ```
 
 ```
-!hunt MONSTER X - Hunts the monster X amount of times. Replace MONSTER with the monster name.
+r!fight @name - Fights the person on the server that is mentioned.
+```
+
+```
+r!monsters - Lists out all available monsters to hunt and their levels.
+```
+
+```
+r!hunt MONSTER X - Hunts the monster X amount of times. Replace MONSTER with the monster name.
+```
+
+```
+r!crate - Explanation on item crates. 
+r!crate weapon X - Buy X amount of weapon crates and opens them.
+r!crate armor X - Buy X amount of armor crates and opens them.
+```
+
+```
+r!server - Link to the official Discord RPG server. Join for update announcements and to give feedback 
+	   to help shape the development of the game.
+```
+
+```
+r!vote - Link to vote for Discord RPG on Discord Bots for rewards!
+```
+
+```
+r!credits - The concept of power, speed, and strength is based on an old school RPG game called hobowars. 
+	    The item icons used are available on https://game-icons.net
 ```
 
 # Join the community!
 
-Discord RPG is currently in beta and it’s in continuous development. We are open to suggestions and feedback which can be posted in github issues or on our official discord server. Stay tuned by [joining the official server](https://discord.gg/3Gq4kAr)!
+Discord RPG is currently in beta and development is ongoing. We are open to suggestions and ideas which can be posted on our official discord server! Stay tuned by [joining the official server](https://discord.gg/3Gq4kAr)!
+
 
 # License
 
