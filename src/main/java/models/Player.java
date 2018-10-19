@@ -3,6 +3,7 @@ package models;
 import config.ApplicationConstants;
 
 import java.text.DecimalFormat;
+import java.time.LocalDate;
 import java.util.HashMap;
 
 public class Player extends Entity{
@@ -68,7 +69,13 @@ public class Player extends Entity{
             return false;
         }
 
-        getInventory().put(item, getInventory().get(item) - amount);
+        int amountLeft = getInventory().get(item) - amount;
+
+        if(amountLeft == 0){
+            getInventory().remove(item);
+        } else{
+            getInventory().put(item, getInventory().get(item) - amount);
+        }
         return true;
     }
 
@@ -121,6 +128,13 @@ public class Player extends Entity{
     }
 
     public int getForageAmount() {
+        String date = LocalDate.now().toString();
+
+        if(!getForageDate().equals(date)){
+            forageAmount = 0;
+            forageDate = date;
+        }
+
         return forageAmount;
     }
 
@@ -184,10 +198,25 @@ public class Player extends Entity{
     }
 
     public double calcStatGain(){
+        int curLevel = getLevel();
         double baseGain = .5;
-        double additionalGain = getLevel() * .0025;
+        double multiplier;
 
-        return baseGain + additionalGain;
+        if(curLevel <= 200){
+            multiplier = .0025;
+        } else if(curLevel <= 600){
+            baseGain = 1;
+            multiplier = .005;
+            curLevel -= 200;
+        } else {
+            baseGain = 3;
+            multiplier = .01;
+            curLevel -= 600;
+        }
+
+        double levelStatGain = curLevel * multiplier;
+
+        return baseGain + levelStatGain;
     }
     public void increSpeed(double amt){
         double statGain = calcStatGain();

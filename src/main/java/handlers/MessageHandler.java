@@ -39,7 +39,8 @@ public class MessageHandler {
             eb.addField("Armor", format.format(player.getArmor()), true);
         }
 
-        eb.setFooter("Stamina: " + player.getStamina() + " / " + ApplicationConstants.MAX_STAMINA, null);
+        eb.setFooter("Stamina: " + player.getStamina() + " / " + ApplicationConstants.MAX_STAMINA + " | Forage: " + (20 - player.getForageAmount()) + " / 20", null);
+
         return eb.build();
     }
 

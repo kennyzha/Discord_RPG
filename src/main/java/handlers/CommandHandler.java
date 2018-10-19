@@ -146,8 +146,8 @@ public class CommandHandler {
         try{
             int amount = Integer.parseInt(msgArr[3]);
 
-            if(amount == 0){
-                message.append("You can't consume nothing!");
+            if(amount <= 0){
+                message.append("You can't consume non existant items!");
                 sendDefaultEmbedMessage(user, message.toString(), messageHandler, channel);
                 return;
             }
@@ -189,11 +189,6 @@ public class CommandHandler {
         Player player = playerDatabase.grabPlayer(user.getId());
         String msg = "";
 
-        if(!player.getForageDate().equals(date.toString())){
-            player.setForageAmount(0);
-            player.setForageDate(date.toString());
-        }
-
         if(msgArr.length == 1){
             msg = String.format("You can forage 20 times a day. You have already foraged %s times today.", player.getForageAmount());
             sendDefaultEmbedMessage(user, msg, messageHandler, channel);
@@ -207,7 +202,7 @@ public class CommandHandler {
             }
 
             if(amount > 20 || amount <= 0 || player.getForageAmount() + amount > 20){
-                msg = String.format("You can only forage 20 times a day and each time uses up 1 stamina. You have already foraged %s times today.", player.getForageAmount());
+                msg = String.format("You can only forage 20 times a day and each time forage consumes 1 stamina. You have already foraged %s times today.", player.getForageAmount());
                 sendDefaultEmbedMessage(user, msg, messageHandler, channel);
                 return;
             }
@@ -243,7 +238,9 @@ public class CommandHandler {
                     if(player.getLevel() < 50){
                         player.increExp(player.calcExpToNextLevel());
                         player.updateLevelAndExp();
-                        sb.append("You wandered around aimlessly and magically gained a level!\n");
+                        player.increExp(player.calcExpToNextLevel());
+                        player.updateLevelAndExp();
+                        sb.append("You wandered around aimlessly and magically gained two levels!\n");
                     } else{
                         sb.append("You found an accessory crate lying on the floor!\n");
                         accessoryCratesFound++;
@@ -363,7 +360,6 @@ public class CommandHandler {
                 } else if(forage && msgArr[1].equals("accessory")){
                     itemType = Item.Type.ACCESSORY;
                     oldPlayerItemStat = player.getAccessory();
-                    System.out.println("speed acc");
                 }
 
                 if(itemType == null){
@@ -476,14 +472,14 @@ public class CommandHandler {
 
     public void train( MessageChannel channel, String[] msgArr, User user){
         if(msgArr.length < 3){
-            channel.sendMessage(messageHandler.createDefaultEmbedMessage(user, "Please include a number between 1 and 20 and the type of stat you would like to train. e.g. r!train power 10")).queue();
+            channel.sendMessage(messageHandler.createDefaultEmbedMessage(user, "Please include a number between 1 and 60 and the type of stat you would like to train. e.g. r!train power 10")).queue();
         }else{
             String statToTrain = msgArr[1];
             try{
                 int numTimesToTrain = Integer.parseInt(msgArr[2]);
 
-                if(numTimesToTrain < 1 || numTimesToTrain > 20){
-                    channel.sendMessage(messageHandler.createDefaultEmbedMessage(user, "Please include a number between 1 and 20 and the type of stat you would like to train. e.g. r!train power 10")).queue();
+                if(numTimesToTrain < 1 || numTimesToTrain > 60){
+                    channel.sendMessage(messageHandler.createDefaultEmbedMessage(user, "Please include a number between 1 and 60 and the type of stat you would like to train. e.g. r!train power 10")).queue();
                 } else{
                     Player player = playerDatabase.grabPlayer(user.getId());
 
@@ -500,7 +496,7 @@ public class CommandHandler {
                     }
                 }
             } catch(Exception e){
-                channel.sendMessage(messageHandler.createDefaultEmbedMessage(user, "Please include a valid number between 1 and 20. e.g. r!train speed 10")).queue();
+                channel.sendMessage(messageHandler.createDefaultEmbedMessage(user, "Please include a valid number between 1 and 60. e.g. r!train speed 10")).queue();
             }
         }
     }
