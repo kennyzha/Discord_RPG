@@ -1,5 +1,7 @@
 package models;
 
+import config.ItemConstants;
+
 import java.util.Random;
 
 public class Item {
@@ -166,8 +168,25 @@ public class Item {
         return (int) (Math.random() * 100) + 1;
     }
 
+    public static void useItem(Item item, Player player, int amount){
+        double statGained = statGained = player.calcStatGain() * amount;
+        switch(item.toString()){
+            case "speed potion":
+                player.increSpeed(statGained);
+                break;
+            case "power potion":
+                player.increPower(statGained);
+                break;
+            case "strength potion":
+                player.increStrength(statGained);
+                break;
+            case "stamina potion":
+                player.setStamina(player.getStamina() + (amount * 2));
+                break;
+        }
+    }
     @Override
     public String toString(){
-        return this.getName();
+        return this.getName().toLowerCase();
     }
 }

@@ -12,7 +12,6 @@ import utils.CombatResult;
 import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class CommandHandler {
 
@@ -147,7 +146,7 @@ public class CommandHandler {
             int amount = Integer.parseInt(msgArr[3]);
 
             if(amount <= 0){
-                message.append("You can't consume non existant items!");
+                message.append("You can't consume non existent items!");
                 sendDefaultEmbedMessage(user, message.toString(), messageHandler, channel);
                 return;
             }
@@ -155,22 +154,21 @@ public class CommandHandler {
             double playerTotalStat = player.getTotalStats();
 
             if(item.equals("speed") && player.consumeItems(ItemConstants.SPEED_POTION.toString(), amount)){
-                player.increSpeed(amount);
+                Item.useItem(ItemConstants.SPEED_POTION, player, amount);
                 double statGained = player.getTotalStats() - playerTotalStat;
                 message.append(String.format("You consumed %s %s and gained %s speed.", amount, ItemConstants.SPEED_POTION.toString(), format.format(statGained)));
             } else if(item.equals("power") && player.consumeItems(ItemConstants.POWER_POTION.toString(), amount)){
-                player.increPower(amount);
+                Item.useItem(ItemConstants.POWER_POTION, player, amount);
                 double statGained = player.getTotalStats() - playerTotalStat;
                 message.append(String.format("You consumed %s %s and gained %s power.", amount, ItemConstants.POWER_POTION.toString(),  format.format(statGained)));
             } else if(item.equals("strength") && player.consumeItems(ItemConstants.STRENGTH_POTION.toString(), amount)){
-                player.increStrength(amount);
+                Item.useItem(ItemConstants.STRENGTH_POTION, player, amount);
                 double statGained = player.getTotalStats() - playerTotalStat;
                 message.append(String.format("You consumed %s %s and gained %s strength.", amount, ItemConstants.STRENGTH_POTION.toString(),  format.format(statGained)));
             } else if(item.equals("stamina") && player.consumeItems(ItemConstants.STAMINA_POTION.toString(), amount)){
-                int staminaGained = amount * 2;
-                player.setStamina(player.getStamina() + staminaGained);
+                Item.useItem(ItemConstants.STAMINA_POTION, player, amount);
 
-                message.append(String.format("You consumed %s %s and gained %s stamina", amount, ItemConstants.STAMINA_POTION.toString(),  format.format(staminaGained)));
+                message.append(String.format("You consumed %s %s and gained %s stamina", amount, ItemConstants.STAMINA_POTION.toString(),  format.format(amount * 2)));
             } else{
                 message.append(String.format("You are trying to consume more than you have or you entered the wrong item name! Check your inventory with r!inventory."));
             }
@@ -183,9 +181,11 @@ public class CommandHandler {
 
     }
 
-    private void forage(MessageChannel channel, String[] msgArr, User user){
-        LocalDate date = LocalDate.now();
+    public void consume(MessageChannel channel, String msg, User user){
+        consume(channel, msg.split(" "), user);
+    }
 
+    private void forage(MessageChannel channel, String[] msgArr, User user){
         Player player = playerDatabase.grabPlayer(user.getId());
         String msg = "";
 
@@ -228,8 +228,16 @@ public class CommandHandler {
                     }
                 } else if(roll > 100){
                     itemRolled = ItemConstants.STAMINA_POTION;
-                    player.addItem(itemRolled.toString(), 1);
-                    sb.append(String.format("You searched around and found a %s!\n", itemRolled.toString()));
+                    Integer staminaPotionsOwned = player.getInventory().get(itemRolled.toString());
+
+                    if(staminaPotionsOwned == null || staminaPotionsOwned <= ApplicationConstants.INVENTORY_LIMIT){
+                        player.addItem(itemRolled.toString(), 1);
+                        sb.append(String.format("You searched around and found a %s!\n", itemRolled.toString()));
+                    } else {
+                        sb.append(String.format("Your can't hold any more stamina potions so you decided to drink the stamina" +
+                                " potion and gain 2 stamina.\n", itemRolled.toString()));
+                        player.setStamina(player.getStamina() + 2);
+                    }
                 } else if(roll > 50){
                     player.increExp(player.calcExpToNextLevel());
                     player.updateLevelAndExp();
@@ -248,28 +256,95 @@ public class CommandHandler {
                 }
             }
 
+            int speedPotionExcess = 0;
+            int powerPotionExcess = 0;
+            int strengthPotionExcess = 0;
+
             if(speedPotionsFound > 0){
-                player.addItem(ItemConstants.SPEED_POTION.toString(), speedPotionsFound);
-                sb.append(String.format("You searched around and found %s %s!\n", speedPotionsFound, ItemConstants.SPEED_POTION.toString()));
+                String itemName = ItemConstants.SPEED_POTION.toString().toLowerCase();
+
+                if(speedPotionsFound == 1){
+                    sb.append(String.format("You searched around and found %s %s!\n", speedPotionsFound, itemName));
+                } else {
+                    sb.append(String.format("You searched around and found %s %ss!\n", speedPotionsFound, itemName));
+
+                }
+                player.addItem(itemName, speedPotionsFound);
+                Integer speedPotionsOwned = player.getInventory().get(itemName);
+                if(speedPotionsOwned != null && speedPotionsOwned > 100){
+                    speedPotionExcess = speedPotionsOwned - ApplicationConstants.INVENTORY_LIMIT;
+
+                    if (speedPotionsFound == 1) {
+                        sb.append(String.format("You decided to drink %s %s because you can only hold a max of 100 of each item.\n", speedPotionExcess, itemName));
+                    } else {
+                        sb.append(String.format("You decided to drink %s %ss because you can only hold a max of 100 of each item.\n", speedPotionExcess, itemName));
+                    }
+                }
+
             }
 
             if(powerPotionsFound > 0){
-                player.addItem(ItemConstants.POWER_POTION.toString(), powerPotionsFound);
-                sb.append(String.format("You searched around and found %s %s!\n", powerPotionsFound, ItemConstants.POWER_POTION.toString()));
+                String itemName = ItemConstants.POWER_POTION.toString().toLowerCase();
+
+                if(powerPotionsFound == 1){
+                    sb.append(String.format("You searched around and found %s %s!\n", powerPotionsFound, itemName));
+                } else {
+                    sb.append(String.format("You searched around and found %s %ss!\n", powerPotionsFound, itemName));
+                }
+                player.addItem(itemName, powerPotionsFound);
+                Integer powerPotionsOwned = player.getInventory().get(itemName);
+
+                if(powerPotionsOwned != null && powerPotionsOwned > 100){
+                    powerPotionExcess = powerPotionsOwned - ApplicationConstants.INVENTORY_LIMIT;
+
+                    if (powerPotionsFound == 1) {
+                        sb.append(String.format("You decided to drink %s %s because you can only hold a max of 100 of each item.\n", powerPotionExcess, itemName));
+                    } else {
+                        sb.append(String.format("You decided to drink %s %ss because you can only hold a max of 100 of each item.\n", powerPotionExcess, itemName));
+                    }
+                }
             }
 
             if(strengthPotionsFound > 0){
-                player.addItem(ItemConstants.STRENGTH_POTION.toString(), strengthPotionsFound);
-                sb.append(String.format("You searched around and found %s %s!\n", strengthPotionsFound, ItemConstants.STRENGTH_POTION.toString()));
+                String itemName = ItemConstants.STRENGTH_POTION.toString().toLowerCase();
+
+                if(strengthPotionsFound == 1){
+                    sb.append(String.format("You searched around and found %s %s!\n", strengthPotionsFound, itemName));
+                } else {
+                    sb.append(String.format("You searched around and found %s %ss!\n", strengthPotionsFound, itemName));
+                }
+                player.addItem(itemName, strengthPotionsFound);
+                Integer strengthPotionsOwned = player.getInventory().get(itemName);
+
+                if(strengthPotionsOwned != null && strengthPotionsOwned > 100){
+                    strengthPotionExcess = strengthPotionsOwned - ApplicationConstants.INVENTORY_LIMIT;
+
+                    if (strengthPotionsFound == 1) {
+                        sb.append(String.format("You decided to drink %s %s because you can only hold a max of 100 of each item.\n", strengthPotionExcess, itemName));
+                    } else {
+                        sb.append(String.format("You decided to drink %s %ss because you can only hold a max of 100 of each item.\n", strengthPotionExcess, itemName));
+                    }
+                }
             }
-
-
-            sendDefaultEmbedMessage(user, sb.toString(), messageHandler, channel);
+            String footer = "Forage: " + (20 - player.getForageAmount()) + " / " + 20 + " (-" + amount + ")";
+            sendDefaultEmbedMessageWithFooter(user, sb.toString(), messageHandler, channel, footer);
 
             player.setForageAmount(player.getForageAmount() + amount);
             player.setForageDate(LocalDate.now().toString());
             player.setStamina(player.getStamina() - amount);
             playerDatabase.insertPlayer(player);
+
+            if(speedPotionExcess > 0){
+                consume(channel, "r!consume speed potion " + speedPotionExcess, user);
+            }
+
+            if(powerPotionExcess > 0){
+                consume(channel, "r!consume power potion " + powerPotionExcess, user);
+            }
+
+            if(strengthPotionExcess > 0){
+                consume(channel, "r!consume strength potion " + strengthPotionExcess, user);
+            }
 
             if(accessoryCratesFound > 0){
                 crate(channel, new String[]{"r!crate", "accessory", Integer.toString(accessoryCratesFound)}, user, true);
@@ -416,7 +491,7 @@ public class CommandHandler {
                                 player.applyLegendaryEffect();
                                 double statsGained = player.getTotalStats() - oldStatTotal;
 
-                                String legendaryEffect = "Legendary effect is applied. Total stats will increase by 5% permanently. \n Your total stats increased by " + format.format(statsGained) + ".";
+                                String legendaryEffect = "Legendary effect is applied. Total stats will increase by 100 + 5% permanently. \n Your total stats increased by " + format.format(statsGained) + ".";
                                 sb.append("\n" +  legendaryEffect + "\n");
                                 channel.getJDA().getGuildById("449610753566048277").getTextChannelById("486328955415298060").sendMessage(messageHandler.createDefaultEmbedMessage(user, legendaryEffect)).queue();
                             }
@@ -631,5 +706,9 @@ public class CommandHandler {
 
     public void sendDefaultEmbedMessage(User user, String description, MessageHandler messageHandler, MessageChannel channel){
         channel.sendMessage(messageHandler.createDefaultEmbedMessage(user, description)).queue();
+    }
+
+    public void sendDefaultEmbedMessageWithFooter(User user, String description, MessageHandler messageHandler, MessageChannel channel, String footer){
+        channel.sendMessage(messageHandler.createDefaultEmbedMessage(user, description, footer)).queue();
     }
 }

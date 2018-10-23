@@ -31,7 +31,7 @@ public class Player extends Entity{
         this.levelExp = 0;
         this.woodCuttingExp = 0;
         this.alive = true;
-        this.forageDate = "1";
+        this.forageDate = LocalDate.now().toString();
         this.forageAmount = 0;
         this.stamina = ApplicationConstants.MAX_STAMINA;
         this.staminaLastUpdateTime = System.currentTimeMillis();
@@ -54,9 +54,9 @@ public class Player extends Entity{
     }
 
     public boolean addItem(String item, int amount){
-        int amountOwned =  inventory.getOrDefault(item, 0);
+        int amountOwned =  inventory.getOrDefault(item.toLowerCase(), 0);
 
-        if(amountOwned == 999 || amount == 0){
+        if(amount <= 0){
             return false;
         }
 
@@ -65,6 +65,7 @@ public class Player extends Entity{
     }
 
     public boolean consumeItems(String item, int amount){
+        item = item.toLowerCase();
         if(!containsItemQuantity(item, amount)){
             return false;
         }
@@ -80,7 +81,7 @@ public class Player extends Entity{
     }
 
     public boolean containsItemQuantity(String item, int amount){
-        return getInventory().getOrDefault(item, 0) >= amount;
+        return getInventory().getOrDefault(item.toLowerCase(), 0) >= amount;
     }
 
     public int getStamina() {

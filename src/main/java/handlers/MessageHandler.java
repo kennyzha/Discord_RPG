@@ -83,7 +83,7 @@ public class MessageHandler {
         setEmbedMessageDefaults(eb , user);
 
         eb.setDescription(String.format("You gained " + statGained + " %s.", statType));
-        eb.setFooter(String.format("Stamina: %s / 20 (-%s)", staminaLeft + staminaUsed, staminaUsed), null);
+        eb.setFooter(String.format("Stamina: %s / %s (-%s)", staminaLeft + staminaUsed, ApplicationConstants.MAX_STAMINA, staminaUsed), null);
 
         if(statType.equals("power"))
             eb.setThumbnail(ApplicationConstants.POWER_IMG);
@@ -115,6 +115,15 @@ public class MessageHandler {
         EmbedBuilder eb = new EmbedBuilder();
         setEmbedMessageDefaults(eb , user);
         eb.setDescription(description);
+
+        return eb.build();
+    }
+
+    public MessageEmbed createDefaultEmbedMessage(User user, String description, String footer){
+        EmbedBuilder eb = new EmbedBuilder();
+        setEmbedMessageDefaults(eb , user);
+        eb.setDescription(description);
+        eb.setFooter(footer, null);
 
         return eb.build();
     }
