@@ -47,7 +47,7 @@ public class CommandHandler {
             return;
         }
 
-        System.out.println(user.getName() + "#" + user.getDiscriminator() + ": " + msg);
+//        System.out.println(user.getName() + "#" + user.getDiscriminator() + ": " + msg);
 
         switch(msgArr[0]){
             case "r!profile":
@@ -416,7 +416,7 @@ public class CommandHandler {
                 return;
             }
 
-            int crateCost = Crate.cost[Item.getLevelBracket(playerLevel)];
+            int crateCost = Crate.getCrateCost(Item.getLevelBracket(playerLevel));
             int lowerBound = Item.getLowerBoundStat(playerLevel);
             int upperBound = Item.getUpperBoundStat(playerLevel);
 
