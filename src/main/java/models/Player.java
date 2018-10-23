@@ -1,10 +1,6 @@
 package models;
 
-import config.ApplicationConstants;
-
 import java.text.DecimalFormat;
-import java.time.LocalDate;
-import java.util.HashMap;
 
 public class Player extends Entity{
     private String id;
@@ -13,14 +9,6 @@ public class Player extends Entity{
     private double intelligence, woodcutting;
     private int levelExp, woodCuttingExp;
     private boolean alive;
-
-    private int stamina;
-    private long staminaLastUpdateTime;
-
-    private String forageDate;
-    private int forageAmount;
-
-    private HashMap<String, Integer> inventory;
 
     public enum Stat {POWER, SPEED, STRENGTH};
     public Player(String id) {
@@ -31,117 +19,9 @@ public class Player extends Entity{
         this.levelExp = 0;
         this.woodCuttingExp = 0;
         this.alive = true;
-        this.forageDate = LocalDate.now().toString();
-        this.forageAmount = 0;
-        this.stamina = ApplicationConstants.MAX_STAMINA;
-        this.staminaLastUpdateTime = System.currentTimeMillis();
-        this.inventory = new HashMap<>();
-    }
-
-    public HashMap<String, Integer> getInventory() {
-        if(inventory == null){
-            this.inventory = new HashMap<>();
-        }
-        return this.inventory;
-    }
-
-    public void setInventory(HashMap<String, Integer> inventory) {
-        if(inventory == null){
-            this.inventory = new HashMap<>();
-        } else {
-            this.inventory = inventory;
-        }
-    }
-
-    public boolean addItem(String item, int amount){
-        int amountOwned =  inventory.getOrDefault(item.toLowerCase(), 0);
-
-        if(amount <= 0){
-            return false;
-        }
-
-        inventory.put(item, amountOwned + amount);
-        return true;
-    }
-
-    public boolean consumeItems(String item, int amount){
-        item = item.toLowerCase();
-        if(!containsItemQuantity(item, amount)){
-            return false;
-        }
-
-        int amountLeft = getInventory().get(item) - amount;
-
-        if(amountLeft == 0){
-            getInventory().remove(item);
-        } else{
-            getInventory().put(item, getInventory().get(item) - amount);
-        }
-        return true;
-    }
-
-    public boolean containsItemQuantity(String item, int amount){
-        return getInventory().getOrDefault(item.toLowerCase(), 0) >= amount;
-    }
-
-    public int getStamina() {
-        return stamina;
-    }
-
-    public void setStamina(int stamina) {
-        this.stamina = stamina;
-    }
-
-    public long getStaminaLastUpdateTime() {
-        return staminaLastUpdateTime;
-    }
-
-    public void setStaminaLastUpdateTime(long staminaLastUpdateTime) {
-        this.staminaLastUpdateTime = staminaLastUpdateTime;
-    }
-
-    public void updateStamina(){
-        Long updatedTime = System.currentTimeMillis();
-
-        if(this.stamina < ApplicationConstants.MAX_STAMINA){
-            Long elapsedTime = updatedTime - this.staminaLastUpdateTime;
-            Long leftOverTime = elapsedTime % ApplicationConstants.STAMINA_REFRESH_RATE;
-            updatedTime -= leftOverTime;
-
-            int staminaGained = (int) (elapsedTime / ApplicationConstants.STAMINA_REFRESH_RATE);
-
-            setStamina(Math.min(this.stamina + staminaGained, ApplicationConstants.MAX_STAMINA));
-        }
-
-        setStaminaLastUpdateTime(updatedTime);
 
     }
 
-    public String getForageDate() {
-        if(this.forageDate == null){
-            this.forageDate = "";
-        }
-        return forageDate;
-    }
-
-    public void setForageDate(String forageDate) {
-        this.forageDate = forageDate;
-    }
-
-    public int getForageAmount() {
-        String date = LocalDate.now().toString();
-
-        if(!getForageDate().equals(date)){
-            forageAmount = 0;
-            forageDate = date;
-        }
-
-        return forageAmount;
-    }
-
-    public void setForageAmount(int forageAmount) {
-        this.forageAmount = forageAmount;
-    }
     public int getGold() {
         return gold;
     }
@@ -204,25 +84,10 @@ public class Player extends Entity{
     }
 
     public double calcStatGain(){
-        int curLevel = getLevel();
         double baseGain = .5;
-        double multiplier;
+        double additionalGain = getLevel() * .0025;
 
-        if(curLevel <= 200){
-            multiplier = .0025;
-        } else if(curLevel <= 600){
-            baseGain = 1;
-            multiplier = .005;
-            curLevel -= 200;
-        } else {
-            baseGain = 3;
-            multiplier = .01;
-            curLevel -= 600;
-        }
-
-        double levelStatGain = curLevel * multiplier;
-
-        return baseGain + levelStatGain;
+        return baseGain + additionalGain;
     }
     public void increSpeed(double amt){
         double statGain = calcStatGain();
@@ -260,7 +125,7 @@ public class Player extends Entity{
     }
 
     public boolean leveledUp(){
-        return getLevelExp() >= calcExpToNextLevel();
+        return getLevelExp() > calcExpToNextLevel();
     }
 
     public void updateLevelAndExp(){
@@ -292,7 +157,7 @@ public class Player extends Entity{
     }
 
     public int calcBaseHealthGained(){
-        double multiplier;
+        double multiplier = 1;
 
         if(getLevel() <= 100){
             multiplier = 2.5;
@@ -301,7 +166,6 @@ public class Player extends Entity{
         } else {
             multiplier = 2;
         }
-
         return (int) (multiplier * getLevel());
     }
 

@@ -43,9 +43,9 @@ public class VoteHandler implements RequestStreamHandler {
 
                 int crateCost = Crate.getCrateCost(Item.getLevelBracket(player.getLevel()));
                 player.setGold(player.getGold() + (crateCost));
+                playerDatabase.insertPlayer(player);
                 System.out.println("Gold added: " + crateCost);
             }
-            playerDatabase.insertPlayer(player);
         } else{
             System.out.println("VOTE: INVALID AUTH. " + wrapper.getAuthorization() + wrapper.getVote().toString() );
         }
