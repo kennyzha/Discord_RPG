@@ -1,3 +1,4 @@
+import ItemTests.CrateTest;
 import ItemTests.ItemRollTest;
 import ItemTests.ItemTest;
 import MonsterTests.MonsterBuildTest;
@@ -13,10 +14,13 @@ import org.junit.runners.Suite;
         LevelExpTests.class,
         MonsterExpGivenTest.class,
         MonsterBuildTest.class,
+        MonsterExpGivenTest.class,
         PlayerStatsTest.class,
+        PlayerStatGainTest.class,
         HealthGainedTests.class,
         ItemTest.class,
-        ItemRollTest.class
+        ItemRollTest.class,
+        CrateTest.class
 })
 
 public class JunitTestSuite {

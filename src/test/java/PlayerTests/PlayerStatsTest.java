@@ -73,7 +73,7 @@ public class PlayerStatsTest {
     @Test
     public void statGainLevel300Test(){
         player.setLevel(300);
-        double expected = 1.25;
+        double expected = 1.5;
 
         System.out.println("Lvl 300 stat gain: " + expected);
         assertEquals(expected, player.calcStatGain());
@@ -82,7 +82,7 @@ public class PlayerStatsTest {
     @Test
     public void statGainLevel400Test(){
         player.setLevel(400);
-        double expected = 1.5;
+        double expected = 2.0;
 
         System.out.println("Lvl 400 stat gain: " + expected);
         assertEquals(expected, player.calcStatGain());
@@ -91,7 +91,7 @@ public class PlayerStatsTest {
     @Test
     public void statGainLevel500Test(){
         player.setLevel(500);
-        double expected = 1.75;
+        double expected = 2.5;
 
         System.out.println("Lvl 500 stat gain: " + expected);
         assertEquals(expected, player.calcStatGain());

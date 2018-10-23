@@ -19,6 +19,7 @@
 /Users/kenny/Git_Projects/Discord_RPG/src/main/java/simulators/CombatSimulator.java
 /Users/kenny/Git_Projects/Discord_RPG/src/main/java/models/Entity.java
 /Users/kenny/Git_Projects/Discord_RPG/src/main/java/models/Vote.java
+/Users/kenny/Git_Projects/Discord_RPG/src/main/java/models/Inventory.java
 /Users/kenny/Git_Projects/Discord_RPG/src/main/java/handlers/CommandHandler.java
 /Users/kenny/Git_Projects/Discord_RPG/src/main/java/models/Player.java
 /Users/kenny/Git_Projects/Discord_RPG/src/main/java/handlers/TrainingHandler.java

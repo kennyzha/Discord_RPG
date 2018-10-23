@@ -35,21 +35,20 @@ public class VoteHandler implements RequestStreamHandler {
             System.out.println("Refreshing player stamina");
             PlayerDatabase playerDatabase = new PlayerDatabase();
             Player player = playerDatabase.grabPlayer(user);
-            playerDatabase.insertPlayerStamina(new Stamina(user));
+            player.setStamina(player.getStamina() + 60);
             System.out.println("Refreshed player stamina");
 
             if(wrapper.getVote().isWeekend()){
                 System.out.println("Its the weekends. Adding one crate of gold to player.");
 
-                int crateCost = Crate.cost[Item.getLevelBracket(player.getLevel())];
+                int crateCost = Crate.getCrateCost(Item.getLevelBracket(player.getLevel()));
                 player.setGold(player.getGold() + (crateCost));
-                playerDatabase.insertPlayer(player);
                 System.out.println("Gold added: " + crateCost);
             }
+            playerDatabase.insertPlayer(player);
         } else{
             System.out.println("VOTE: INVALID AUTH. " + wrapper.getAuthorization() + wrapper.getVote().toString() );
         }
-
 
 /*
         try{

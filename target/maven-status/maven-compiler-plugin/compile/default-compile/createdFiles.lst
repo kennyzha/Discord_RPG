@@ -1,6 +1,7 @@
 handlers/CombatHandler.class
 handlers/VoteHandler.class
 models/Stamina.class
+models/Inventory.class
 models/Item$Type.class
 config/ApplicationConstants.class
 models/VoteRewardWrapper.class
