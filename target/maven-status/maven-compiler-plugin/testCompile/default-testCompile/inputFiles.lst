@@ -1,12 +1,14 @@
 /Users/kenny/Git_Projects/Discord_RPG/src/test/java/PlayerTests/LevelUpTests.java
-/Users/kenny/Git_Projects/Discord_RPG/src/test/java/ItemTests/ItemTest.java
 /Users/kenny/Git_Projects/Discord_RPG/src/test/java/ItemTests/ItemRarityRareTest.java
 /Users/kenny/Git_Projects/Discord_RPG/src/test/java/ItemTests/ItemRarityUncommonTest.java
-/Users/kenny/Git_Projects/Discord_RPG/src/test/java/MonsterTests/MonsterBuildTest.java
 /Users/kenny/Git_Projects/Discord_RPG/src/test/java/PlayerTests/HealthGainedTests.java
 /Users/kenny/Git_Projects/Discord_RPG/src/test/java/JunitTestSuite.java
 /Users/kenny/Git_Projects/Discord_RPG/src/test/java/PlayerTests/PlayerStatsTest.java
-/Users/kenny/Git_Projects/Discord_RPG/src/test/java/ItemTests/ItemRollTest.java
+/Users/kenny/Git_Projects/Discord_RPG/src/test/java/ItemTests/CrateTest.java
 /Users/kenny/Git_Projects/Discord_RPG/src/test/java/MonsterTests/MonsterExpGivenTest.java
 /Users/kenny/Git_Projects/Discord_RPG/src/test/java/ItemTests/ItemRarityEpicTest.java
+/Users/kenny/Git_Projects/Discord_RPG/src/test/java/PlayerTests/PlayerStatGainTest.java
+/Users/kenny/Git_Projects/Discord_RPG/src/test/java/ItemTests/ItemTest.java
+/Users/kenny/Git_Projects/Discord_RPG/src/test/java/MonsterTests/MonsterBuildTest.java
+/Users/kenny/Git_Projects/Discord_RPG/src/test/java/ItemTests/ItemRollTest.java
 /Users/kenny/Git_Projects/Discord_RPG/src/test/java/PlayerTests/LevelExpTests.java

@@ -38,7 +38,7 @@ public class HealthGainedTests {
 
     @Test
     public void baseHpGainedFiveHundredTest(){
-        baseHpGainedTest(500, 600);
+        baseHpGainedTest(500, 1000);
     }
 
 }

@@ -59,6 +59,11 @@ public class Player extends Entity{
     }
 
     public void setGold(int gold) {
+
+        if(gold < 0){
+            return;
+        }
+
         this.gold = gold;
     }
 

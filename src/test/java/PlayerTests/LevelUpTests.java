@@ -59,7 +59,7 @@ public class LevelUpTests {
         CombatResult combatResult = combatHandler.fightMonster(overPoweredPlayer, kobold, 100);
         int newLevel = overPoweredPlayer.getLevel();
 
-        assertEquals(30, newLevel);
+        assertEquals(34, newLevel);
     }
 
     @Test

@@ -32,7 +32,7 @@ public class CommandHandler {
         String[] msgArr = msg.split(" ");
         if(msgArr.length == 0 || !msgArr[0].startsWith(COMMAND_PREFIX))
             return;
-
+      
         switch(msgArr[0]){
             case "r!profile":
                 profile(channel, user, message);
@@ -111,7 +111,7 @@ public class CommandHandler {
                 return;
             }
 
-            int crateCost = Crate.cost[Item.getLevelBracket(playerLevel)];
+            int crateCost = Crate.getCrateCost(Item.getLevelBracket(playerLevel));
             int lowerBound = Item.getLowerBoundStat(playerLevel);
             int upperBound = Item.getUpperBoundStat(playerLevel);
 
