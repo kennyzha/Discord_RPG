@@ -78,6 +78,22 @@ r!credits - The concept of power, speed, and strength is based on an old school 
 	    The item icons used are available on https://game-icons.net
 ```
 
+```
+r!gamble - A random number will be generated between 0 and 100. You win twice your bet amount if the number is greater than 50. e.g. r!gamble 500
+```
+
+```
+r!forage X - Find random items or even levels up to 20 times a day. e.g. r!forage 20
+```
+
+```
+r!inventory - Displays the items you currently have in your inventory.  
+```
+
+```
+r!use X Y- Consumes X item Y times. e.g. Make to to type in the item name as displayed in inventory. e.g. r!use speed potion 3 
+```
+
 # Join the community!
 
 Discord RPG is currently in beta and development is ongoing. We are open to suggestions and ideas which can be posted on our official discord server! Stay tuned by [joining the official server](https://discord.gg/3Gq4kAr)!
