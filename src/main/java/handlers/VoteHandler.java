@@ -36,6 +36,7 @@ public class VoteHandler implements RequestStreamHandler {
             PlayerDatabase playerDatabase = new PlayerDatabase();
             Player player = playerDatabase.grabPlayer(user);
             player.setStamina(player.getStamina() + 60);
+
             System.out.println("Refreshed player stamina");
 
             if(wrapper.getVote().isWeekend()){

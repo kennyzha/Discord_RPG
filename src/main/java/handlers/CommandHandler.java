@@ -38,17 +38,6 @@ public class CommandHandler {
         if(msgArr.length == 0 || !msgArr[0].startsWith(COMMAND_PREFIX))
             return;
 
-
-        if(ApplicationConstants.TEST_SERVER &&
-                (!event.getMessage().getChannelType().isGuild() ||
-                        !event.getGuild().getId().equals(ApplicationConstants.OFFICIAL_GUILD_ID) ||
-                        !event.getChannel().getId().equals("495015240124203019"))){
-            System.out.println("not official server channel");
-            return;
-        }
-
-//        System.out.println(user.getName() + "#" + user.getDiscriminator() + ": " + msg);
-
         switch(msgArr[0]){
             case "r!profile":
             case "r!prof":
