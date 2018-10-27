@@ -10,9 +10,9 @@ import javax.security.auth.login.LoginException;
 
 public class Rpg {
     public static void main(String[] args) throws LoginException, RateLimitedException, InterruptedException{
-        JDA jda = new JDABuilder(AccountType.BOT).setToken(ApplicationConstants.TOKEN).buildBlocking();
+        JDA jda = new JDABuilder(AccountType.BOT).setToken(ApplicationConstants.TEST_TOKEN).buildBlocking();
 
-        PostStats.toDiscordBots(jda, ApplicationConstants.DISCORD_BOT_AUTH_TOKEN);
+//        PostStats.toDiscordBots(jda, ApplicationConstants.DISCORD_BOT_AUTH_TOKEN);
 
         jda.addEventListener(new MessageListener());
     }

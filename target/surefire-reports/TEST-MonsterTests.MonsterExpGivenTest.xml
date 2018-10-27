@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<testsuite tests="6" failures="0" name="MonsterTests.MonsterExpGivenTest" time="0.003" errors="0" skipped="0">
+<testsuite tests="6" failures="0" name="MonsterTests.MonsterExpGivenTest" time="0.006" errors="0" skipped="0">
   <properties>
     <property name="idea.version" value="2018.2.3"/>
     <property name="java.runtime.name" value="Java(TM) SE Runtime Environment"/>
@@ -64,9 +64,9 @@
     <property name="sun.cpu.isalist" value=""/>
   </properties>
   <testcase classname="MonsterTests.MonsterExpGivenTest" name="varianceTest1" time="0.001"/>
-  <testcase classname="MonsterTests.MonsterExpGivenTest" name="varianceTest2" time="0"/>
+  <testcase classname="MonsterTests.MonsterExpGivenTest" name="varianceTest2" time="0.001"/>
   <testcase classname="MonsterTests.MonsterExpGivenTest" name="varianceTest3" time="0"/>
   <testcase classname="MonsterTests.MonsterExpGivenTest" name="varianceTest4" time="0.001"/>
-  <testcase classname="MonsterTests.MonsterExpGivenTest" name="varianceTest5" time="0"/>
-  <testcase classname="MonsterTests.MonsterExpGivenTest" name="varianceTest6" time="0.001"/>
+  <testcase classname="MonsterTests.MonsterExpGivenTest" name="varianceTest5" time="0.001"/>
+  <testcase classname="MonsterTests.MonsterExpGivenTest" name="varianceTest6" time="0.002"/>
 </testsuite>

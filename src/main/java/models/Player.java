@@ -9,6 +9,9 @@ import java.util.HashMap;
 public class Player extends Entity{
     private String id;
 
+    private boolean donator;
+    private String donatorEndDate;
+
     private int gold;
     private double intelligence, woodcutting;
     private int levelExp, woodCuttingExp;
@@ -36,6 +39,24 @@ public class Player extends Entity{
         this.stamina = ApplicationConstants.MAX_STAMINA;
         this.staminaLastUpdateTime = System.currentTimeMillis();
         this.inventory = new HashMap<>();
+        this.donator = false;
+        this.donatorEndDate = "";
+    }
+
+    public boolean isDonator() {
+        return donator;
+    }
+
+    public void setDonator(boolean donator) {
+        this.donator = donator;
+    }
+
+    public String getDonatorEndDate() {
+        return donatorEndDate;
+    }
+
+    public void setDonatorEndDate(String donatorEndDate) {
+        this.donatorEndDate = donatorEndDate;
     }
 
     public HashMap<String, Integer> getInventory() {
@@ -322,6 +343,11 @@ public class Player extends Entity{
         this.setSpeed((this.getSpeed() * .05) + this.getSpeed() + 33.333);
         this.setPower((this.getPower() * .05) + this.getPower() + 33.333);
         this.setStrength((this.getStrength() * .05) + this.getStrength() + 33.333);
+    }
+
+    public int calcDonatorBonusGold(int gold){
+        return (int) (gold * .25);
+
     }
 
     @Override

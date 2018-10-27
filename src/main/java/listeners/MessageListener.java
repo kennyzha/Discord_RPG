@@ -21,6 +21,15 @@ public class MessageListener extends ListenerAdapter {
         if(event.getAuthor().isBot() || ApplicationConstants.getBlackList().contains(event.getAuthor().getId())){
             return;
         }
+
+        if(ApplicationConstants.TEST_SERVER &&
+                (!event.getMessage().getChannelType().isGuild() ||
+                        !event.getGuild().getId().equals(ApplicationConstants.OFFICIAL_GUILD_ID) ||
+                        !event.getChannel().getId().equals("495015240124203019"))){
+            System.out.println("not official server channel");
+            return;
+        }
+
         new CommandHandler(playerDatabase, messageHandler, highscoreHandler).handleCommand(event);
     }
 

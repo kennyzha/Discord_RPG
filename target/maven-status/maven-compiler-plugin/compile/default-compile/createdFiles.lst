@@ -4,6 +4,7 @@ models/Stamina.class
 models/Inventory.class
 models/Item$Type.class
 config/ApplicationConstants.class
+handlers/DonatorHandler.class
 models/VoteRewardWrapper.class
 models/Monster.class
 models/Item.class
