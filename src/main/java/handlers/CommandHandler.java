@@ -1,5 +1,7 @@
 package handlers;
 
+import commands.Profile;
+import commands.Train;
 import config.ApplicationConstants;
 import config.ItemConstants;
 import database.PlayerDatabase;
@@ -506,21 +508,7 @@ public class CommandHandler {
     }
 
     public void profile(MessageChannel channel, User user, Message message){
-        String[] msgArr = message.getContentDisplay().split(" ");
-        if(msgArr.length == 1){
-            Player player = playerDatabase.grabPlayer(user.getId());
-
-            if(player != null){
-                channel.sendMessage(messageHandler.createEmbedProfile(user, player)).queue();
-            }
-        } else{
-            Player mentionedPlayer = playerDatabase.grabMentionedPlayer(message, channel, "profile");
-
-            if(mentionedPlayer != null){
-                User mentionedUser = message.getMentionedMembers().get(0).getUser();
-                channel.sendMessage(messageHandler.createEmbedProfile(mentionedUser, mentionedPlayer)).queue();
-            }
-        }
+        Profile.profileCommand(message, playerDatabase, user, channel, messageHandler);
     }
 
     public void help(MessageChannel channel, User user){
@@ -535,34 +523,7 @@ public class CommandHandler {
         channel.sendMessage(messageHandler.createDefaultEmbedMessage(user, "Messaged you the list of commands.")).queue();    }
 
     public void train( MessageChannel channel, String[] msgArr, User user){
-        if(msgArr.length < 3){
-            channel.sendMessage(messageHandler.createDefaultEmbedMessage(user, "Please include a number between 1 and 60 and the type of stat you would like to train. e.g. r!train power 10")).queue();
-        }else{
-            String statToTrain = msgArr[1];
-            try{
-                int numTimesToTrain = Integer.parseInt(msgArr[2]);
-
-                if(numTimesToTrain < 1 || numTimesToTrain > 60){
-                    channel.sendMessage(messageHandler.createDefaultEmbedMessage(user, "Please include a number between 1 and 60 and the type of stat you would like to train. e.g. r!train power 10")).queue();
-                } else{
-                    Player player = playerDatabase.grabPlayer(user.getId());
-
-                    TrainingHandler trainingHandler = new TrainingHandler(player, user, channel, playerDatabase);
-
-                    if(statToTrain.equals("speed") || statToTrain.equals("spd")){
-                        trainingHandler.trainSpeed(numTimesToTrain);
-                    }else if(statToTrain.equals("power")  || statToTrain.equals("pwr") || statToTrain.equals("pow")){
-                        trainingHandler.trainPower(numTimesToTrain);
-                    }else if(statToTrain.equals("strength") || statToTrain.equals("str")){
-                        trainingHandler.trainStrength(numTimesToTrain);
-                    } else{
-                        channel.sendMessage(messageHandler.createDefaultEmbedMessage(user, "Invalid argument. Failed to train:" + statToTrain + ". You can only train power, speed and strength.")).queue();
-                    }
-                }
-            } catch(Exception e){
-                channel.sendMessage(messageHandler.createDefaultEmbedMessage(user, "Please include a valid number between 1 and 60. e.g. r!train speed 10")).queue();
-            }
-        }
+        Train.trainCommand(msgArr, channel, playerDatabase, user, messageHandler);
     }
 
     public void stamina(MessageChannel channel, User user){
