@@ -25,7 +25,6 @@ public class Player extends Entity{
 
     private HashMap<String, Integer> inventory;
 
-    public enum Stat {POWER, SPEED, STRENGTH};
     public Player(String id) {
         super(1, 200, 1, 1, 1);
         this.id = id;
@@ -40,7 +39,7 @@ public class Player extends Entity{
         this.staminaLastUpdateTime = System.currentTimeMillis();
         this.inventory = new HashMap<>();
         this.donator = false;
-        this.donatorEndDate = "";
+        this.donatorEndDate = LocalDate.now().toString();
     }
 
     public boolean isDonator() {
@@ -126,7 +125,8 @@ public class Player extends Entity{
 
         if(this.stamina < ApplicationConstants.MAX_STAMINA){
             Long elapsedTime = updatedTime - this.staminaLastUpdateTime;
-            Long leftOverTime = elapsedTime % ApplicationConstants.STAMINA_REFRESH_RATE;
+            int staminaRefreshRate = (this.donator) ? ApplicationConstants.DONATOR_STAMINA_REFRESH_RATE : ApplicationConstants.STAMINA_REFRESH_RATE;
+            Long leftOverTime = elapsedTime % staminaRefreshRate;
             updatedTime -= leftOverTime;
 
             int staminaGained = (int) (elapsedTime / ApplicationConstants.STAMINA_REFRESH_RATE);
@@ -246,7 +246,6 @@ public class Player extends Entity{
         return baseGain + levelStatGain;
     }
     public void increSpeed(double amt){
-        double statGain = calcStatGain();
         double totalStatGain = amt * calcStatGain();
         double rounded = Math.round((getSpeed() + totalStatGain) * 1000.0) / 1000.0;
         setSpeed(rounded);
@@ -260,8 +259,6 @@ public class Player extends Entity{
     }
 
     public void increPower(double amt){
-        double oldPow = getPower();
-
         double totalStatGain = amt * calcStatGain();
         double rounded = Math.round((getPower() + totalStatGain) * 1000.0) / 1000.0;
 

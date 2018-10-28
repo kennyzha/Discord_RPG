@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<testsuite tests="23" failures="0" name="PlayerTests.PlayerStatsTest" time="0.12" errors="0" skipped="0">
+<testsuite tests="23" failures="0" name="PlayerTests.PlayerStatsTest" time="0.168" errors="0" skipped="0">
   <properties>
     <property name="idea.version" value="2018.2.3"/>
     <property name="java.runtime.name" value="Java(TM) SE Runtime Environment"/>
@@ -63,27 +63,27 @@
     <property name="ftp.nonProxyHosts" value="local|*.local|169.254/16|*.169.254/16"/>
     <property name="sun.cpu.isalist" value=""/>
   </properties>
-  <testcase classname="PlayerTests.PlayerStatsTest" name="strengthPercentage2Test" time="0.113"/>
+  <testcase classname="PlayerTests.PlayerStatsTest" name="strengthPercentage2Test" time="0.158"/>
   <testcase classname="PlayerTests.PlayerStatsTest" name="legendaryEffectTest" time="0"/>
-  <testcase classname="PlayerTests.PlayerStatsTest" name="strengthPercentageTest" time="0.001"/>
+  <testcase classname="PlayerTests.PlayerStatsTest" name="strengthPercentageTest" time="0"/>
   <testcase classname="PlayerTests.PlayerStatsTest" name="increaseSpeedTest" time="0"/>
   <testcase classname="PlayerTests.PlayerStatsTest" name="totalStatsTest" time="0"/>
   <testcase classname="PlayerTests.PlayerStatsTest" name="powerPercentage2Test" time="0"/>
   <testcase classname="PlayerTests.PlayerStatsTest" name="statIncreLevelThreeTest" time="0.002"/>
-  <testcase classname="PlayerTests.PlayerStatsTest" name="statGainLevel300Test" time="0"/>
+  <testcase classname="PlayerTests.PlayerStatsTest" name="statGainLevel300Test" time="0.001"/>
   <testcase classname="PlayerTests.PlayerStatsTest" name="increaseStrengthTest" time="0"/>
-  <testcase classname="PlayerTests.PlayerStatsTest" name="speedPercentageTest" time="0.001"/>
+  <testcase classname="PlayerTests.PlayerStatsTest" name="speedPercentageTest" time="0"/>
   <testcase classname="PlayerTests.PlayerStatsTest" name="legendaryEffectTest2" time="0"/>
   <testcase classname="PlayerTests.PlayerStatsTest" name="legendaryEffectTest3" time="0"/>
-  <testcase classname="PlayerTests.PlayerStatsTest" name="legendaryEffectTest4" time="0.001"/>
+  <testcase classname="PlayerTests.PlayerStatsTest" name="legendaryEffectTest4" time="0"/>
   <testcase classname="PlayerTests.PlayerStatsTest" name="statGainLevel400Test" time="0"/>
-  <testcase classname="PlayerTests.PlayerStatsTest" name="statIncreLevelTwoTest" time="0"/>
+  <testcase classname="PlayerTests.PlayerStatsTest" name="statIncreLevelTwoTest" time="0.001"/>
   <testcase classname="PlayerTests.PlayerStatsTest" name="speedPercentage2Test" time="0.001"/>
   <testcase classname="PlayerTests.PlayerStatsTest" name="statGainLevel500Test" time="0"/>
   <testcase classname="PlayerTests.PlayerStatsTest" name="increasePowerTest" time="0"/>
-  <testcase classname="PlayerTests.PlayerStatsTest" name="powerPercentageTest" time="0"/>
+  <testcase classname="PlayerTests.PlayerStatsTest" name="powerPercentageTest" time="0.001"/>
   <testcase classname="PlayerTests.PlayerStatsTest" name="statIncreLevel100Test" time="0"/>
-  <testcase classname="PlayerTests.PlayerStatsTest" name="statIncreLevel50Test" time="0"/>
-  <testcase classname="PlayerTests.PlayerStatsTest" name="statGainLeve200Test" time="0"/>
-  <testcase classname="PlayerTests.PlayerStatsTest" name="statGainLevel50Test" time="0.001"/>
+  <testcase classname="PlayerTests.PlayerStatsTest" name="statIncreLevel50Test" time="0.001"/>
+  <testcase classname="PlayerTests.PlayerStatsTest" name="statGainLeve200Test" time="0.003"/>
+  <testcase classname="PlayerTests.PlayerStatsTest" name="statGainLevel50Test" time="0"/>
 </testsuite>
