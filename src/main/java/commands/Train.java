@@ -16,26 +16,38 @@ public class Train {
             try{
                 int numTimesToTrain = Integer.parseInt(msgArr[2]);
 
-                if(numTimesToTrain < 1 || numTimesToTrain > 60){
-                    channel.sendMessage(messageHandler.createDefaultEmbedMessage(user, "Please include a number between 1 and 60 and the type of stat you would like to train. e.g. r!train power 10")).queue();
+                if(numTimesToTrain < 1){
+                    channel.sendMessage(messageHandler.createDefaultEmbedMessage(user, "Please include a number greater than 0 and the type of stat you would like to train. e.g. r!train power 10")).queue();
                 } else{
                     Player player = playerDatabase.grabPlayer(user.getId());
-
                     TrainingHandler trainingHandler = new TrainingHandler(player, user, channel, playerDatabase);
 
-                    if(statToTrain.equals("speed") || statToTrain.equals("spd")){
-                        trainingHandler.trainSpeed(numTimesToTrain);
-                    }else if(statToTrain.equals("power")  || statToTrain.equals("pwr") || statToTrain.equals("pow")){
-                        trainingHandler.trainPower(numTimesToTrain);
-                    }else if(statToTrain.equals("strength") || statToTrain.equals("str")){
-                        trainingHandler.trainStrength(numTimesToTrain);
-                    } else{
-                        channel.sendMessage(messageHandler.createDefaultEmbedMessage(user, "Invalid argument. Failed to train:" + statToTrain + ". You can only train power, speed and strength.")).queue();
-                    }
+                    trainStat(trainingHandler, statToTrain, numTimesToTrain, channel, messageHandler, user);
                 }
             } catch(Exception e){
                 channel.sendMessage(messageHandler.createDefaultEmbedMessage(user, "Please include a valid number between 1 and 60. e.g. r!train speed 10")).queue();
             }
+        }
+    }
+
+    private static void trainStat(TrainingHandler trainingHandler, String statToTrain, int numTimesToTrain, MessageChannel channel, MessageHandler messageHandler, User user){
+        switch (statToTrain) {
+            case "speed":
+            case "spd":
+                trainingHandler.trainSpeed(numTimesToTrain);
+                break;
+            case "power":
+            case "pwr":
+            case "pow":
+                trainingHandler.trainPower(numTimesToTrain);
+                break;
+            case "strength":
+            case "str":
+                trainingHandler.trainStrength(numTimesToTrain);
+                break;
+            default:
+                channel.sendMessage(messageHandler.createDefaultEmbedMessage(user, "Invalid argument. Failed to train:" + statToTrain + ". You can only train power, speed and strength.")).queue();
+                break;
         }
     }
 }

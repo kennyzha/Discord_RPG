@@ -44,14 +44,14 @@ public class CommandHandler {
             case "r!profile":
             case "r!prof":
             case "r!p":
-                profile(channel, user, message);
+                Profile.profileCommand(message, playerDatabase, user, channel, messageHandler);
                 break;
             case "r!help":
                 help(channel, user);
                 break;
             case "r!train":
             case "r!t":
-               train(channel, msgArr, user);
+                Train.trainCommand(msgArr, channel, playerDatabase, user, messageHandler);
                 break;
             case "r!stamina":
                 stamina(channel, user);
@@ -120,7 +120,6 @@ public class CommandHandler {
 
     private void inventory(MessageChannel channel, User user) {
         Player player = playerDatabase.grabPlayer(user.getId());
-
         channel.sendMessage(messageHandler.createEmbedInventory(user, player)).queue();
     }
 
@@ -520,11 +519,9 @@ public class CommandHandler {
             privateChannel.sendMessage(messageHandler.createDefaultEmbedMessage(user, ApplicationConstants.VERBOSE_COMMANDS)).queue();;
         });
 
-        channel.sendMessage(messageHandler.createDefaultEmbedMessage(user, "Messaged you the list of commands.")).queue();    }
-
-    public void train( MessageChannel channel, String[] msgArr, User user){
-        Train.trainCommand(msgArr, channel, playerDatabase, user, messageHandler);
+        channel.sendMessage(messageHandler.createDefaultEmbedMessage(user, "Messaged you the list of commands.")).queue();
     }
+
 
     public void stamina(MessageChannel channel, User user){
         int curStamina = playerDatabase.grabPlayer(user.getId()).getStamina();
