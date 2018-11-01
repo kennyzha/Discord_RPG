@@ -8,16 +8,18 @@ import net.dv8tion.jda.core.entities.MessageChannel;
 import net.dv8tion.jda.core.entities.User;
 
 public class Train {
+    private static final String ERROR_MESSAGE = "Please include a number greater than 0 and the type of stat you would like to train. e.g. r!train power 10";
+
     public static void trainCommand(String[] msgArr, MessageChannel channel, PlayerDatabase playerDatabase, User user, MessageHandler messageHandler){
         if(msgArr.length < 3){
-            channel.sendMessage(messageHandler.createDefaultEmbedMessage(user, "Please include a number between 1 and 60 and the type of stat you would like to train. e.g. r!train power 10")).queue();
+            channel.sendMessage(messageHandler.createDefaultEmbedMessage(user, ERROR_MESSAGE)).queue();
         }else{
             String statToTrain = msgArr[1];
             try{
                 int numTimesToTrain = Integer.parseInt(msgArr[2]);
 
                 if(numTimesToTrain < 1){
-                    channel.sendMessage(messageHandler.createDefaultEmbedMessage(user, "Please include a number greater than 0 and the type of stat you would like to train. e.g. r!train power 10")).queue();
+                    channel.sendMessage(messageHandler.createDefaultEmbedMessage(user, ERROR_MESSAGE)).queue();
                 } else{
                     Player player = playerDatabase.grabPlayer(user.getId());
                     TrainingHandler trainingHandler = new TrainingHandler(player, user, channel, playerDatabase);
@@ -25,7 +27,7 @@ public class Train {
                     trainStat(trainingHandler, statToTrain, numTimesToTrain, channel, messageHandler, user);
                 }
             } catch(Exception e){
-                channel.sendMessage(messageHandler.createDefaultEmbedMessage(user, "Please include a valid number between 1 and 60. e.g. r!train speed 10")).queue();
+                channel.sendMessage(messageHandler.createDefaultEmbedMessage(user, ERROR_MESSAGE)).queue();
             }
         }
     }

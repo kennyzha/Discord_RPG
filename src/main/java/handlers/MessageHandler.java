@@ -5,6 +5,7 @@ import config.MonsterConstants;
 import models.*;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.JDA;
+import net.dv8tion.jda.core.entities.MessageChannel;
 import net.dv8tion.jda.core.entities.MessageEmbed;
 import net.dv8tion.jda.core.entities.User;
 import utils.CombatResult;
@@ -266,5 +267,12 @@ public class MessageHandler {
         eb.setFooter(String.format("Min Roll: %s Max Roll: %s", format.format(Item.getLowerBoundStat(player.getLevel())), format.format(Item.getUpperBoundStat(player.getLevel()))), null);
 
         return eb.build();
+    }
+    public static void sendDefaultEmbedMessage(User user, String description, MessageHandler messageHandler, MessageChannel channel){
+        channel.sendMessage(messageHandler.createDefaultEmbedMessage(user, description)).queue();
+    }
+
+    public static void sendDefaultEmbedMessageWithFooter(User user, String description, MessageHandler messageHandler, MessageChannel channel, String footer){
+        channel.sendMessage(messageHandler.createDefaultEmbedMessage(user, description, footer)).queue();
     }
 }

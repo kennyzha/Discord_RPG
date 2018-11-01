@@ -1,5 +1,7 @@
 package handlers;
 
+import commands.Consume;
+import commands.Fight;
 import commands.Profile;
 import commands.Train;
 import config.ApplicationConstants;
@@ -8,6 +10,7 @@ import database.PlayerDatabase;
 import models.*;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.entities.*;
+import net.dv8tion.jda.core.events.Event;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import utils.CombatResult;
 
@@ -37,17 +40,55 @@ public class CommandHandler {
         MessageChannel channel = event.getChannel();    //This is the MessageChannel that the message was sent to.
         String msg = message.getContentDisplay().toLowerCase();
         String[] msgArr = msg.split(" ");
+
         if(msgArr.length == 0 || !msgArr[0].startsWith(COMMAND_PREFIX))
             return;
 
+        if(!handleStaticCommands(msgArr, channel, user) && !handleDynamicCommands(msgArr, channel, user, message, event)){
+            String str = "Command not recognized: " + msgArr[0] + ". Type r!commands for list of commands.";
+            sendDefaultEmbedMessage(user, str, messageHandler, channel);
+        }
+    }
+
+    public boolean handleStaticCommands(String[] msgArr, MessageChannel channel, User user){
+        switch(msgArr[0]){
+            case "r!help":
+                help(channel, user);
+                break;
+            case "r!monster":
+            case "r!monsters":
+                monsters(channel, user);
+                break;
+            case "r!server":
+                String link = "Link to official RPG server.  Join for update announcements and to give feedback to help shape the development of the game.\n\nhttps://discord.gg/3Gq4kAr";
+                sendDefaultEmbedMessage(user,link, messageHandler, channel);
+                break;
+            case "r!commands":
+            case "r!command":
+                commands(channel, user);
+                break;
+            case "r!credits":
+                String credits = "The concept of power, speed, and strength is based on an old school RPG game called hobowars. " +
+                        "The item icons used in this are available on https://game-icons.net";
+                sendDefaultEmbedMessage(user, credits, messageHandler, channel);
+                break;
+            case "r!vote":
+            case "r!votes":
+            case "r!daily":
+                vote(channel, user);
+                break;
+            default:
+                return false;
+        }
+        return true;
+    }
+
+    public boolean handleDynamicCommands(String[] msgArr, MessageChannel channel, User user, Message message, Event event){
         switch(msgArr[0]){
             case "r!profile":
             case "r!prof":
             case "r!p":
                 Profile.profileCommand(message, playerDatabase, user, channel, messageHandler);
-                break;
-            case "r!help":
-                help(channel, user);
                 break;
             case "r!train":
             case "r!t":
@@ -57,15 +98,11 @@ public class CommandHandler {
                 stamina(channel, user);
                 break;
             case "r!fight":
-               fight(channel, message, user);
+                Fight.fightCommand(message, user, playerDatabase, channel, messageHandler);
                 break;
             case "r!hunt":
             case "r!h":
                 hunt(channel, msgArr, user);
-                break;
-            case "r!monster":
-            case "r!monsters":
-                monsters(channel, user);
                 break;
             case "r!highscore":
             case "r!highscores":
@@ -84,38 +121,21 @@ public class CommandHandler {
             case "r!forage":
                 forage(channel, msgArr, user);
                 break;
+            case "r!consume":
+            case "r!item":
+            case "r!use":
+                Consume.consumeCommand(msgArr, user, playerDatabase, channel, messageHandler, format);
+                break;
             case "r!inventory":
             case "r!inven":
             case "r!i":
                 inventory(channel, user);
                 break;
-            case "r!consume":
-            case "r!item":
-            case "r!use":
-                consume(channel, msgArr, user);
-                break;
-            case "r!server":
-                String link = "Link to official RPG server.  Join for update announcements and to give feedback to help shape the development of the game.\n\nhttps://discord.gg/3Gq4kAr";
-                sendDefaultEmbedMessage(user,link, messageHandler, channel);
-                break;
-            case "r!commands":
-                commands(channel, user);
-                break;
-            case "r!credits":
-                String credits = "The concept of power, speed, and strength is based on an old school RPG game called hobowars. " +
-                        "The item icons used in this are available on https://game-icons.net";
-                sendDefaultEmbedMessage(user, credits, messageHandler, channel);
-                break;
-            case "r!vote":
-            case "r!votes":
-            case "r!daily":
-                vote(channel, user);
-                break;
-
             default:
-                String str = "Command not recognized: " + message.getContentDisplay() + ". Type r!commands for list of commands.";
-                sendDefaultEmbedMessage(user, str, messageHandler, channel);
+                return false;
         }
+
+        return true;
     }
 
     private void inventory(MessageChannel channel, User user) {
@@ -168,7 +188,6 @@ public class CommandHandler {
         } catch(NumberFormatException e){
             sendDefaultEmbedMessage(user, "Invalid number. Please type the item full name as it appears in your inventory with spaces. If you would like to consume 5 stamina potions you would type :r!consume stamina potion 5.", messageHandler, channel);
         }
-
     }
 
     public void consume(MessageChannel channel, String msg, User user){
@@ -506,10 +525,6 @@ public class CommandHandler {
         }
     }
 
-    public void profile(MessageChannel channel, User user, Message message){
-        Profile.profileCommand(message, playerDatabase, user, channel, messageHandler);
-    }
-
     public void help(MessageChannel channel, User user){
         channel.sendMessage(messageHandler.createDefaultEmbedMessage(user, ApplicationConstants.HELP_STRING)).queue();;
     }
@@ -528,26 +543,6 @@ public class CommandHandler {
 
         channel.sendMessage(messageHandler.createDefaultEmbedMessage(user, "You currently have " + curStamina + " stamina.")).queue();
 
-    }
-
-    public void fight(MessageChannel channel, Message message, User user){
-        String[] msgArr = message.getContentDisplay().split(" ");
-
-        CombatHandler combatHandler = new CombatHandler();
-        if(msgArr.length < 2){
-            sendDefaultEmbedMessage(user, "Please mention the name of the user you wish to fight with !fight @name.", messageHandler, channel);
-        } else{
-            Player mentionedPlayer = playerDatabase.grabMentionedPlayer(message, channel, "fight");
-
-            if(mentionedPlayer != null){
-                String enemyName = message.getMentionedUsers().get(0).getName();
-
-                Player player = playerDatabase.grabPlayer(user.getId());
-                CombatResult pvpResults = combatHandler.fightPlayer(player, mentionedPlayer);
-
-                channel.sendMessage(messageHandler.createEmbedFightMessage(user, enemyName, pvpResults)).queue();
-            }
-        }
     }
 
     public void hunt(MessageChannel channel, String[] msgArr, User user){
