@@ -168,8 +168,8 @@ public class Item {
         return (int) (Math.random() * 100) + 1;
     }
 
-    public static void useItem(Item item, Player player, int amount){
-        double statGained = statGained = player.calcStatGain() * amount;
+    public static void usePotionItem(Item item, Player player, int amount){
+        double statGained = player.calcStatGain() * amount;
         switch(item.toString()){
             case "speed potion":
                 player.increSpeed(statGained);
@@ -185,6 +185,23 @@ public class Item {
                 break;
         }
     }
+
+    public static void useScrollItem(Item item, Player player, int pow, int spd, int str){
+        switch(item.toString()){
+            case "reset scroll":
+                if(pow + spd + str != 100){
+                    return;
+                }
+
+                double totalStats = player.getTotalStats();
+
+                player.setPower(totalStats * pow / 100);
+                player.setSpeed(totalStats * spd / 100);
+                player.setStrength(totalStats * str / 100);
+                break;
+        }
+    }
+
     @Override
     public String toString(){
         return this.getName().toLowerCase();

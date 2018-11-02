@@ -164,19 +164,19 @@ public class CommandHandler {
             double playerTotalStat = player.getTotalStats();
 
             if(item.equals("speed") && player.consumeItems(ItemConstants.SPEED_POTION.toString(), amount)){
-                Item.useItem(ItemConstants.SPEED_POTION, player, amount);
+                Item.usePotionItem(ItemConstants.SPEED_POTION, player, amount);
                 double statGained = player.getTotalStats() - playerTotalStat;
                 message.append(String.format("You consumed %s %s and gained %s speed.", amount, ItemConstants.SPEED_POTION.toString(), format.format(statGained)));
             } else if(item.equals("power") && player.consumeItems(ItemConstants.POWER_POTION.toString(), amount)){
-                Item.useItem(ItemConstants.POWER_POTION, player, amount);
+                Item.usePotionItem(ItemConstants.POWER_POTION, player, amount);
                 double statGained = player.getTotalStats() - playerTotalStat;
                 message.append(String.format("You consumed %s %s and gained %s power.", amount, ItemConstants.POWER_POTION.toString(),  format.format(statGained)));
             } else if(item.equals("strength") && player.consumeItems(ItemConstants.STRENGTH_POTION.toString(), amount)){
-                Item.useItem(ItemConstants.STRENGTH_POTION, player, amount);
+                Item.usePotionItem(ItemConstants.STRENGTH_POTION, player, amount);
                 double statGained = player.getTotalStats() - playerTotalStat;
                 message.append(String.format("You consumed %s %s and gained %s strength.", amount, ItemConstants.STRENGTH_POTION.toString(),  format.format(statGained)));
             } else if(item.equals("stamina") && player.consumeItems(ItemConstants.STAMINA_POTION.toString(), amount)){
-                Item.useItem(ItemConstants.STAMINA_POTION, player, amount);
+                Item.usePotionItem(ItemConstants.STAMINA_POTION, player, amount);
 
                 message.append(String.format("You consumed %s %s and gained %s stamina", amount, ItemConstants.STAMINA_POTION.toString(),  format.format(amount * 2)));
             } else{
