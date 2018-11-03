@@ -113,7 +113,7 @@ public class Forage {
 
 
             if(accessoryCratesFound > 0){
-                crate(channel, new String[]{"r!crate", "accessory", Integer.toString(accessoryCratesFound)}, user, true);
+                Crate.CrateCommand(new String[]{"r!crate", "accessory", Integer.toString(accessoryCratesFound)}, channel, playerDatabase, user, messageHandler, true);
             }
         } catch(NumberFormatException e){
             msg = String.format("Please enter a a valid number. You can only forage 20 times a day. You have already foraged %s times today.", player.getForageAmount());
