@@ -18,7 +18,7 @@ public class DynamoClient {
     private String awsSecretKey = ApplicationConstants.AWS_SECRET_ACCESS_KEY;
 
 //    private String playerTableName = ApplicationConstants.PLAYER_TABLE_NAME;
-    private String playerTableName = ApplicationConstants.PLAYER_TEST_TABLE_NAME;
+    private String playerTableName = ApplicationConstants.PLAYER_DEV_TABLE_NAME;
     private String staminaTableName = ApplicationConstants.STAMINA_TABLE_NAME;
 
     private String playerSpeedIndex = ApplicationConstants.PLAYER_SPEED_INDEX;
