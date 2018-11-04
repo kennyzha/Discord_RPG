@@ -6,7 +6,6 @@ import database.PlayerDatabase;
 import handlers.MessageHandler;
 import models.Item;
 import models.Player;
-import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.MessageChannel;
 import net.dv8tion.jda.core.entities.User;
 
@@ -113,7 +112,7 @@ public class Forage {
 
 
             if(accessoryCratesFound > 0){
-                Crate.CrateCommand(new String[]{"r!crate", "accessory", Integer.toString(accessoryCratesFound)}, channel, playerDatabase, user, messageHandler, true);
+                Crate.crateCommand(new String[]{"r!crate", "accessory", Integer.toString(accessoryCratesFound)}, channel, playerDatabase, user, messageHandler, true);
             }
         } catch(NumberFormatException e){
             msg = String.format("Please enter a a valid number. You can only forage 20 times a day. You have already foraged %s times today.", player.getForageAmount());

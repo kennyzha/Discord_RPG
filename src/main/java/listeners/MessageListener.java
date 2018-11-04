@@ -22,15 +22,20 @@ public class MessageListener extends ListenerAdapter {
             return;
         }
 
-        if(ApplicationConstants.TEST_SERVER &&
-                (!event.getMessage().getChannelType().isGuild() ||
+        if(ApplicationConstants.TEST_SERVER && checkIsTestServer(event)){
+            new CommandHandler(playerDatabase, messageHandler, highscoreHandler).handleCommand(event);
+        }
+    }
+
+    public boolean checkIsTestServer(MessageReceivedEvent event){
+        if((!event.getMessage().getChannelType().isGuild() ||
                         !event.getGuild().getId().equals(ApplicationConstants.OFFICIAL_GUILD_ID) ||
                         !event.getChannel().getId().equals("495015240124203019"))){
-            System.out.println("not official server channel");
-            return;
+            System.out.println("not official server channel. " + event.getAuthor().getName() + event.getAuthor().getDiscriminator()
+                    + " : " + event.getMessage().toString());
+            return false;
         }
-
-        new CommandHandler(playerDatabase, messageHandler, highscoreHandler).handleCommand(event);
+        return true;
     }
 
 

@@ -12,7 +12,7 @@ import java.text.DecimalFormat;
 public class Crate {
     public static final String LOW_LEVEL_ERROR_MSG = "Crates provide you with weapon and armor stats. You will unlock them at level 50.";
 
-    public static void CrateCommand(String[] msgArr, MessageChannel channel, PlayerDatabase playerDatabase, User user, MessageHandler messageHandler, boolean forage){
+    public static void crateCommand(String[] msgArr, MessageChannel channel, PlayerDatabase playerDatabase, User user, MessageHandler messageHandler, boolean forage){
         Player player = playerDatabase.grabPlayer(user.getId());
 
         if(player != null){
