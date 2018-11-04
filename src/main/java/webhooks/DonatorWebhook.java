@@ -1,4 +1,4 @@
-package handlers;
+package webhooks;
 
 import com.amazonaws.services.lambda.runtime.Context;
 
@@ -9,7 +9,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
-public class DonatorHandler implements RequestStreamHandler {
+public class DonatorWebhook implements RequestStreamHandler {
     JSONParser parser = new JSONParser();
 
     @Override
