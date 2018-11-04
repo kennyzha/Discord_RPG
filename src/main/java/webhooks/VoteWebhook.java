@@ -6,9 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import config.ApplicationConstants;
 import database.PlayerDatabase;
 import models.*;
-import net.dv8tion.jda.core.AccountType;
-import net.dv8tion.jda.core.JDA;
-import net.dv8tion.jda.core.JDABuilder;
+import utils.VoteRewardWrapper;
 
 import java.io.IOException;
 import java.io.InputStream;

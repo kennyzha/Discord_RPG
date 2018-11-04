@@ -1,6 +1,7 @@
 package models;
 
 import config.ApplicationConstants;
+import utils.Donator;
 
 import java.text.DecimalFormat;
 import java.time.LocalDate;
@@ -46,18 +47,6 @@ public class Player extends Entity{
 
     public void setDonatorEndTime(long donatorEndTime) {
         this.donatorEndTime = donatorEndTime;
-    }
-
-    public void addDonatorTime(long milliseconds){
-        if(isDonator()){
-            setDonatorEndTime(getDonatorEndTime() + milliseconds);
-        } else {
-            setDonatorEndTime(System.currentTimeMillis() + milliseconds);
-        }
-    }
-
-    public boolean isDonator(){
-        return (getDonatorEndTime() - System.currentTimeMillis()) > 0;
     }
 
     public HashMap<String, Integer> getInventory() {
@@ -127,7 +116,7 @@ public class Player extends Entity{
 
         if(this.stamina < ApplicationConstants.MAX_STAMINA){
             Long elapsedTime = updatedTime - this.staminaLastUpdateTime;
-            int staminaRefreshRate = (isDonator()) ? ApplicationConstants.DONATOR_STAMINA_REFRESH_RATE : ApplicationConstants.STAMINA_REFRESH_RATE;
+            int staminaRefreshRate = (Donator.isDonator(this)) ? ApplicationConstants.DONATOR_STAMINA_REFRESH_RATE : ApplicationConstants.STAMINA_REFRESH_RATE;
             Long leftOverTime = elapsedTime % staminaRefreshRate;
             updatedTime -= leftOverTime;
 

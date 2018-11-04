@@ -1,4 +1,6 @@
-package models;
+package utils;
+
+import models.Player;
 
 public class Donator {
     public static final long ONE_MONTH = 1000L * 60 * 60 * 24 * 31;

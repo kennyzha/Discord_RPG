@@ -5,6 +5,7 @@ import models.*;
 import net.dv8tion.jda.core.entities.MessageChannel;
 import utils.CombatStatistic;
 import utils.CombatResult;
+import utils.Donator;
 
 import java.text.DecimalFormat;
 
@@ -38,7 +39,7 @@ public class CombatHandler {
             }
         }
 
-        if(player.isDonator()){
+        if(Donator.isDonator(player)){
             donatorGoldEarned = player.calcDonatorBonusGold(totalGoldEarned);
             combatResult.appendToCombatResult(String.format("\nYou gained an extra %s gold due to being a donator.\n"));
         }
