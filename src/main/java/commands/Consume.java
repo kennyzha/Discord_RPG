@@ -50,7 +50,7 @@ public class Consume {
             double statGained = player.getTotalStats() - playerTotalStat;
             message.append(String.format("You consumed %s %s and gained %s speed.", amount, ItemConstants.SPEED_POTION.toString(), format.format(statGained)));
         } else if(item.equals("power") && player.consumeItems(ItemConstants.POWER_POTION.toString(), amount)){
-            Item.usePotionItem(ItemConstants.POWER_POTION, player, amount);
+            Item.usePha otionItem(ItemConstants.POWER_POTION, player, amount);
             double statGained = player.getTotalStats() - playerTotalStat;
             message.append(String.format("You consumed %s %s and gained %s power.", amount, ItemConstants.POWER_POTION.toString(),  format.format(statGained)));
         } else if(item.equals("strength") && player.consumeItems(ItemConstants.STRENGTH_POTION.toString(), amount)){
