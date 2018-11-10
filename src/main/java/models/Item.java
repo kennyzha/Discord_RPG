@@ -169,16 +169,15 @@ public class Item {
     }
 
     public static void usePotionItem(Item item, Player player, int amount){
-        double statGained = player.calcStatGain() * amount;
         switch(item.toString()){
             case "speed potion":
-                player.increSpeed(statGained);
+                player.increSpeed(amount);
                 break;
             case "power potion":
-                player.increPower(statGained);
+                player.increPower(amount);
                 break;
             case "strength potion":
-                player.increStrength(statGained);
+                player.increStrength(amount);
                 break;
             case "stamina potion":
                 player.setStamina(player.getStamina() + (amount * 2));

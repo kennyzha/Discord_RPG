@@ -9,6 +9,7 @@ import net.dv8tion.jda.core.entities.MessageChannel;
 import net.dv8tion.jda.core.entities.MessageEmbed;
 import net.dv8tion.jda.core.entities.User;
 import utils.CombatResult;
+import utils.Donator;
 
 import java.awt.*;
 import java.text.DecimalFormat;
@@ -25,7 +26,9 @@ public class MessageHandler {
         EmbedBuilder eb = new EmbedBuilder();
         setEmbedMessageDefaults(eb, user);
 
-        eb.setTitle("Level " + player.getLevel() + " (" + format.format(player.getLevelExp()) + "/" + format.format(player.calcExpToNextLevel()) + ")");
+        String donatorStar = (Donator.isDonator(player)) ? ":star: " : "";
+
+        eb.setTitle(donatorStar + "Level " + player.getLevel() + " (" + format.format(player.getLevelExp()) + "/" + format.format(player.calcExpToNextLevel()) + ")");
 
         eb.addField("Health", format.format(player.getHealth()), true);
         eb.addField("Gold", format.format(player.getGold()), true);
@@ -212,7 +215,15 @@ public class MessageHandler {
         EmbedBuilder eb = new EmbedBuilder();
         setEmbedMessageDefaults(eb, user);
 
-        String suffix = itemType == Item.Type.WEAPON ? "attack" : "defense";
+        String suffix = "";
+
+        if(itemType == Item.Type.WEAPON){
+            suffix = "attack";
+        } else if(itemType == Item.Type.ARMOR) {
+            suffix = "attack";
+        } else{
+            suffix = "speed";
+        }
 
         eb.appendDescription(crateSummary);
 

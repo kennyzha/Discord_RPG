@@ -10,6 +10,7 @@ import net.dv8tion.jda.core.entities.*;
 import net.dv8tion.jda.core.events.Event;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import utils.CombatResult;
+import utils.Donator;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -27,7 +28,7 @@ public class CommandHandler {
         this.playerDatabase = playerDatabase;
         this.messageHandler = messageHandler;
         this.highscoreHandler = highscoreHandler;
-        format = new DecimalFormat("#,###.##");
+        format = new DecimalFormat("#,###.###");
     }
 
     public void handleCommand(MessageReceivedEvent event){
@@ -126,6 +127,17 @@ public class CommandHandler {
             case "r!inven":
             case "r!i":
                 inventory(channel, user);
+                break;
+            case "r!donator":
+                Player player = playerDatabase.grabPlayer(user.getId());
+                String str = "Player is a donator. " + Donator.isDonator(player);
+                str += " - " + player.getDonatorEndTime();
+                System.out.println(str);
+//                Donator.applyDonatorPacks(player, 1);
+                System.out.println("Donator.isDonator(player) = " + Donator.isDonator(player));
+                System.out.println("Donator.getDonatorTimeDays(ok) = " + Donator.getDonatorTimeDays(player));
+//                playerDatabase.insertPlayer(player);
+
                 break;
             default:
                 return false;
@@ -246,6 +258,7 @@ public class CommandHandler {
                 channel.sendMessage(messageHandler.createEmbedFightMessage(user, monster.getName(), pvmResults)).queue();
 
             } catch(Exception e){
+                e.printStackTrace();
                 sendDefaultEmbedMessage(user, "Please type a valid number of times you wish to hunt that monster with. e.g. \"r!hunt slime 1\". \"r!monsters\" for list of monsters.", messageHandler, channel);
             }
         }

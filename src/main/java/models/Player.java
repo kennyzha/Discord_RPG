@@ -120,7 +120,7 @@ public class Player extends Entity{
             Long leftOverTime = elapsedTime % staminaRefreshRate;
             updatedTime -= leftOverTime;
 
-            int staminaGained = (int) (elapsedTime / ApplicationConstants.STAMINA_REFRESH_RATE);
+            int staminaGained = (int) (elapsedTime / staminaRefreshRate);
 
             setStamina(Math.min(this.stamina + staminaGained, ApplicationConstants.MAX_STAMINA));
         }

@@ -41,7 +41,7 @@ public class CombatHandler {
 
         if(Donator.isDonator(player)){
             donatorGoldEarned = player.calcDonatorBonusGold(totalGoldEarned);
-            combatResult.appendToCombatResult(String.format("\nYou gained an extra %s gold due to being a donator.\n"));
+            combatResult.appendToCombatResult(String.format("\nYou gained an extra %s gold due to being a donator.\n", donatorGoldEarned));
         }
 
         combatResult.appendToCombatResult(String.format("\nYou won %d/%d times and gained %s exp and %s gold (+%s).", numWins, numTimes, format.format(totalExpEarned), format.format(totalGoldEarned), format.format(donatorGoldEarned)));
