@@ -168,7 +168,7 @@ public class Item {
         return (int) (Math.random() * 100) + 1;
     }
 
-    public static void usePotionItem(Item item, Player player, int amount){
+    public static void applyPotionItem(Item item, Player player, int amount){
         switch(item.toString()){
             case "speed potion":
                 player.increSpeed(amount);
@@ -185,20 +185,16 @@ public class Item {
         }
     }
 
-    public static void useScrollItem(Item item, Player player, int pow, int spd, int str){
-        switch(item.toString()){
-            case "reset scroll":
-                if(pow + spd + str != 100){
-                    return;
-                }
+    public static void applyResetScroll(Player player, int pow, int spd, int str){
+            if(pow + spd + str != 100){
+                return;
+            }
 
-                double totalStats = player.getTotalStats();
+            double totalStats = player.getTotalStats();
 
-                player.setPower(totalStats * pow / 100);
-                player.setSpeed(totalStats * spd / 100);
-                player.setStrength(totalStats * str / 100);
-                break;
-        }
+            player.setPower(totalStats * pow / 100);
+            player.setSpeed(totalStats * spd / 100);
+            player.setStrength(totalStats * str / 100);
     }
 
     @Override

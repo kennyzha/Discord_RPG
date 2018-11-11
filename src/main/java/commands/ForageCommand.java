@@ -12,7 +12,7 @@ import net.dv8tion.jda.core.entities.User;
 import java.text.DecimalFormat;
 import java.time.LocalDate;
 
-public class Forage {
+public class ForageCommand {
     public static void forageCommand(String[] msgArr, MessageChannel channel, PlayerDatabase playerDatabase, User user, MessageHandler messageHandler, DecimalFormat format){
         Player player = playerDatabase.grabPlayer(user.getId());
         String msg = "";
@@ -100,7 +100,7 @@ public class Forage {
                 strengthPotionExcess = getExcessAmount(player, powerPotionsFound, ItemConstants.STRENGTH_POTION, sb);
             }
 
-            String footer = "Forage: " + (20 - player.getForageAmount()) + " / " + 20 + " (-" + amount + ")";
+            String footer = "ForageCommand: " + (20 - player.getForageAmount()) + " / " + 20 + " (-" + amount + ")";
             MessageHandler.sendDefaultEmbedMessageWithFooter(user, sb.toString(), messageHandler, channel, footer);
 
             player.setForageAmount(player.getForageAmount() + amount);
@@ -112,7 +112,7 @@ public class Forage {
 
 
             if(accessoryCratesFound > 0){
-                Crate.crateCommand(new String[]{"r!crate", "accessory", Integer.toString(accessoryCratesFound)}, channel, playerDatabase, user, messageHandler, true);
+                CrateCommand.crateCommand(new String[]{"r!crate", "accessory", Integer.toString(accessoryCratesFound)}, channel, playerDatabase, user, messageHandler, true);
             }
         } catch(NumberFormatException e){
             msg = String.format("Please enter a a valid number. You can only forage 20 times a day. You have already foraged %s times today.", player.getForageAmount());
@@ -125,17 +125,17 @@ public class Forage {
         String potionStr = "";
         if(speedPotionExcess > 0){
             potionStr = "r!consume speed potion";
-            Consume.consumeCommand(potionStr.split(" "), user, playerDatabase, channel, messageHandler, format);
+            ConsumeCommand.consumeCommand(potionStr.split(" "), user, playerDatabase, channel, messageHandler, format);
         }
 
         if(powerPotionExcess > 0){
             potionStr = "r!consume power potion";
-            Consume.consumeCommand(potionStr.split(" "), user, playerDatabase, channel, messageHandler, format);
+            ConsumeCommand.consumeCommand(potionStr.split(" "), user, playerDatabase, channel, messageHandler, format);
         }
 
         if(strengthPotionExcess > 0){
             potionStr = "r!consume strength potion";
-            Consume.consumeCommand(potionStr.split(" "), user, playerDatabase, channel, messageHandler, format);
+            ConsumeCommand.consumeCommand(potionStr.split(" "), user, playerDatabase, channel, messageHandler, format);
         }
     }
 

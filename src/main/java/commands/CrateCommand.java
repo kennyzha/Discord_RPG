@@ -9,7 +9,7 @@ import net.dv8tion.jda.core.entities.User;
 
 import java.text.DecimalFormat;
 
-public class Crate {
+public class CrateCommand {
     public static final String LOW_LEVEL_ERROR_MSG = "Crates provide you with weapon and armor stats. You will unlock them at level 50.";
 
     public static void crateCommand(String[] msgArr, MessageChannel channel, PlayerDatabase playerDatabase, User user, MessageHandler messageHandler, boolean forage){

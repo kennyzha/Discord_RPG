@@ -7,7 +7,7 @@ import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.MessageChannel;
 import net.dv8tion.jda.core.entities.User;
 
-public class Profile {
+public class ProfileCommand {
 
     public static void profileCommand(Message message, PlayerDatabase playerDatabase, User user, MessageChannel channel, MessageHandler messageHandler){
         String[] msgArr = message.getContentDisplay().split(" ");

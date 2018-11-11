@@ -85,17 +85,17 @@ public class CommandHandler {
             case "r!profile":
             case "r!prof":
             case "r!p":
-                Profile.profileCommand(message, playerDatabase, user, channel, messageHandler);
+                ProfileCommand.profileCommand(message, playerDatabase, user, channel, messageHandler);
                 break;
             case "r!train":
             case "r!t":
-                Train.trainCommand(msgArr, channel, playerDatabase, user, messageHandler);
+                TrainCommand.trainCommand(msgArr, channel, playerDatabase, user, messageHandler);
                 break;
             case "r!stamina":
                 stamina(channel, user);
                 break;
             case "r!fight":
-                Fight.fightCommand(message, user, playerDatabase, channel, messageHandler);
+                FightCommand.fightCommand(message, user, playerDatabase, channel, messageHandler);
                 break;
             case "r!hunt":
             case "r!h":
@@ -109,19 +109,19 @@ public class CommandHandler {
                 break;
             case "r!crate":
             case"r!crates":
-                commands.Crate.crateCommand(msgArr, channel, playerDatabase, user, messageHandler, false);
+                CrateCommand.crateCommand(msgArr, channel, playerDatabase, user, messageHandler, false);
                 break;
             case "r!gamble":
             case "r!bet":
                 gamble(channel, msgArr, user);
                 break;
             case "r!forage":
-                Forage.forageCommand(msgArr, channel, playerDatabase, user, messageHandler, format);
+                ForageCommand.forageCommand(msgArr, channel, playerDatabase, user, messageHandler, format);
                 break;
             case "r!consume":
             case "r!item":
             case "r!use":
-                Consume.consumeCommand(msgArr, user, playerDatabase, channel, messageHandler, format);
+                ConsumeCommand.consumeCommand(msgArr, user, playerDatabase, channel, messageHandler, format);
                 break;
             case "r!inventory":
             case "r!inven":

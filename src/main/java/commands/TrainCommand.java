@@ -7,7 +7,7 @@ import models.Player;
 import net.dv8tion.jda.core.entities.MessageChannel;
 import net.dv8tion.jda.core.entities.User;
 
-public class Train {
+public class TrainCommand {
     private static final String ERROR_MESSAGE = "Please include a number greater than 0 and the type of stat you would like to train. e.g. r!train power 10";
 
     public static void trainCommand(String[] msgArr, MessageChannel channel, PlayerDatabase playerDatabase, User user, MessageHandler messageHandler){

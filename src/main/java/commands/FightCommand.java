@@ -9,7 +9,7 @@ import net.dv8tion.jda.core.entities.MessageChannel;
 import net.dv8tion.jda.core.entities.User;
 import utils.CombatResult;
 
-public class Fight {
+public class FightCommand {
     public static void fightCommand(Message message, User user, PlayerDatabase playerDatabase, MessageChannel channel, MessageHandler messageHandler){
         String[] msgArr = message.getContentDisplay().split(" ");
 
