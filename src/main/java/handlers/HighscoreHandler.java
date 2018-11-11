@@ -4,6 +4,7 @@ import database.PlayerDatabase;
 import models.Player;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.PriorityQueue;
 
@@ -32,6 +33,7 @@ public class HighscoreHandler {
     public ArrayList<Player> getLevelHighscore(){
         if(levelHighscore.isEmpty() || isStale()){
             updateHighscores();
+            Collections.reverse(levelHighscore);
         }
             return levelHighscore;
     }
@@ -39,6 +41,7 @@ public class HighscoreHandler {
     public ArrayList<Player> getSpeedHighscore(){
         if(speedHighscore.isEmpty() || isStale()){
             updateHighscores();
+            Collections.reverse(speedHighscore);
         }
         return speedHighscore;
     }
@@ -46,6 +49,7 @@ public class HighscoreHandler {
     public ArrayList<Player> getPowerHighscore(){
         if(powerHighscore.isEmpty() || isStale()){
             updateHighscores();
+            Collections.reverse(powerHighscore);
         }
         return powerHighscore;
     }
@@ -53,6 +57,7 @@ public class HighscoreHandler {
     public ArrayList<Player> getStrengthHighscore(){
         if(strengthHighscore.isEmpty() || isStale()){
             updateHighscores();
+            Collections.reverse(strengthHighscore);
         }
         return strengthHighscore;
     }
@@ -60,6 +65,7 @@ public class HighscoreHandler {
     public ArrayList<Player> getTotalHighscore(){
         if(totalHighscore.isEmpty() || isStale()){
             updateHighscores();
+            Collections.reverse(totalHighscore);
         }
         return totalHighscore;
     }
@@ -67,6 +73,7 @@ public class HighscoreHandler {
     public ArrayList<Player> getGoldHighscore(){
         if(goldHighscore.isEmpty() || isStale()){
             updateHighscores();
+            Collections.reverse(goldHighscore);
         }
         return goldHighscore;
     }
@@ -82,30 +89,46 @@ public class HighscoreHandler {
         this.timeSinceUpdated = System.currentTimeMillis();
         initHighscoreArrays();
 
-        PriorityQueue<Player> levelsPq = new PriorityQueue<>((p1, p2) -> (p2.getLevel() - p1.getLevel()));
-        PriorityQueue<Player> powerPq = new PriorityQueue<>((p1, p2) -> (int) (p2.getPower() - p1.getPower()));
-        PriorityQueue<Player> speedPq = new PriorityQueue<>((p1, p2) -> (int) (p2.getSpeed() - p1.getSpeed()));
-        PriorityQueue<Player> strengthPq = new PriorityQueue<>((p1, p2) -> (int) (p2.getStrength() - p1.getStrength()));
-        PriorityQueue<Player> totalPq = new PriorityQueue<>((p1,p2) -> (int) (p2.getTotalStats() - p1.getTotalStats()));
-        PriorityQueue<Player> goldPq = new PriorityQueue<>((p1,p2) -> (p2.getGold() - p1.getGold()));
+        PriorityQueue<Player> levelPq = new PriorityQueue<>((p1, p2) -> (p1.getLevel() - p2.getLevel()));
+        PriorityQueue<Player> powerPq = new PriorityQueue<>((p1, p2) -> (int) (p1.getPower() - p2.getPower()));
+        PriorityQueue<Player> speedPq = new PriorityQueue<>((p1, p2) -> (int) (p1.getSpeed() - p2.getSpeed()));
+        PriorityQueue<Player> strengthPq = new PriorityQueue<>((p1, p2) -> (int) (p1.getStrength() - p2.getStrength()));
+        PriorityQueue<Player> totalPq = new PriorityQueue<>((p1,p2) -> (int) (p1.getTotalStats() - p2.getTotalStats()));
+        PriorityQueue<Player> goldPq = new PriorityQueue<>((p1,p2) -> (p1.getGold() - p2.getGold()));
 
         List<Player> players = playerDatabase.retreivePlayers();
 
-        if(players.size() < HIGHSCORE_SIZE){
-            return;
-        }
+        populateQueues(players, levelPq, powerPq, speedPq, strengthPq, totalPq, goldPq);
+        populateHighscoreArrays(levelPq, powerPq, speedPq, strengthPq, totalPq, goldPq);
+    }
 
+    public void populateQueues(List<Player> players, PriorityQueue<Player> levelPq, PriorityQueue<Player> powerPq, PriorityQueue<Player> speedPq, PriorityQueue<Player> strengthPq,
+                               PriorityQueue<Player> totalPq, PriorityQueue<Player> goldPq){
         for(Player p : players){
-            levelsPq.add(p);
+            if(levelPq.size() >= HIGHSCORE_SIZE){
+                levelPq.poll();
+                powerPq.poll();
+                speedPq.poll();
+                strengthPq.poll();
+                totalPq.poll();
+                goldPq.poll();
+            }
+
+            levelPq.add(p);
             powerPq.add(p);
             speedPq.add(p);
             strengthPq.add(p);
             totalPq.add(p);
             goldPq.add(p);
         }
+    }
 
-        for(int i = 0; i < HIGHSCORE_SIZE; i++){
-            levelHighscore.add(levelsPq.poll());
+    public void populateHighscoreArrays(PriorityQueue<Player> levelPq, PriorityQueue<Player> powerPq, PriorityQueue<Player> speedPq, PriorityQueue<Player> strengthPq,
+                                        PriorityQueue<Player> totalPq, PriorityQueue<Player> goldPq){
+        int size = Math.min(HIGHSCORE_SIZE, levelPq.size());
+
+        for(int i = 0; i < size; i++){
+            levelHighscore.add(levelPq.poll());
             powerHighscore.add(powerPq.poll());
             speedHighscore.add(speedPq.poll());
             strengthHighscore.add(strengthPq.poll());
