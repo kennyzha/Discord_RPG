@@ -42,7 +42,7 @@ public class ConsumeCommand {
                 case "scroll":
                     if(msgArr.length < 6){
                         message.append("Insufficient arguments. If you are trying to use a reset scroll, you need to type in the % of each stat" +
-                                " you would like and they must add up to 100. \n e.g. r!use reset scroll 30 25 45 would set your power to 30%, speed" +
+                                " you would like and they must add up to 100. \n\n e.g. r!use reset scroll 30 25 45 would set your power to 30%, speed" +
                                 " to 25% and strength to 45% of your total stats.");
                         MessageHandler.sendDefaultEmbedMessage(user, message.toString(), messageHandler, channel);
                         return;
@@ -82,17 +82,17 @@ public class ConsumeCommand {
             Item.applyPotionItem(ItemConstants.STAMINA_POTION, player, amount);
             message.append(String.format("You consumed %s %s and gained %s stamina", amount, ItemConstants.STAMINA_POTION.toString(),  format.format(amount * 2)));
         } else{
-            message.append(String.format("You are trying to consume more than you have or you entered the wrong item name! Check your inventory with r!inventory."));
+            message.append("You are trying to consume more than you have or you entered the wrong item name! Check your inventory with r!inventory.");
         }
     }
 
     public static void consumeResetScroll(String itemName, Player player, int pow, int spd, int str, StringBuilder message){
-        if(itemName.equals("reset") && player.consumeItems(ItemConstants.RESET_SCROLL.toString(), 1)){
+        if(itemName.equals("reset") && player.containsItemQuantity(ItemConstants.RESET_SCROLL.toString(), 1) && Item.applyResetScroll(player, pow, spd, str) && player.consumeItems(ItemConstants.RESET_SCROLL.toString(), 1)){
             // r!use reset scroll 33 33 34
-            Item.applyResetScroll(player, pow, spd, str);
             message.append(String.format("Successfully applied reset scroll. Your stat distribution is now %s%% power, %s%% speed, and %s%% strength.", pow, spd, str));
         } else{
-            message.append(String.format("You are trying to consume more than you have or you entered the wrong item name! Check your inventory with r!inventory."));
+            message.append("If you are trying to use a reset scroll, you need to type in the % of each stat you would like and they must add up to 100. \n\n" +
+                    "e.g. r!use reset scroll 30 25 45 would set your power to 30%, speed to 25% and strength to 45% of your total stats.");
         }
     }
 }

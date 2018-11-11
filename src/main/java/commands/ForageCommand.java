@@ -84,20 +84,16 @@ public class ForageCommand {
                 }
             }
 
-            int speedPotionExcess = 0;
-            int powerPotionExcess = 0;
-            int strengthPotionExcess = 0;
-
             if(speedPotionsFound > 0){
-                speedPotionExcess = getExcessAmount(player, speedPotionsFound, ItemConstants.SPEED_POTION, sb);
+                addPotions(player, speedPotionsFound, ItemConstants.SPEED_POTION, sb);
             }
 
             if(powerPotionsFound > 0){
-                powerPotionExcess = getExcessAmount(player, powerPotionsFound, ItemConstants.POWER_POTION, sb);
+                addPotions(player, powerPotionsFound, ItemConstants.POWER_POTION, sb);
             }
 
             if(strengthPotionsFound > 0){
-                strengthPotionExcess = getExcessAmount(player, powerPotionsFound, ItemConstants.STRENGTH_POTION, sb);
+                addPotions(player, powerPotionsFound, ItemConstants.STRENGTH_POTION, sb);
             }
 
             String footer = "ForageCommand: " + (20 - player.getForageAmount()) + " / " + 20 + " (-" + amount + ")";
@@ -107,9 +103,6 @@ public class ForageCommand {
             player.setForageDate(LocalDate.now().toString());
             player.setStamina(player.getStamina() - amount);
             playerDatabase.insertPlayer(player);
-
-            consumeExcessPotions(user, playerDatabase, channel, messageHandler, format, speedPotionExcess, powerPotionExcess, strengthPotionExcess);
-
 
             if(accessoryCratesFound > 0){
                 CrateCommand.crateCommand(new String[]{"r!crate", "accessory", Integer.toString(accessoryCratesFound)}, channel, playerDatabase, user, messageHandler, true);
@@ -139,9 +132,8 @@ public class ForageCommand {
         }
     }
 
-    public static int getExcessAmount(Player player, int potionAmount, Item item, StringBuilder sb){
+    public static void addPotions(Player player, int potionAmount, Item item, StringBuilder sb){
         String itemName = item.toString().toLowerCase();
-        int potionExcess = 0;
 
         if(potionAmount == 1){
             sb.append(String.format("You searched around and found %s %s!\n", potionAmount, itemName));
@@ -150,17 +142,6 @@ public class ForageCommand {
 
         }
         player.addItem(itemName, potionAmount);
-        Integer speedPotionsOwned = player.getInventory().get(itemName);
-        if(speedPotionsOwned != null && speedPotionsOwned > 100){
-            potionExcess = speedPotionsOwned - ApplicationConstants.INVENTORY_LIMIT;
 
-            if (potionExcess == 1) {
-                sb.append(String.format("You decided to drink a %s because you can only hold a max of 100 of each item.\n", itemName));
-            } else {
-                sb.append(String.format("You decided to drink %s %ss because you can only hold a max of 100 of each item.\n", potionExcess, itemName));
-            }
-        }
-
-        return potionExcess;
     }
 }

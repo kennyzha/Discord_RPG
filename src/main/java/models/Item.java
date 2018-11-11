@@ -185,9 +185,9 @@ public class Item {
         }
     }
 
-    public static void applyResetScroll(Player player, int pow, int spd, int str){
-            if(pow + spd + str != 100){
-                return;
+    public static boolean applyResetScroll(Player player, int pow, int spd, int str){
+            if(pow < 0 || spd < 0 || str < 0 || pow + spd + str != 100){
+                return false;
             }
 
             double totalStats = player.getTotalStats();
@@ -195,6 +195,8 @@ public class Item {
             player.setPower(totalStats * pow / 100);
             player.setSpeed(totalStats * spd / 100);
             player.setStrength(totalStats * str / 100);
+
+            return true;
     }
 
     @Override
