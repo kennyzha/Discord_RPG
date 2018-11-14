@@ -96,7 +96,7 @@ public class HighscoreHandler {
         PriorityQueue<Player> totalPq = new PriorityQueue<>((p1,p2) -> (int) (p1.getTotalStats() - p2.getTotalStats()));
         PriorityQueue<Player> goldPq = new PriorityQueue<>((p1,p2) -> (p1.getGold() - p2.getGold()));
 
-        List<Player> players = playerDatabase.retreivePlayers();
+        List<Player> players = playerDatabase.retreiveAllPlayers();
 
         populateQueues(players, levelPq, powerPq, speedPq, strengthPq, totalPq, goldPq);
         populateHighscoreArrays(levelPq, powerPq, speedPq, strengthPq, totalPq, goldPq);

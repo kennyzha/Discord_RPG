@@ -1,5 +1,8 @@
 package handlers;
 
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
+import com.google.common.cache.LoadingCache;
 import commands.*;
 
 import config.ApplicationConstants;
@@ -14,20 +17,24 @@ import utils.Donator;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class CommandHandler {
 
     private PlayerDatabase playerDatabase;
     private MessageHandler messageHandler;
     private HighscoreHandler highscoreHandler;
+    private LoadingCache<String, Integer> rateLimitCache;
 
     private DecimalFormat format;
 
     private final String COMMAND_PREFIX = "r!";
-    public CommandHandler(PlayerDatabase playerDatabase, MessageHandler messageHandler, HighscoreHandler highscoreHandler){
+    public CommandHandler(PlayerDatabase playerDatabase, MessageHandler messageHandler, HighscoreHandler highscoreHandler, LoadingCache<String, Integer> rateLimitCache){
         this.playerDatabase = playerDatabase;
         this.messageHandler = messageHandler;
         this.highscoreHandler = highscoreHandler;
+        this.rateLimitCache = rateLimitCache;
         format = new DecimalFormat("#,###.###");
     }
 
@@ -40,6 +47,27 @@ public class CommandHandler {
 
         if(msgArr.length == 0 || !msgArr[0].startsWith(COMMAND_PREFIX))
             return;
+
+        if(rateLimitCache.getUnchecked(user.getId()) > 10){
+            System.out.println(user.getId() + " Full: " + rateLimitCache.getUnchecked(user.getId()));
+            return;
+        } else{
+            rateLimitCache.put(user.getId(), rateLimitCache.getUnchecked(user.getId()) + 1);
+            System.out.println(user.getId() + "After: " + rateLimitCache.getUnchecked(user.getId()));
+        }
+
+        List<Member> members = message.getGuild().getMembers();
+        System.out.println(members.size());
+        
+        for(Member m : members){
+            System.out.println("m.getUser().getName() = " + m.getUser().getName());
+        }
+        
+        List<Player> players = playerDatabase.retreivePlayers(members);
+
+        for(Player p : players){
+            System.out.println("p.getId() +  = " + p.getId() + " Level: " + p.getLevel() + " Total: " + p.getTotalStats());
+        }
 
         if(!handleStaticCommands(msgArr, channel, user) && !handleDynamicCommands(msgArr, channel, user, message, event)){
             String str = "Command not recognized: " + msgArr[0] + ". Type r!commands for list of commands.";
@@ -126,6 +154,7 @@ public class CommandHandler {
             case "r!inventory":
             case "r!inven":
             case "r!i":
+            case "r!inv":
                 inventory(channel, user);
                 break;
             case "r!donator":
