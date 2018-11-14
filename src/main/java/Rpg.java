@@ -19,8 +19,6 @@ public class Rpg {
         ShardManager shardManager = builder.build();
         System.out.println(shardManager.getShards().size());
 
-
-
 /*        JDA jda = new JDABuilder(AccountType.BOT).setToken(ApplicationConstants.TEST_TOKEN).buildBlocking();
 
 //        PostStats.toDiscordBots(jda, ApplicationConstants.DISCORD_BOT_AUTH_TOKEN);

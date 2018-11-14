@@ -128,7 +128,7 @@ public class CommandHandler {
             case "r!i":
                 inventory(channel, user);
                 break;
-            case "r!donator":
+/*            case "r!donator":
                 Player player = playerDatabase.grabPlayer(user.getId());
                 String str = "Player is a donator. " + Donator.isDonator(player);
                 str += " - " + player.getDonatorEndTime();
@@ -138,6 +138,23 @@ public class CommandHandler {
                 System.out.println("Donator.getDonatorTimeDays(ok) = " + Donator.getDonatorTimeDays(player));
 //                playerDatabase.insertPlayer(player);
 
+                break;*/
+            case "r!collect":
+                Player curPlayer = playerDatabase.grabPlayer(user.getId());
+                if(curPlayer.getKeyword() == null || !curPlayer.getKeyword().equals(ApplicationConstants.KEYWORD)){
+                    int crateCost = models.Crate.getCrateCost(Item.getLevelBracket(curPlayer.getLevel()));
+                    int goldIncrease = crateCost * 5;
+
+                    curPlayer.increGold(goldIncrease);
+                    curPlayer.setKeyword(ApplicationConstants.KEYWORD);
+                    playerDatabase.insertPlayer(curPlayer);
+
+                    String msg = String.format("You have collected %s gold.", goldIncrease);
+                    MessageHandler.sendDefaultEmbedMessage(user, msg, messageHandler, channel);
+                }  else{
+                    String msg = "You have already collected your gold.";
+                    MessageHandler.sendDefaultEmbedMessage(user, msg, messageHandler, channel);
+                }
                 break;
             default:
                 return false;

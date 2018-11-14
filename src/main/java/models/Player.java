@@ -23,6 +23,8 @@ public class Player extends Entity{
     private String forageDate;
     private int forageAmount;
 
+    private String keyword;
+
     private HashMap<String, Integer> inventory;
 
     public Player(String id) {
@@ -39,6 +41,15 @@ public class Player extends Entity{
         this.staminaLastUpdateTime = System.currentTimeMillis();
         this.inventory = new HashMap<>();
         this.donatorEndTime = System.currentTimeMillis();
+        this.keyword = "abc";
+    }
+
+    public String getKeyword() {
+        return keyword;
+    }
+
+    public void setKeyword(String keyword) {
+        this.keyword = keyword;
     }
 
     public long getDonatorEndTime() {
