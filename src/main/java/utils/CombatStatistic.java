@@ -1,7 +1,10 @@
 package utils;
 
+import java.text.DecimalFormat;
+
 public class CombatStatistic {
     private int totalDamageDealt, minDmgDealt, maxDmgDealt, numHitsGiven, roundsPassed;
+    private DecimalFormat format;
 
     public CombatStatistic() {
         this.numHitsGiven = 0;
@@ -9,6 +12,7 @@ public class CombatStatistic {
         this.roundsPassed = 0;
         this.minDmgDealt = Integer.MAX_VALUE;
         this.maxDmgDealt = 0;
+        this.format = new DecimalFormat("#,###.##");
     }
 
     public int getTotalDamageDealt() {
@@ -89,6 +93,6 @@ public class CombatStatistic {
     @Override
     public String toString(){
         return String.format("\nLowest damage dealt: %s Highest Damage dealt: %s \n" +
-                "Average damage dealt: %s Percentage hits dealt: %s", (getMinDmgDealt() == Integer.MAX_VALUE) ? 0 : getMinDmgDealt(), getMaxDmgDealt(), calcAvgDmgDealt(), calcAvgNumHitsGiven());
+                "Average damage dealt: %s Percentage hits dealt: %s", (getMinDmgDealt() == Integer.MAX_VALUE) ? 0 : format.format(getMinDmgDealt()), format.format(getMaxDmgDealt()), format.format(calcAvgDmgDealt()), calcAvgNumHitsGiven());
     }
 }

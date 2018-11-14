@@ -1,5 +1,7 @@
 package models;
 
+import config.ItemConstants;
+
 import java.util.Random;
 
 public class Item {
@@ -93,8 +95,10 @@ public class Item {
         int upperBound = getUpperBoundStat(level);
         int diff = upperBound - lowerBound;
 
-        if(statValue < lowerBound || statValue > upperBound){
-            return null;
+        if(statValue < lowerBound){
+            return Rarity.COMMON;
+        } else if (statValue > upperBound){
+            return Rarity.LEGENDARY;
         }
 
         if(statValue == lowerBound){
@@ -164,8 +168,39 @@ public class Item {
         return (int) (Math.random() * 100) + 1;
     }
 
+    public static void applyPotionItem(Item item, Player player, int amount){
+        switch(item.toString()){
+            case "speed potion":
+                player.increSpeed(amount);
+                break;
+            case "power potion":
+                player.increPower(amount);
+                break;
+            case "strength potion":
+                player.increStrength(amount);
+                break;
+            case "stamina potion":
+                player.setStamina(player.getStamina() + (amount * 2));
+                break;
+        }
+    }
+
+    public static boolean applyResetScroll(Player player, int pow, int spd, int str){
+            if(pow < 0 || spd < 0 || str < 0 || pow + spd + str != 100){
+                return false;
+            }
+
+            double totalStats = player.getTotalStats();
+
+            player.setPower(totalStats * pow / 100);
+            player.setSpeed(totalStats * spd / 100);
+            player.setStrength(totalStats * str / 100);
+
+            return true;
+    }
+
     @Override
     public String toString(){
-        return this.getName();
+        return this.getName().toLowerCase();
     }
 }

@@ -73,7 +73,7 @@ public class PlayerStatsTest {
     @Test
     public void statGainLevel300Test(){
         player.setLevel(300);
-        double expected = 1.25;
+        double expected = 1.5;
 
         System.out.println("Lvl 300 stat gain: " + expected);
         assertEquals(expected, player.calcStatGain());
@@ -82,7 +82,7 @@ public class PlayerStatsTest {
     @Test
     public void statGainLevel400Test(){
         player.setLevel(400);
-        double expected = 1.5;
+        double expected = 2.0;
 
         System.out.println("Lvl 400 stat gain: " + expected);
         assertEquals(expected, player.calcStatGain());
@@ -91,7 +91,7 @@ public class PlayerStatsTest {
     @Test
     public void statGainLevel500Test(){
         player.setLevel(500);
-        double expected = 1.75;
+        double expected = 2.5;
 
         System.out.println("Lvl 500 stat gain: " + expected);
         assertEquals(expected, player.calcStatGain());
@@ -216,9 +216,9 @@ public class PlayerStatsTest {
 
         player.applyLegendaryEffect();
 
-        assertEquals(105, player.getSpeed(), .01);
-        assertEquals(105, player.getPower(), .01);
-        assertEquals(105, player.getStrength(), .01);
+        assertEquals(105 + 33.333, player.getSpeed(), .01);
+        assertEquals(105 + 33.333, player.getPower(), .01);
+        assertEquals(105 + 33.333, player.getStrength(), .01);
     }
 
     @Test
@@ -229,9 +229,9 @@ public class PlayerStatsTest {
 
         player.applyLegendaryEffect();
 
-        assertEquals(558.5496, player.getSpeed(),  .01);
-        assertEquals(102.291, player.getPower(), .01);
-        assertEquals(9791.08, player.getStrength(),.01);
+        assertEquals(558.5496 + 33.333, player.getSpeed(),  .01);
+        assertEquals(102.291 + 33.333, player.getPower(), .01);
+        assertEquals(9791.08 + 33.333, player.getStrength(),.01);
     }
 
     @Test
@@ -246,7 +246,7 @@ public class PlayerStatsTest {
 
         double diff = newTotal - oldTotal;
 
-        assertEquals(diff, oldTotal *.05,  .01);
+        assertEquals(diff, oldTotal *.05 + 99.999,  .01);
 
     }
 
@@ -262,7 +262,7 @@ public class PlayerStatsTest {
 
         double diff = newTotal - oldTotal;
 
-        assertEquals(diff, oldTotal *.05, .01);
+        assertEquals(diff, oldTotal *.05 + 99.999, .01);
 
     }
 }

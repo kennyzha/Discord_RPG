@@ -1,6 +1,7 @@
-package models;
+package utils;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import models.Vote;
 
 public class VoteRewardWrapper {
 

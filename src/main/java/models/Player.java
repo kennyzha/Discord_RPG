@@ -1,8 +1,10 @@
 package models;
 
 import config.ApplicationConstants;
+import utils.Donator;
 
 import java.text.DecimalFormat;
+import java.time.LocalDate;
 import java.util.HashMap;
 
 public class Player extends Entity{
@@ -13,6 +15,8 @@ public class Player extends Entity{
     private int levelExp, woodCuttingExp;
     private boolean alive;
 
+    private long donatorEndTime;
+
     private int stamina;
     private long staminaLastUpdateTime;
 
@@ -21,7 +25,6 @@ public class Player extends Entity{
 
     private HashMap<String, Integer> inventory;
 
-    public enum Stat {POWER, SPEED, STRENGTH};
     public Player(String id) {
         super(1, 200, 1, 1, 1);
         this.id = id;
@@ -30,11 +33,20 @@ public class Player extends Entity{
         this.levelExp = 0;
         this.woodCuttingExp = 0;
         this.alive = true;
-        this.forageDate = "1";
+        this.forageDate = LocalDate.now().toString();
         this.forageAmount = 0;
         this.stamina = ApplicationConstants.MAX_STAMINA;
         this.staminaLastUpdateTime = System.currentTimeMillis();
         this.inventory = new HashMap<>();
+        this.donatorEndTime = System.currentTimeMillis();
+    }
+
+    public long getDonatorEndTime() {
+        return donatorEndTime;
+    }
+
+    public void setDonatorEndTime(long donatorEndTime) {
+        this.donatorEndTime = donatorEndTime;
     }
 
     public HashMap<String, Integer> getInventory() {
@@ -53,9 +65,9 @@ public class Player extends Entity{
     }
 
     public boolean addItem(String item, int amount){
-        int amountOwned =  inventory.getOrDefault(item, 0);
+        int amountOwned =  inventory.getOrDefault(item.toLowerCase(), 0);
 
-        if(amountOwned == 999 || amount == 0){
+        if(amount <= 0){
             return false;
         }
 
@@ -64,16 +76,23 @@ public class Player extends Entity{
     }
 
     public boolean consumeItems(String item, int amount){
+        item = item.toLowerCase();
         if(!containsItemQuantity(item, amount)){
             return false;
         }
 
-        getInventory().put(item, getInventory().get(item) - amount);
+        int amountLeft = getInventory().get(item) - amount;
+
+        if(amountLeft == 0){
+            getInventory().remove(item);
+        } else{
+            getInventory().put(item, getInventory().get(item) - amount);
+        }
         return true;
     }
 
     public boolean containsItemQuantity(String item, int amount){
-        return getInventory().getOrDefault(item, 0) >= amount;
+        return getInventory().getOrDefault(item.toLowerCase(), 0) >= amount;
     }
 
     public int getStamina() {
@@ -97,10 +116,11 @@ public class Player extends Entity{
 
         if(this.stamina < ApplicationConstants.MAX_STAMINA){
             Long elapsedTime = updatedTime - this.staminaLastUpdateTime;
-            Long leftOverTime = elapsedTime % ApplicationConstants.STAMINA_REFRESH_RATE;
+            int staminaRefreshRate = (Donator.isDonator(this)) ? ApplicationConstants.DONATOR_STAMINA_REFRESH_RATE : ApplicationConstants.STAMINA_REFRESH_RATE;
+            Long leftOverTime = elapsedTime % staminaRefreshRate;
             updatedTime -= leftOverTime;
 
-            int staminaGained = (int) (elapsedTime / ApplicationConstants.STAMINA_REFRESH_RATE);
+            int staminaGained = (int) (elapsedTime / staminaRefreshRate);
 
             setStamina(Math.min(this.stamina + staminaGained, ApplicationConstants.MAX_STAMINA));
         }
@@ -121,6 +141,13 @@ public class Player extends Entity{
     }
 
     public int getForageAmount() {
+        String date = LocalDate.now().toString();
+
+        if(!getForageDate().equals(date)){
+            forageAmount = 0;
+            forageDate = date;
+        }
+
         return forageAmount;
     }
 
@@ -164,6 +191,11 @@ public class Player extends Entity{
     }
 
     public void setGold(int gold) {
+
+        if(gold < 0){
+            return;
+        }
+
         this.gold = gold;
     }
 
@@ -184,13 +216,27 @@ public class Player extends Entity{
     }
 
     public double calcStatGain(){
+        int curLevel = getLevel();
         double baseGain = .5;
-        double additionalGain = getLevel() * .0025;
+        double multiplier;
 
-        return baseGain + additionalGain;
+        if(curLevel <= 200){
+            multiplier = .0025;
+        } else if(curLevel <= 600){
+            baseGain = 1;
+            multiplier = .005;
+            curLevel -= 200;
+        } else {
+            baseGain = 3;
+            multiplier = .01;
+            curLevel -= 600;
+        }
+
+        double levelStatGain = curLevel * multiplier;
+
+        return baseGain + levelStatGain;
     }
     public void increSpeed(double amt){
-        double statGain = calcStatGain();
         double totalStatGain = amt * calcStatGain();
         double rounded = Math.round((getSpeed() + totalStatGain) * 1000.0) / 1000.0;
         setSpeed(rounded);
@@ -204,8 +250,6 @@ public class Player extends Entity{
     }
 
     public void increPower(double amt){
-        double oldPow = getPower();
-
         double totalStatGain = amt * calcStatGain();
         double rounded = Math.round((getPower() + totalStatGain) * 1000.0) / 1000.0;
 
@@ -287,6 +331,11 @@ public class Player extends Entity{
         this.setSpeed((this.getSpeed() * .05) + this.getSpeed() + 33.333);
         this.setPower((this.getPower() * .05) + this.getPower() + 33.333);
         this.setStrength((this.getStrength() * .05) + this.getStrength() + 33.333);
+    }
+
+    public int calcDonatorBonusGold(int gold){
+        return (int) (gold * .25);
+
     }
 
     @Override
