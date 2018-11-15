@@ -1,9 +1,11 @@
 package handlers;
 
+import config.ApplicationConstants;
 import models.*;
 import net.dv8tion.jda.core.entities.MessageChannel;
 import utils.CombatStatistic;
 import utils.CombatResult;
+import utils.Donator;
 
 import java.text.DecimalFormat;
 
@@ -20,6 +22,7 @@ public class CombatHandler {
     public CombatResult fightMonster(Player player, Monster monster, int numTimes){
         int totalExpEarned = 0;
         int totalGoldEarned = 0;
+        int donatorGoldEarned = 0;
         int numWins = 0;
 
         for(int i = 0; i < numTimes; i++){
@@ -36,9 +39,14 @@ public class CombatHandler {
             }
         }
 
-        combatResult.appendToCombatResult(String.format("\nYou won %d/%d times and gained %s exp and %s gold.", numWins, numTimes, format.format(totalExpEarned), format.format(totalGoldEarned)));
+        if(Donator.isDonator(player)){
+            donatorGoldEarned = player.calcDonatorBonusGold(totalGoldEarned);
+            combatResult.appendToCombatResult(String.format("\nYou gained an extra %s gold due to being a donator.\n", donatorGoldEarned));
+        }
 
-        player.increGold(totalGoldEarned);
+        combatResult.appendToCombatResult(String.format("\nYou won %d/%d times and gained %s exp and %s gold (+%s).", numWins, numTimes, format.format(totalExpEarned), format.format(totalGoldEarned), format.format(donatorGoldEarned)));
+
+        player.increGold(totalGoldEarned + donatorGoldEarned);
         playerLevelUp(player, totalExpEarned);
         return combatResult;
     }
@@ -51,8 +59,8 @@ public class CombatHandler {
     public void simulateCombat(Entity p1, Entity p2, MessageChannel channel){
         int curHealth = p1.getHealth();
         int curHealth2 = p2.getHealth();
-        double lowSpeed = calcLowSpeed(p1.getSpeed());
-        double lowSpeed2 = calcLowSpeed(p2.getSpeed());
+        double lowSpeed = calcLowSpeed(p1.getSpeed() + p1.getAccessory() / ApplicationConstants.ITEM_RATIO);
+        double lowSpeed2 = calcLowSpeed(p2.getSpeed() + p2.getAccessory() / ApplicationConstants.ITEM_RATIO);
 
         CombatStatistic entityOneStats = combatResult.getEntityOneStats();
         CombatStatistic entityTwoStats = combatResult.getEntityTwoStats();
@@ -62,11 +70,11 @@ public class CombatHandler {
                 break;
             }
 
-            double speedRoll = generateRoll(lowSpeed, p1.getSpeed());
-            double speedRoll2 = generateRoll(lowSpeed2, p2.getSpeed());
+            double speedRoll = generateRoll(lowSpeed, p1.getSpeed() + p1.getAccessory() / ApplicationConstants.ITEM_RATIO);
+            double speedRoll2 = generateRoll(lowSpeed2, p2.getSpeed() + p2.getAccessory() / ApplicationConstants.ITEM_RATIO);
 
             if(speedRoll > speedRoll2){
-                int hitDmg = calcHitDamage(p1, p2, p1.getWeapon(),p2.getArmor());
+                int hitDmg = calcHitDamage(p1, p2, p1.getWeapon(), p2.getArmor());
                 curHealth2 = curHealth2 - hitDmg > 0 ? (curHealth2 - hitDmg) : 0;
 
                 entityOneStats.updateDamageStats(hitDmg);
@@ -137,22 +145,22 @@ public class CombatHandler {
     }
 
     public double calcLowDamage(double str, double pow, double weap, double arm){
-        double effectiveStrength = calcEffectiveStr(str + arm/4);
-        double effectivePower = calcEffectivePow(pow + weap/4);
+        double effectiveStrength = calcEffectiveStr(str + arm/ApplicationConstants.ITEM_RATIO);
+        double effectivePower = calcEffectivePow(pow + weap/ApplicationConstants.ITEM_RATIO);
 
         return effectiveStrength/6 + effectivePower/2;
     }
 
     public double calcHighDamage(double str, double pow, double weap, double arm){
-        return calcEffectiveStr(str + arm/4)/4 + 3*calcEffectivePow(pow + weap/4)/4;
+        return calcEffectiveStr(str + arm/ApplicationConstants.ITEM_RATIO)/4 + 3*calcEffectivePow(pow + weap/ApplicationConstants.ITEM_RATIO)/4;
     }
 
     public double calcLowDefense(double str, double armor){
-        return (calcEffectiveStr(str + armor/4)/3 );
+        return (calcEffectiveStr(str + armor/ApplicationConstants.ITEM_RATIO)/3 );
     }
 
     public double calcHighDefense(double str, double armor){
-        return (calcEffectiveStr(str + armor/4)/2);
+        return (calcEffectiveStr(str + armor/ApplicationConstants.ITEM_RATIO)/2);
     }
 
     public double calcLowSpeed(double speed){

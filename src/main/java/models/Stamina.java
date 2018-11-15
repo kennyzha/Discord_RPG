@@ -7,12 +7,15 @@ public class Stamina {
     private int stamina;
     private long timeSinceUpdated;
 
+/*
     public Stamina(String playerId){
         this.playerId = playerId;
-        this.stamina = 20;
+        this.stamina = ApplicationConstants.MAX_STAMINA;
         timeSinceUpdated = System.currentTimeMillis();
     }
+*/
 
+/*
     public String getPlayerId() {
         return playerId;
     }
@@ -50,4 +53,7 @@ public class Stamina {
         }
         setStamina(Math.min(ApplicationConstants.MAX_STAMINA, getStamina() + staminaGained));
     }
+
+*/
+
 }

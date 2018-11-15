@@ -10,7 +10,7 @@ import com.amazonaws.services.dynamodbv2.model.ScanResult;
 import com.google.gson.Gson;
 import config.ApplicationConstants;
 import models.Player;
-import models.Stamina;
+import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.MessageChannel;
 import net.dv8tion.jda.core.entities.User;
@@ -26,6 +26,7 @@ public class PlayerDatabase {
 
     private Gson gson;
 
+
     public PlayerDatabase(){
         this.dynamoClient = new DynamoClient();
         this.dynamoDB = dynamoClient.getDynamoDb();
@@ -38,25 +39,39 @@ public class PlayerDatabase {
         playerTable.putItem(Item.fromJSON(gson.toJson(player)));
     }
 
-    public Player selectPlayer(String id){
+    private Player selectPlayer(String id){
         Table playerTable = dynamoDB.getTable(dynamoClient.getPlayerTableName());
         Item item = playerTable.getItem(ApplicationConstants.PLAYER_PRIMARY_KEY, id);
 
         if(item == null)
             return null;
 
-        return gson.fromJson(item.toJSON(), Player.class);
+        Player player = gson.fromJson(item.toJSON(), Player.class);
+        player.updateStamina();
+
+        player.getInventory();
+        return player;
     }
 
     public Player grabPlayer(String id){
         Player player = selectPlayer(id);
         if(player == null){
             Player newPlayer = new Player(id);
+
+//            if(ApplicationConstants.TEST_SERVER){
+//                newPlayer.setLevel(100);
+//                newPlayer.setHealth(13335);
+//                newPlayer.setGold(500000);
+//                newPlayer.setPower(4000);
+//                newPlayer.setSpeed(4000);
+//                newPlayer.setStrength(4000);
+//            }
+
             insertPlayer(newPlayer);
             player = newPlayer;
 
-            Stamina stamina = new Stamina(id);
-            insertPlayerStamina(stamina);
+//            Stamina stamina = new Stamina(id);
+//            insertPlayerStamina(stamina);
         }
 
         return player;
@@ -79,29 +94,29 @@ public class PlayerDatabase {
         return player;
     }
 
-    public Stamina retreivePlayerStamina(String id){
-        Table staminaTable = dynamoDB.getTable(dynamoClient.getStaminaTableName());
-        Item item = staminaTable.getItem(ApplicationConstants.STAMINA_PRIMARY_KEY, id);
+//    public Stamina retreivePlayerStamina(String id){
+//        Table staminaTable = dynamoDB.getTable(dynamoClient.getStaminaTableName());
+//        Item item = staminaTable.getItem(ApplicationConstants.STAMINA_PRIMARY_KEY, id);
+//
+//        if(item == null)
+//            return null;
+//
+//        Stamina stamina = gson.fromJson(item.toJSON(), Stamina.class);
+//
+//        if(stamina == null)
+//            return null;
+//
+//        stamina.updateStamina();
+//
+//        return stamina;
+//    }
 
-        if(item == null)
-            return null;
+//    public void insertPlayerStamina(Stamina stamina){
+//        Table staminaTable = dynamoDB.getTable(dynamoClient.getStaminaTableName());
+//        staminaTable.putItem(Item.fromJSON(gson.toJson(stamina)));
+//    }
 
-        Stamina stamina = gson.fromJson(item.toJSON(), Stamina.class);
-
-        if(stamina == null)
-            return null;
-
-        stamina.updateStamina();
-
-        return stamina;
-    }
-
-    public void insertPlayerStamina(Stamina stamina){
-        Table staminaTable = dynamoDB.getTable(dynamoClient.getStaminaTableName());
-        staminaTable.putItem(Item.fromJSON(gson.toJson(stamina)));
-    }
-
-    public List<Player> retreivePlayers(){
+    public List<Player> retreiveAllPlayers(){
         ArrayList<Player> players = new ArrayList<>();
         AmazonDynamoDB amazonDynamoDB = dynamoClient.getAmazonDynamoDB();
         ScanRequest scanRequest = new ScanRequest().withTableName(dynamoClient.getPlayerTableName());
@@ -130,5 +145,38 @@ public class PlayerDatabase {
             }
         }
         return players;
+    }
+
+    public List<Player> retreivePlayers(List<Member> members){
+        List<Player> players = new ArrayList<>();
+        TableKeysAndAttributes playerKeyAndAttributes = new TableKeysAndAttributes(dynamoClient.getPlayerTableName());
+
+        int count = 0;
+        for(Member member : members){
+            if(count == 100){
+               addPlayerBatchToArray(playerKeyAndAttributes, players);
+               playerKeyAndAttributes = new TableKeysAndAttributes(dynamoClient.getPlayerTableName());
+                count = 0;
+                continue;
+            }
+            count++;
+            playerKeyAndAttributes.addHashOnlyPrimaryKey("id", member.getUser().getId());
+        }
+
+        return players;
+    }
+
+    public void addPlayerBatchToArray(TableKeysAndAttributes playerKeyAndAttributes, List<Player> players){
+        BatchGetItemOutcome outcome = dynamoDB.batchGetItem(playerKeyAndAttributes);
+
+        for (String tableName : outcome.getTableItems().keySet()) {
+            System.out.println("Items in table " + tableName);
+            List<Item> items = outcome.getTableItems().get(tableName);
+            for (Item item : items) {
+                Player player = gson.fromJson(item.toJSON(), Player.class);
+                players.add(player);
+                System.out.println(item);
+            }
+        }
     }
 }

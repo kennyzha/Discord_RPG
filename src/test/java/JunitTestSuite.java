@@ -4,6 +4,7 @@ import ItemTests.ItemTest;
 import MonsterTests.MonsterBuildTest;
 import MonsterTests.MonsterExpGivenTest;
 import PlayerTests.*;
+import models.DonatorTransaction;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
@@ -20,7 +21,8 @@ import org.junit.runners.Suite;
         HealthGainedTests.class,
         ItemTest.class,
         ItemRollTest.class,
-        CrateTest.class
+        CrateTest.class,
+        DonatorTransaction.class
 })
 
 public class JunitTestSuite {

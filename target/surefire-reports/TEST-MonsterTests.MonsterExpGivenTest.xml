@@ -63,10 +63,10 @@
     <property name="ftp.nonProxyHosts" value="local|*.local|169.254/16|*.169.254/16"/>
     <property name="sun.cpu.isalist" value=""/>
   </properties>
-  <testcase classname="MonsterTests.MonsterExpGivenTest" name="varianceTest1" time="0.001"/>
-  <testcase classname="MonsterTests.MonsterExpGivenTest" name="varianceTest2" time="0"/>
-  <testcase classname="MonsterTests.MonsterExpGivenTest" name="varianceTest3" time="0"/>
-  <testcase classname="MonsterTests.MonsterExpGivenTest" name="varianceTest4" time="0.001"/>
-  <testcase classname="MonsterTests.MonsterExpGivenTest" name="varianceTest5" time="0"/>
-  <testcase classname="MonsterTests.MonsterExpGivenTest" name="varianceTest6" time="0.001"/>
+  <testcase classname="MonsterTests.MonsterExpGivenTest" name="varianceTest1" time="0"/>
+  <testcase classname="MonsterTests.MonsterExpGivenTest" name="varianceTest2" time="0.001"/>
+  <testcase classname="MonsterTests.MonsterExpGivenTest" name="varianceTest3" time="0.001"/>
+  <testcase classname="MonsterTests.MonsterExpGivenTest" name="varianceTest4" time="0"/>
+  <testcase classname="MonsterTests.MonsterExpGivenTest" name="varianceTest5" time="0.001"/>
+  <testcase classname="MonsterTests.MonsterExpGivenTest" name="varianceTest6" time="0"/>
 </testsuite>

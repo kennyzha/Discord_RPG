@@ -1,4 +1,4 @@
-package handlers;
+package webhooks;
 
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestStreamHandler;
@@ -6,15 +6,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import config.ApplicationConstants;
 import database.PlayerDatabase;
 import models.*;
-import net.dv8tion.jda.core.AccountType;
-import net.dv8tion.jda.core.JDA;
-import net.dv8tion.jda.core.JDABuilder;
+import utils.VoteRewardWrapper;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-public class VoteHandler implements RequestStreamHandler {
+public class VoteWebhook implements RequestStreamHandler {
     private ObjectMapper objectMapper = new ObjectMapper();
 
     @Override
@@ -36,6 +34,7 @@ public class VoteHandler implements RequestStreamHandler {
             PlayerDatabase playerDatabase = new PlayerDatabase();
             Player player = playerDatabase.grabPlayer(user);
             player.setStamina(player.getStamina() + 60);
+
             System.out.println("Refreshed player stamina");
 
             if(wrapper.getVote().isWeekend()){
@@ -43,9 +42,9 @@ public class VoteHandler implements RequestStreamHandler {
 
                 int crateCost = Crate.getCrateCost(Item.getLevelBracket(player.getLevel()));
                 player.setGold(player.getGold() + (crateCost));
-                playerDatabase.insertPlayer(player);
                 System.out.println("Gold added: " + crateCost);
             }
+            playerDatabase.insertPlayer(player);
         } else{
             System.out.println("VOTE: INVALID AUTH. " + wrapper.getAuthorization() + wrapper.getVote().toString() );
         }
