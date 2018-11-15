@@ -1,6 +1,7 @@
 package models;
 
 import config.ApplicationConstants;
+import utils.Donator;
 
 import java.text.DecimalFormat;
 import java.time.LocalDate;
@@ -14,15 +15,18 @@ public class Player extends Entity{
     private int levelExp, woodCuttingExp;
     private boolean alive;
 
+    private long donatorEndTime;
+
     private int stamina;
     private long staminaLastUpdateTime;
 
     private String forageDate;
     private int forageAmount;
 
+    private String keyword;
+
     private HashMap<String, Integer> inventory;
 
-    public enum Stat {POWER, SPEED, STRENGTH};
     public Player(String id) {
         super(1, 200, 1, 1, 1);
         this.id = id;
@@ -36,6 +40,24 @@ public class Player extends Entity{
         this.stamina = ApplicationConstants.MAX_STAMINA;
         this.staminaLastUpdateTime = System.currentTimeMillis();
         this.inventory = new HashMap<>();
+        this.donatorEndTime = System.currentTimeMillis();
+        this.keyword = "abc";
+    }
+
+    public String getKeyword() {
+        return keyword;
+    }
+
+    public void setKeyword(String keyword) {
+        this.keyword = keyword;
+    }
+
+    public long getDonatorEndTime() {
+        return donatorEndTime;
+    }
+
+    public void setDonatorEndTime(long donatorEndTime) {
+        this.donatorEndTime = donatorEndTime;
     }
 
     public HashMap<String, Integer> getInventory() {
@@ -105,10 +127,11 @@ public class Player extends Entity{
 
         if(this.stamina < ApplicationConstants.MAX_STAMINA){
             Long elapsedTime = updatedTime - this.staminaLastUpdateTime;
-            Long leftOverTime = elapsedTime % ApplicationConstants.STAMINA_REFRESH_RATE;
+            int staminaRefreshRate = (Donator.isDonator(this)) ? ApplicationConstants.DONATOR_STAMINA_REFRESH_RATE : ApplicationConstants.STAMINA_REFRESH_RATE;
+            Long leftOverTime = elapsedTime % staminaRefreshRate;
             updatedTime -= leftOverTime;
 
-            int staminaGained = (int) (elapsedTime / ApplicationConstants.STAMINA_REFRESH_RATE);
+            int staminaGained = (int) (elapsedTime / staminaRefreshRate);
 
             setStamina(Math.min(this.stamina + staminaGained, ApplicationConstants.MAX_STAMINA));
         }
@@ -225,7 +248,6 @@ public class Player extends Entity{
         return baseGain + levelStatGain;
     }
     public void increSpeed(double amt){
-        double statGain = calcStatGain();
         double totalStatGain = amt * calcStatGain();
         double rounded = Math.round((getSpeed() + totalStatGain) * 1000.0) / 1000.0;
         setSpeed(rounded);
@@ -239,8 +261,6 @@ public class Player extends Entity{
     }
 
     public void increPower(double amt){
-        double oldPow = getPower();
-
         double totalStatGain = amt * calcStatGain();
         double rounded = Math.round((getPower() + totalStatGain) * 1000.0) / 1000.0;
 
@@ -322,6 +342,11 @@ public class Player extends Entity{
         this.setSpeed((this.getSpeed() * .05) + this.getSpeed() + 33.333);
         this.setPower((this.getPower() * .05) + this.getPower() + 33.333);
         this.setStrength((this.getStrength() * .05) + this.getStrength() + 33.333);
+    }
+
+    public int calcDonatorBonusGold(int gold){
+        return (int) (gold * .25);
+
     }
 
     @Override

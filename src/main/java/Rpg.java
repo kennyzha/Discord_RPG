@@ -1,5 +1,8 @@
 import config.ApplicationConstants;
 import listeners.MessageListener;
+import net.dv8tion.jda.bot.sharding.DefaultShardManager;
+import net.dv8tion.jda.bot.sharding.DefaultShardManagerBuilder;
+import net.dv8tion.jda.bot.sharding.ShardManager;
 import net.dv8tion.jda.core.AccountType;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.JDABuilder;
@@ -10,10 +13,16 @@ import javax.security.auth.login.LoginException;
 
 public class Rpg {
     public static void main(String[] args) throws LoginException, RateLimitedException, InterruptedException{
-        JDA jda = new JDABuilder(AccountType.BOT).setToken(ApplicationConstants.TOKEN).buildBlocking();
+        DefaultShardManagerBuilder builder = new DefaultShardManagerBuilder();
+        builder.setToken(ApplicationConstants.TEST_TOKEN);
+        builder.addEventListeners(new MessageListener());
+        ShardManager shardManager = builder.build();
+        System.out.println(shardManager.getShards().size());
 
-        PostStats.toDiscordBots(jda, ApplicationConstants.DISCORD_BOT_AUTH_TOKEN);
+/*        JDA jda = new JDABuilder(AccountType.BOT).setToken(ApplicationConstants.TEST_TOKEN).buildBlocking();
 
-        jda.addEventListener(new MessageListener());
+//        PostStats.toDiscordBots(jda, ApplicationConstants.DISCORD_BOT_AUTH_TOKEN);
+
+        jda.addEventListener(new MessageListener());*/
     }
 }

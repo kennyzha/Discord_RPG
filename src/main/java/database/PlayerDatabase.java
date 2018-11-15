@@ -10,6 +10,7 @@ import com.amazonaws.services.dynamodbv2.model.ScanResult;
 import com.google.gson.Gson;
 import config.ApplicationConstants;
 import models.Player;
+import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.MessageChannel;
 import net.dv8tion.jda.core.entities.User;
@@ -115,7 +116,7 @@ public class PlayerDatabase {
 //        staminaTable.putItem(Item.fromJSON(gson.toJson(stamina)));
 //    }
 
-    public List<Player> retreivePlayers(){
+    public List<Player> retreiveAllPlayers(){
         ArrayList<Player> players = new ArrayList<>();
         AmazonDynamoDB amazonDynamoDB = dynamoClient.getAmazonDynamoDB();
         ScanRequest scanRequest = new ScanRequest().withTableName(dynamoClient.getPlayerTableName());
@@ -144,5 +145,38 @@ public class PlayerDatabase {
             }
         }
         return players;
+    }
+
+    public List<Player> retreivePlayers(List<Member> members){
+        List<Player> players = new ArrayList<>();
+        TableKeysAndAttributes playerKeyAndAttributes = new TableKeysAndAttributes(dynamoClient.getPlayerTableName());
+
+        int count = 0;
+        for(Member member : members){
+            if(count == 100){
+               addPlayerBatchToArray(playerKeyAndAttributes, players);
+               playerKeyAndAttributes = new TableKeysAndAttributes(dynamoClient.getPlayerTableName());
+                count = 0;
+                continue;
+            }
+            count++;
+            playerKeyAndAttributes.addHashOnlyPrimaryKey("id", member.getUser().getId());
+        }
+
+        return players;
+    }
+
+    public void addPlayerBatchToArray(TableKeysAndAttributes playerKeyAndAttributes, List<Player> players){
+        BatchGetItemOutcome outcome = dynamoDB.batchGetItem(playerKeyAndAttributes);
+
+        for (String tableName : outcome.getTableItems().keySet()) {
+            System.out.println("Items in table " + tableName);
+            List<Item> items = outcome.getTableItems().get(tableName);
+            for (Item item : items) {
+                Player player = gson.fromJson(item.toJSON(), Player.class);
+                players.add(player);
+                System.out.println(item);
+            }
+        }
     }
 }

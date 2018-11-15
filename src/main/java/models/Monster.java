@@ -143,6 +143,22 @@ public class Monster extends Entity {
                 return MonsterConstants.MERMAID;
             case "wyvern":
                 return MonsterConstants.WYVERN;
+            case "drake":
+                return MonsterConstants.DRAKE;
+            case "centaur":
+                return MonsterConstants.CENTAUR;
+            case "merman":
+                return MonsterConstants.MERMAN;
+            case "dryad":
+                return MonsterConstants.DRYAD;
+            case "lochness":
+                return MonsterConstants.LOCHNESS;
+            case "thoon":
+                return MonsterConstants.THOON;
+            case "griffin":
+                return MonsterConstants.GRIFFIN;
+            case "dragon":
+                return MonsterConstants.DRAGON;
         }
         return null;
     }

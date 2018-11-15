@@ -5,9 +5,11 @@ import config.MonsterConstants;
 import models.*;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.JDA;
+import net.dv8tion.jda.core.entities.MessageChannel;
 import net.dv8tion.jda.core.entities.MessageEmbed;
 import net.dv8tion.jda.core.entities.User;
 import utils.CombatResult;
+import utils.Donator;
 
 import java.awt.*;
 import java.text.DecimalFormat;
@@ -24,7 +26,9 @@ public class MessageHandler {
         EmbedBuilder eb = new EmbedBuilder();
         setEmbedMessageDefaults(eb, user);
 
-        eb.setTitle("Level " + player.getLevel() + " (" + format.format(player.getLevelExp()) + "/" + format.format(player.calcExpToNextLevel()) + ")");
+        String donatorStar = (Donator.isDonator(player)) ? ":star: " : "";
+
+        eb.setTitle(donatorStar + "Level " + player.getLevel() + " (" + format.format(player.getLevelExp()) + "/" + format.format(player.calcExpToNextLevel()) + ")");
 
         eb.addField("Health", format.format(player.getHealth()), true);
         eb.addField("Gold", format.format(player.getGold()), true);
@@ -211,7 +215,15 @@ public class MessageHandler {
         EmbedBuilder eb = new EmbedBuilder();
         setEmbedMessageDefaults(eb, user);
 
-        String suffix = itemType == Item.Type.WEAPON ? "attack" : "defense";
+        String suffix = "";
+
+        if(itemType == Item.Type.WEAPON){
+            suffix = "attack";
+        } else if(itemType == Item.Type.ARMOR) {
+            suffix = "attack";
+        } else{
+            suffix = "speed";
+        }
 
         eb.appendDescription(crateSummary);
 
@@ -266,5 +278,12 @@ public class MessageHandler {
         eb.setFooter(String.format("Min Roll: %s Max Roll: %s", format.format(Item.getLowerBoundStat(player.getLevel())), format.format(Item.getUpperBoundStat(player.getLevel()))), null);
 
         return eb.build();
+    }
+    public static void sendDefaultEmbedMessage(User user, String description, MessageHandler messageHandler, MessageChannel channel){
+        channel.sendMessage(messageHandler.createDefaultEmbedMessage(user, description)).queue();
+    }
+
+    public static void sendDefaultEmbedMessageWithFooter(User user, String description, MessageHandler messageHandler, MessageChannel channel, String footer){
+        channel.sendMessage(messageHandler.createDefaultEmbedMessage(user, description, footer)).queue();
     }
 }

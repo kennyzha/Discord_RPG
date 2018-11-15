@@ -5,6 +5,7 @@ import models.*;
 import net.dv8tion.jda.core.entities.MessageChannel;
 import utils.CombatStatistic;
 import utils.CombatResult;
+import utils.Donator;
 
 import java.text.DecimalFormat;
 
@@ -21,6 +22,7 @@ public class CombatHandler {
     public CombatResult fightMonster(Player player, Monster monster, int numTimes){
         int totalExpEarned = 0;
         int totalGoldEarned = 0;
+        int donatorGoldEarned = 0;
         int numWins = 0;
 
         for(int i = 0; i < numTimes; i++){
@@ -37,9 +39,14 @@ public class CombatHandler {
             }
         }
 
-        combatResult.appendToCombatResult(String.format("\nYou won %d/%d times and gained %s exp and %s gold.", numWins, numTimes, format.format(totalExpEarned), format.format(totalGoldEarned)));
+        if(Donator.isDonator(player)){
+            donatorGoldEarned = player.calcDonatorBonusGold(totalGoldEarned);
+            combatResult.appendToCombatResult(String.format("\nYou gained an extra %s gold due to being a donator.\n", donatorGoldEarned));
+        }
 
-        player.increGold(totalGoldEarned);
+        combatResult.appendToCombatResult(String.format("\nYou won %d/%d times and gained %s exp and %s gold (+%s).", numWins, numTimes, format.format(totalExpEarned), format.format(totalGoldEarned), format.format(donatorGoldEarned)));
+
+        player.increGold(totalGoldEarned + donatorGoldEarned);
         playerLevelUp(player, totalExpEarned);
         return combatResult;
     }
