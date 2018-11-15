@@ -104,8 +104,16 @@ public class HighscoreHandler {
 
     public void populateQueues(List<Player> players, PriorityQueue<Player> levelPq, PriorityQueue<Player> powerPq, PriorityQueue<Player> speedPq, PriorityQueue<Player> strengthPq,
                                PriorityQueue<Player> totalPq, PriorityQueue<Player> goldPq){
+
         for(Player p : players){
-            if(levelPq.size() >= HIGHSCORE_SIZE){
+            levelPq.add(p);
+            powerPq.add(p);
+            speedPq.add(p);
+            strengthPq.add(p);
+            totalPq.add(p);
+            goldPq.add(p);
+
+            if(levelPq.size() > HIGHSCORE_SIZE){
                 levelPq.poll();
                 powerPq.poll();
                 speedPq.poll();
@@ -113,13 +121,6 @@ public class HighscoreHandler {
                 totalPq.poll();
                 goldPq.poll();
             }
-
-            levelPq.add(p);
-            powerPq.add(p);
-            speedPq.add(p);
-            strengthPq.add(p);
-            totalPq.add(p);
-            goldPq.add(p);
         }
     }
 
