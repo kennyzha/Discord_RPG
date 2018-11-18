@@ -1,3 +1,4 @@
+import DonatorTests.DonatorTest;
 import ItemTests.CrateTest;
 import ItemTests.ItemRollTest;
 import ItemTests.ItemTest;
@@ -22,7 +23,7 @@ import org.junit.runners.Suite;
         ItemTest.class,
         ItemRollTest.class,
         CrateTest.class,
-        DonatorTransaction.class
+        DonatorTest.class
 })
 
 public class JunitTestSuite {
