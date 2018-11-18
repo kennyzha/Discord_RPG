@@ -2,11 +2,15 @@ package utils;
 
 import models.Player;
 
-public class Donator {
-    public static final long ONE_MONTH = 1000L * 60 * 60 * 24 * 31;
+import static utils.TimeUtil.*;
 
+public class Donator {
     public static boolean isDonator(Player player){
-        return getDonatorTimeMillisecond(player) > 0;
+        if(player == null){
+            return false;
+        }
+
+        return millisecondsRemaining(player.getDonatorEndTime(), System.currentTimeMillis()) > 0;
     }
 
     private static void addDonatorTime(Player player, long milliseconds){
@@ -23,37 +27,34 @@ public class Donator {
     public static void applyDonatorPacks(Player player, int numDonatorPacks){
         if(player != null && numDonatorPacks > 0){
             long extension = numDonatorPacks * ONE_MONTH;
-            System.out.println("ONE_MONTH = " + ONE_MONTH);
-            System.out.println("extension = " + extension);
             addDonatorTime(player, extension);
         }
-
     }
 
     public static void removeDonatorPacks(Player player, int numDonatorPacks){
-        if(numDonatorPacks > 0 && isDonator(player)){
-            long remainingTime = getDonatorTimeMillisecond(player);
+        if(player != null && numDonatorPacks > 0 && isDonator(player)){
             long removeAmount = numDonatorPacks * ONE_MONTH;
-
-            if(remainingTime - removeAmount > 0){
-                player.setDonatorEndTime(remainingTime - removeAmount);
-            } else{
-                player.setDonatorEndTime(System.currentTimeMillis());
-            }
-
+            player.setDonatorEndTime(player.getDonatorEndTime() - removeAmount);
         }
     }
 
-    public static long getDonatorTimeMillisecond(Player player){
-        if(player != null) {
-            return player.getDonatorEndTime() - System.currentTimeMillis();
-        }
-
-        return 0;
+    public static int donatorDaysRemaining(Player player){
+        return daysRemaining(player.getDonatorEndTime(), System.currentTimeMillis());
     }
 
-    public static int getDonatorTimeDays(Player player){
-        return (int) (getDonatorTimeMillisecond(player) / (ONE_MONTH / 31));
+    public static int donatorMinutesRemaining(Player player){
+        return minutesRemaining(player.getDonatorEndTime(), System.currentTimeMillis()) % 60;
     }
 
+    public static int donatorHoursRemaining(Player player){
+        return hoursRemaining(player.getDonatorEndTime(), System.currentTimeMillis()) % 24;
+    }
+
+    public static String getDonatorTimeRemainingString(Player player){
+        int daysRemaining = donatorDaysRemaining(player);
+        int hoursRemaining = donatorHoursRemaining(player);
+        int minutesRemaining = donatorMinutesRemaining(player);
+
+        return String.format("Days: %s Hours: %s Minutes: %s", daysRemaining, hoursRemaining, minutesRemaining);
+    }
 }
