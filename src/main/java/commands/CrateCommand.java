@@ -83,7 +83,7 @@ public class CrateCommand {
 
                                 String legendaryEffect = "Legendary effect is applied. Total stats will increase by 100 + 5% permanently. \n Your total stats increased by " + format.format(statsGained) + ".";
                                 sb.append("\n" +  legendaryEffect + "\n");
-                                channel.getJDA().getGuildById("449610753566048277").getTextChannelById("486328955415298060").sendMessage(messageHandler.createDefaultEmbedMessage(user, legendaryEffect)).queue();
+                                channel.getJDA().asBot().getShardManager().getGuildById("449610753566048277").getTextChannelById("486328955415298060").sendMessage(messageHandler.createDefaultEmbedMessage(user, legendaryEffect)).queue();
                             }
 
                             playerDatabase.insertPlayer(player);
