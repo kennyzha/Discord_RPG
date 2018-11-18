@@ -26,7 +26,15 @@ public class MessageHandler {
         EmbedBuilder eb = new EmbedBuilder();
         setEmbedMessageDefaults(eb, user);
 
-        String donatorStar = (Donator.isDonator(player)) ? ":star: " : "";
+        String donatorStar = "";
+        int maxStamina = ApplicationConstants.MAX_STAMINA;
+        String donatorTimeRemaining = "";
+
+        if(Donator.isDonator(player)){
+            donatorStar = ":star:";
+            maxStamina = ApplicationConstants.DONATOR_MAX_STAMINA;
+            donatorTimeRemaining = " | " + Donator.getDonatorTimeRemainingString(player);
+        }
 
         eb.setTitle(donatorStar + "Level " + player.getLevel() + " (" + format.format(player.getLevelExp()) + "/" + format.format(player.calcExpToNextLevel()) + ")");
 
@@ -43,7 +51,7 @@ public class MessageHandler {
             eb.addField("Armor", format.format(player.getArmor()), true);
         }
 
-        eb.setFooter("Stamina: " + player.getStamina() + " / " + ApplicationConstants.MAX_STAMINA + " | Forage: " + (20 - player.getForageAmount()) + " / 20", null);
+        eb.setFooter("Stamina: " + player.getStamina() + " / " + maxStamina + " | Forage: " + (20 - player.getForageAmount()) + " / 20" + donatorTimeRemaining, null);
 
         return eb.build();
     }
@@ -145,8 +153,11 @@ public class MessageHandler {
 
         int rankCounter = 1;
         for(Player p: players){
-            User curUser = jda.getUserById(p.getId());
+//            User curUser = jda.getUserById(p.getId());
+            User curUser = jda.asBot().getShardManager().getUserById(p.getId());
+
             if(curUser == null){
+                System.out.println(highscoreType + "this is null huh.");
                 continue;
             }
             
@@ -166,8 +177,10 @@ public class MessageHandler {
 
         int rankCounter = 1;
         for (Player p : players) {
-            User curUser = jda.getUserById(p.getId());
+//            User curUser = jda.getUserById(p.getId());
+            User curUser = jda.asBot().getShardManager().getUserById(p.getId());
             if (curUser == null) {
+                System.out.println(highscoreType + "  total this is null huh.");
                 continue;
             }
 
@@ -187,8 +200,11 @@ public class MessageHandler {
 
         int rankCounter = 1;
         for (Player p : players) {
-            User curUser = jda.getUserById(p.getId());
+//            User curUser = jda.getUserById(p.getId());
+            User curUser = jda.asBot().getShardManager().getUserById(p.getId());
+
             if (curUser == null) {
+                System.out.println(highscoreType + "  gold this is null huh.");
                 continue;
             }
 

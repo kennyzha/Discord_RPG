@@ -44,7 +44,6 @@ public class CommandHandler {
 
         if(msgArr.length == 0 || !msgArr[0].startsWith(COMMAND_PREFIX))
             return;
-
         System.out.println(message.getAuthor().getName() + " id: " + message.getAuthor().getId() + " : " + event.getMessage());
         if(!handleStaticCommands(msgArr, channel, user) && !handleDynamicCommands(msgArr, channel, user, message, event)){
             String str = "Command not recognized: " + msgArr[0] + ". Type r!commands for list of commands.";
@@ -145,9 +144,9 @@ public class CommandHandler {
 //                playerDatabase.insertPlayer(player);
 
                 break;*/
-            case "r!collect":
+/*            case "r!collect":
                 CollectCommand.collect(user, playerDatabase, messageHandler, channel);
-                break;
+                break;*/
             default:
                 return false;
         }
@@ -155,7 +154,7 @@ public class CommandHandler {
         return true;
     }
 
-    private void inventory(MessageChannel channel, User user) {
+        private void inventory(MessageChannel channel, User user) {
         Player player = playerDatabase.grabPlayer(user.getId());
         channel.sendMessage(messageHandler.createEmbedInventory(user, player)).queue();
     }
@@ -267,7 +266,6 @@ public class CommandHandler {
                 channel.sendMessage(messageHandler.createEmbedFightMessage(user, monster.getName(), pvmResults)).queue();
 
             } catch(Exception e){
-                e.printStackTrace();
                 sendDefaultEmbedMessage(user, "Please type a valid number of times you wish to hunt that monster with. e.g. \"r!hunt slime 1\". \"r!monsters\" for list of monsters.", messageHandler, channel);
             }
         }
