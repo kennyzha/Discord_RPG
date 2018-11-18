@@ -14,10 +14,17 @@ import javax.security.auth.login.LoginException;
 public class Rpg {
     public static void main(String[] args) throws LoginException, RateLimitedException, InterruptedException{
         DefaultShardManagerBuilder builder = new DefaultShardManagerBuilder();
-        builder.setToken(ApplicationConstants.TEST_TOKEN);
+        builder.setToken(ApplicationConstants.TOKEN);
         builder.addEventListeners(new MessageListener());
         ShardManager shardManager = builder.build();
         System.out.println(shardManager.getShards().size());
+        int total = 0;
+
+        for(JDA jda : shardManager.getShards()){
+            total += jda.getGuildCache().size();
+        }
+
+        System.out.println(total);
 
 /*        JDA jda = new JDABuilder(AccountType.BOT).setToken(ApplicationConstants.TEST_TOKEN).buildBlocking();
 

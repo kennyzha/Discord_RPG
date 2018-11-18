@@ -15,13 +15,11 @@ public class MessageListener extends ListenerAdapter {
     private PlayerDatabase playerDatabase;
     private MessageHandler messageHandler;
     private HighscoreHandler highscoreHandler;
-    private LoadingCache<String, Integer> rateLimitCache;
 
     public MessageListener(){
         this.playerDatabase = new PlayerDatabase();
         this.messageHandler = new MessageHandler();
         this.highscoreHandler = new HighscoreHandler();
-        initRateLimitCache();
     }
 
     @Override
@@ -30,9 +28,12 @@ public class MessageListener extends ListenerAdapter {
             return;
         }
 
-        if(ApplicationConstants.TEST_SERVER && checkIsTestServer(event)){
-            new CommandHandler(playerDatabase, messageHandler, highscoreHandler, rateLimitCache).handleCommand(event);
-        }
+//        if(ApplicationConstants.TEST_SERVER && checkIsTestServer(event)){
+//            new CommandHandler(playerDatabase, messageHandler, highscoreHandler).handleCommand(event);
+//        }
+
+        new CommandHandler(playerDatabase, messageHandler, highscoreHandler).handleCommand(event);
+
     }
 
     public boolean checkIsTestServer(MessageReceivedEvent event){
@@ -45,17 +46,4 @@ public class MessageListener extends ListenerAdapter {
         }
         return true;
     }
-
-    public void initRateLimitCache(){
-        CacheLoader<String, Integer> loader = new CacheLoader<String, Integer>() {
-            @Override
-            public Integer load(String key) throws Exception {
-                System.out.println("loadingg");
-                return 0;
-            }
-        };
-
-        this.rateLimitCache = CacheBuilder.newBuilder().expireAfterWrite(1, TimeUnit.MINUTES).build(loader);
-    }
-
 }

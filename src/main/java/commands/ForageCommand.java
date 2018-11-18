@@ -56,16 +56,9 @@ public class ForageCommand {
                     }
                 } else if(roll > 100){
                     itemRolled = ItemConstants.STAMINA_POTION;
-                    Integer staminaPotionsOwned = player.getInventory().get(itemRolled.toString());
 
-                    if(staminaPotionsOwned == null || staminaPotionsOwned <= ApplicationConstants.INVENTORY_LIMIT){
-                        player.addItem(itemRolled.toString(), 1);
-                        sb.append(String.format("You searched around and found a %s!\n", itemRolled.toString()));
-                    } else {
-                        sb.append(String.format("Your can't hold any more stamina potions so you decided to drink the stamina" +
-                                " potion and gain 2 stamina.\n", itemRolled.toString()));
-                        player.setStamina(player.getStamina() + 2);
-                    }
+                    player.addItem(itemRolled.toString(), 1);
+                    sb.append(String.format("You searched around and found a %s!\n", itemRolled.toString()));
                 } else if(roll > 50){
                     player.increExp(player.calcExpToNextLevel());
                     player.updateLevelAndExp();
@@ -93,10 +86,10 @@ public class ForageCommand {
             }
 
             if(strengthPotionsFound > 0){
-                addPotions(player, powerPotionsFound, ItemConstants.STRENGTH_POTION, sb);
+                addPotions(player, strengthPotionsFound, ItemConstants.STRENGTH_POTION, sb);
             }
 
-            String footer = "ForageCommand: " + (20 - player.getForageAmount()) + " / " + 20 + " (-" + amount + ")";
+            String footer = "Forage: " + (20 - player.getForageAmount()) + " / " + 20 + " (-" + amount + ")";
             MessageHandler.sendDefaultEmbedMessageWithFooter(user, sb.toString(), messageHandler, channel, footer);
 
             player.setForageAmount(player.getForageAmount() + amount);

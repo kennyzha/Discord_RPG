@@ -25,16 +25,13 @@ public class CommandHandler {
     private PlayerDatabase playerDatabase;
     private MessageHandler messageHandler;
     private HighscoreHandler highscoreHandler;
-    private LoadingCache<String, Integer> rateLimitCache;
-
     private DecimalFormat format;
 
     private final String COMMAND_PREFIX = "r!";
-    public CommandHandler(PlayerDatabase playerDatabase, MessageHandler messageHandler, HighscoreHandler highscoreHandler, LoadingCache<String, Integer> rateLimitCache){
+    public CommandHandler(PlayerDatabase playerDatabase, MessageHandler messageHandler, HighscoreHandler highscoreHandler){
         this.playerDatabase = playerDatabase;
         this.messageHandler = messageHandler;
         this.highscoreHandler = highscoreHandler;
-        this.rateLimitCache = rateLimitCache;
         format = new DecimalFormat("#,###.###");
     }
 
@@ -48,27 +45,7 @@ public class CommandHandler {
         if(msgArr.length == 0 || !msgArr[0].startsWith(COMMAND_PREFIX))
             return;
 
-        if(rateLimitCache.getUnchecked(user.getId()) > 10){
-            System.out.println(user.getId() + " Full: " + rateLimitCache.getUnchecked(user.getId()));
-            return;
-        } else{
-            rateLimitCache.put(user.getId(), rateLimitCache.getUnchecked(user.getId()) + 1);
-            System.out.println(user.getId() + "After: " + rateLimitCache.getUnchecked(user.getId()));
-        }
-
-        List<Member> members = message.getGuild().getMembers();
-        System.out.println(members.size());
-        
-        for(Member m : members){
-            System.out.println("m.getUser().getName() = " + m.getUser().getName());
-        }
-        
-        List<Player> players = playerDatabase.retreivePlayers(members);
-
-        for(Player p : players){
-            System.out.println("p.getId() +  = " + p.getId() + " Level: " + p.getLevel() + " Total: " + p.getTotalStats());
-        }
-
+        System.out.println(message.getAuthor().getName() + " id: " + message.getAuthor().getId() + " : " + event.getMessage());
         if(!handleStaticCommands(msgArr, channel, user) && !handleDynamicCommands(msgArr, channel, user, message, event)){
             String str = "Command not recognized: " + msgArr[0] + ". Type r!commands for list of commands.";
             sendDefaultEmbedMessage(user, str, messageHandler, channel);
@@ -169,21 +146,7 @@ public class CommandHandler {
 
                 break;*/
             case "r!collect":
-                Player curPlayer = playerDatabase.grabPlayer(user.getId());
-                if(curPlayer.getKeyword() == null || !curPlayer.getKeyword().equals(ApplicationConstants.KEYWORD)){
-                    int crateCost = models.Crate.getCrateCost(Item.getLevelBracket(curPlayer.getLevel()));
-                    int goldIncrease = crateCost * 5;
-
-                    curPlayer.increGold(goldIncrease);
-                    curPlayer.setKeyword(ApplicationConstants.KEYWORD);
-                    playerDatabase.insertPlayer(curPlayer);
-
-                    String msg = String.format("You have collected %s gold.", goldIncrease);
-                    MessageHandler.sendDefaultEmbedMessage(user, msg, messageHandler, channel);
-                }  else{
-                    String msg = "You have already collected your gold.";
-                    MessageHandler.sendDefaultEmbedMessage(user, msg, messageHandler, channel);
-                }
+                CollectCommand.collect(user, playerDatabase, messageHandler, channel);
                 break;
             default:
                 return false;
@@ -239,7 +202,7 @@ public class CommandHandler {
     }
 
     public void vote(MessageChannel channel, User user) {
-        String msg = "You may vote for the bot every 12 hours. As a reward, your stamina will refresh to 20 each time you vote." +
+        String msg = "You may vote for the bot every 12 hours. As a reward, you will get additional stamina each time you vote." +
                 " On Friday, Saturday, and Sunday, you will also get a crate worth of gold added to your account. Thanks for supporting Discord RPG!\n\n " +
                 "https://discordbots.org/bot/449444515548495882";
 
