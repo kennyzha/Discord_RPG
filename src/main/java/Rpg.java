@@ -12,24 +12,23 @@ import utils.PostStats;
 import javax.security.auth.login.LoginException;
 
 public class Rpg {
+
+    public static ShardManager shardManager;
     public static void main(String[] args) throws LoginException, RateLimitedException, InterruptedException{
-        DefaultShardManagerBuilder builder = new DefaultShardManagerBuilder();
-        builder.setToken(ApplicationConstants.TOKEN);
-        builder.addEventListeners(new MessageListener());
-        ShardManager shardManager = builder.build();
+        DefaultShardManagerBuilder builder = new DefaultShardManagerBuilder()
+                        .setToken(ApplicationConstants.TOKEN).
+                        addEventListeners(new MessageListener());
+        shardManager = builder.build();
+
         System.out.println(shardManager.getShards().size());
         int total = 0;
 
         for(JDA jda : shardManager.getShards()){
-            total += jda.getGuildCache().size();
+            total += jda.getGuilds().size();
         }
+    }
 
-        System.out.println(total);
-
-/*        JDA jda = new JDABuilder(AccountType.BOT).setToken(ApplicationConstants.TEST_TOKEN).buildBlocking();
-
-//        PostStats.toDiscordBots(jda, ApplicationConstants.DISCORD_BOT_AUTH_TOKEN);
-
-        jda.addEventListener(new MessageListener());*/
+    public static ShardManager getShardManager(){
+        return shardManager;
     }
 }

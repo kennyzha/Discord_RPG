@@ -33,47 +33,50 @@ public class HighscoreHandler {
     public ArrayList<Player> getLevelHighscore(){
         if(levelHighscore.isEmpty() || isStale()){
             updateHighscores();
-            Collections.reverse(levelHighscore);
         }
-            return levelHighscore;
+        levelHighscore.forEach((p) -> System.out.println(p.toString()));
+
+        return levelHighscore;
     }
 
     public ArrayList<Player> getSpeedHighscore(){
         if(speedHighscore.isEmpty() || isStale()){
             updateHighscores();
-            Collections.reverse(speedHighscore);
         }
+        speedHighscore.forEach((p) -> System.out.println(p.toString()));
+
         return speedHighscore;
     }
 
     public ArrayList<Player> getPowerHighscore(){
         if(powerHighscore.isEmpty() || isStale()){
             updateHighscores();
-            Collections.reverse(powerHighscore);
         }
+        powerHighscore.forEach((p) -> System.out.println(p.toString()));
         return powerHighscore;
     }
 
     public ArrayList<Player> getStrengthHighscore(){
         if(strengthHighscore.isEmpty() || isStale()){
             updateHighscores();
-            Collections.reverse(strengthHighscore);
         }
+        strengthHighscore.forEach((p) -> System.out.println(p.toString()));
+
         return strengthHighscore;
     }
 
     public ArrayList<Player> getTotalHighscore(){
         if(totalHighscore.isEmpty() || isStale()){
             updateHighscores();
-            Collections.reverse(totalHighscore);
         }
+        totalHighscore.forEach((p) -> System.out.println(p.toString()));
+
         return totalHighscore;
     }
 
     public ArrayList<Player> getGoldHighscore(){
         if(goldHighscore.isEmpty() || isStale()){
             updateHighscores();
-            Collections.reverse(goldHighscore);
         }
         return goldHighscore;
     }
@@ -93,13 +96,14 @@ public class HighscoreHandler {
         PriorityQueue<Player> powerPq = new PriorityQueue<>((p1, p2) -> (int) (p1.getPower() - p2.getPower()));
         PriorityQueue<Player> speedPq = new PriorityQueue<>((p1, p2) -> (int) (p1.getSpeed() - p2.getSpeed()));
         PriorityQueue<Player> strengthPq = new PriorityQueue<>((p1, p2) -> (int) (p1.getStrength() - p2.getStrength()));
-        PriorityQueue<Player> totalPq = new PriorityQueue<>((p1,p2) -> (int) (p1.getTotalStats() - p2.getTotalStats()));
-        PriorityQueue<Player> goldPq = new PriorityQueue<>((p1,p2) -> (p1.getGold() - p2.getGold()));
+        PriorityQueue<Player> totalPq = new PriorityQueue<>((p1, p2) -> (int) (p1.getTotalStats() - p2.getTotalStats()));
+        PriorityQueue<Player> goldPq = new PriorityQueue<>((p1, p2) -> (p1.getGold() - p2.getGold()));
 
         List<Player> players = playerDatabase.retreiveAllPlayers();
 
         populateQueues(players, levelPq, powerPq, speedPq, strengthPq, totalPq, goldPq);
         populateHighscoreArrays(levelPq, powerPq, speedPq, strengthPq, totalPq, goldPq);
+        reverseArrays();
     }
 
     public void populateQueues(List<Player> players, PriorityQueue<Player> levelPq, PriorityQueue<Player> powerPq, PriorityQueue<Player> speedPq, PriorityQueue<Player> strengthPq,
@@ -145,5 +149,14 @@ public class HighscoreHandler {
         this.strengthHighscore = new ArrayList<>();
         this.totalHighscore = new ArrayList<>();
         this.goldHighscore = new ArrayList<>();
+    }
+
+    private void reverseArrays(){
+        Collections.reverse(levelHighscore);
+        Collections.reverse(speedHighscore);
+        Collections.reverse(powerHighscore);
+        Collections.reverse(strengthHighscore);
+        Collections.reverse(totalHighscore);
+        Collections.reverse(goldHighscore);
     }
 }
