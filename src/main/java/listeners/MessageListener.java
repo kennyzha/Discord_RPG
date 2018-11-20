@@ -28,9 +28,9 @@ public class MessageListener extends ListenerAdapter {
             return;
         }
 
-//        if(ApplicationConstants.TEST_SERVER && checkIsTestServer(event)){
-//            new CommandHandler(playerDatabase, messageHandler, highscoreHandler).handleCommand(event);
-//        }
+/*        if(ApplicationConstants.TEST_SERVER && checkIsTestServer(event)){
+            new CommandHandler(playerDatabase, messageHandler, highscoreHandler).handleCommand(event);
+        }*/
 
         new CommandHandler(playerDatabase, messageHandler, highscoreHandler).handleCommand(event);
 

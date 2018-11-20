@@ -1,6 +1,7 @@
 package database;
 
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
 import com.amazonaws.services.dynamodbv2.document.*;
 import com.amazonaws.services.dynamodbv2.document.spec.QuerySpec;
 import com.amazonaws.services.dynamodbv2.document.spec.ScanSpec;
@@ -119,34 +120,40 @@ public class PlayerDatabase {
     public List<Player> retreiveAllPlayers(){
         ArrayList<Player> players = new ArrayList<>();
         AmazonDynamoDB amazonDynamoDB = dynamoClient.getAmazonDynamoDB();
-        ScanRequest scanRequest = new ScanRequest().withTableName(dynamoClient.getPlayerTableName());
 
-        ScanResult scanResult = amazonDynamoDB.scan(scanRequest);
+        Map<String, AttributeValue> lastEvaluatedKey = null;
 
-        for (Map<String, AttributeValue> item : scanResult.getItems()){
-            try {
-                String id = item.get("id").getS();
-                String level = item.get("level").getN();
-                String speed = item.get("speed").getN();
-                String power = item.get("power").getN();
-                String strength = item.get("strength").getN();
-                String gold = item.get("gold").getN();
+        do{
+            ScanRequest scanRequest = new ScanRequest().withTableName(dynamoClient.getPlayerTableName()).withExclusiveStartKey(lastEvaluatedKey);
+            ScanResult scanResult = amazonDynamoDB.scan(scanRequest);
+            for (Map<String, AttributeValue> item : scanResult.getItems()){
+                try {
+                    String id = item.get("id").getS();
+                    String level = item.get("level").getN();
+                    String speed = item.get("speed").getN();
+                    String power = item.get("power").getN();
+                    String strength = item.get("strength").getN();
+                    String gold = item.get("gold").getN();
 
-                Player player = new Player(id);
-                player.setLevel(Integer.parseInt(level));
-                player.setSpeed(Double.parseDouble(speed));
-                player.setPower(Double.parseDouble(power));
-                player.setStrength(Double.parseDouble(strength));
-                player.setGold(Integer.parseInt(gold));
-                players.add(player);
+                    Player player = new Player(id);
+                    player.setLevel(Integer.parseInt(level));
+                    player.setSpeed(Double.parseDouble(speed));
+                    player.setPower(Double.parseDouble(power));
+                    player.setStrength(Double.parseDouble(strength));
+                    player.setGold(Integer.parseInt(gold));
+                    players.add(player);
 
-            } catch (NumberFormatException e) {
-                e.printStackTrace();
+                } catch (NumberFormatException e) {
+                    e.printStackTrace();
+                }
+                lastEvaluatedKey = scanResult.getLastEvaluatedKey();
             }
-        }
+        } while(lastEvaluatedKey != null);
+
+
         return players;
     }
-
+    
     public List<Player> retreivePlayers(List<Member> members){
         List<Player> players = new ArrayList<>();
         TableKeysAndAttributes playerKeyAndAttributes = new TableKeysAndAttributes(dynamoClient.getPlayerTableName());
