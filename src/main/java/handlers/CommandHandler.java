@@ -6,6 +6,7 @@ import com.google.common.cache.LoadingCache;
 import commands.*;
 
 import config.ApplicationConstants;
+import database.PlayerCache;
 import database.PlayerDatabase;
 import models.*;
 import net.dv8tion.jda.core.JDA;
@@ -46,7 +47,6 @@ public class CommandHandler {
             return;
 
 //        System.out.println(message.getAuthor().getName() + " id: " + message.getAuthor().getId() + " : " + event.getMessage());
-//
 //        System.out.println(event.getJDA().asBot().getShardManager().getGuilds().size());
 
         if(!handleStaticCommands(msgArr, channel, user) && !handleDynamicCommands(msgArr, channel, user, message, event)){
@@ -113,7 +113,8 @@ public class CommandHandler {
             case "r!highscores":
             case "r!leaderboards":
             case "r!leaderboard":
-                highscore(channel, msgArr, user, event.getJDA());
+                HighscoreCommand.highscore(msgArr, channel, messageHandler, highscoreHandler, user, message.getGuild(), event.getJDA());
+                //highscore(channel, msgArr, user, event.getJDA());
                 break;
             case "r!crate":
             case"r!crates":

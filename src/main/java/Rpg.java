@@ -16,7 +16,7 @@ public class Rpg {
     public static ShardManager shardManager;
     public static void main(String[] args) throws LoginException, RateLimitedException, InterruptedException{
         DefaultShardManagerBuilder builder = new DefaultShardManagerBuilder()
-                        .setToken(ApplicationConstants.TOKEN).
+                        .setToken(ApplicationConstants.TEST_TOKEN).
                         addEventListeners(new MessageListener());
         shardManager = builder.build();
 
