@@ -28,12 +28,12 @@ public class MessageListener extends ListenerAdapter {
             return;
         }
 
-//        if(ApplicationConstants.TEST_SERVER && checkIsTestServer(event)){
+        if(ApplicationConstants.TEST_SERVER && checkIsTestServer(event)){
+            System.out.println(event.getMessage());
+            new CommandHandler(playerDatabase, messageHandler, highscoreHandler).handleCommand(event);
+        }
+
 //            new CommandHandler(playerDatabase, messageHandler, highscoreHandler).handleCommand(event);
-//        }
-
-        new CommandHandler(playerDatabase, messageHandler, highscoreHandler).handleCommand(event);
-
     }
 
     public boolean checkIsTestServer(MessageReceivedEvent event){

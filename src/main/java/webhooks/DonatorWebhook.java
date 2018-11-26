@@ -43,7 +43,7 @@ public class DonatorWebhook implements RequestStreamHandler {
                         if(donator.getBuyer_id() != null && !donator.getBuyer_id().equals("")){
                             Player player = playerDatabase.grabPlayer(donator.getBuyer_id());
 
-                            System.out.println(donator.toString());
+                            System.out.println(player.toString());
 
                             if(donator.getStatus() != null){
                                 String donatorStatus = donator.getStatus();

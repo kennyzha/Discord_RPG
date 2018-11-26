@@ -124,8 +124,9 @@ public class Player extends Entity{
 
     public void updateStamina(){
         Long updatedTime = System.currentTimeMillis();
+        int maxStamina = Donator.isDonator(this) ? ApplicationConstants.DONATOR_MAX_STAMINA : ApplicationConstants.MAX_STAMINA;
 
-        if(this.stamina < ApplicationConstants.MAX_STAMINA){
+        if(this.stamina < maxStamina){
             Long elapsedTime = updatedTime - this.staminaLastUpdateTime;
             int staminaRefreshRate = (Donator.isDonator(this)) ? ApplicationConstants.DONATOR_STAMINA_REFRESH_RATE : ApplicationConstants.STAMINA_REFRESH_RATE;
             Long leftOverTime = elapsedTime % staminaRefreshRate;
@@ -133,7 +134,7 @@ public class Player extends Entity{
 
             int staminaGained = (int) (elapsedTime / staminaRefreshRate);
 
-            setStamina(Math.min(this.stamina + staminaGained, ApplicationConstants.MAX_STAMINA));
+            setStamina(Math.min(this.stamina + staminaGained, maxStamina));
         }
 
         setStaminaLastUpdateTime(updatedTime);

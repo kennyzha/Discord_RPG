@@ -6,6 +6,7 @@ import com.google.common.cache.LoadingCache;
 import commands.*;
 
 import config.ApplicationConstants;
+import database.PlayerCache;
 import database.PlayerDatabase;
 import models.*;
 import net.dv8tion.jda.core.JDA;
@@ -45,7 +46,9 @@ public class CommandHandler {
         if(msgArr.length == 0 || !msgArr[0].startsWith(COMMAND_PREFIX))
             return;
 
-        System.out.println(message.getAuthor().getName() + " id: " + message.getAuthor().getId() + " : " + event.getMessage());
+//        System.out.println(message.getAuthor().getName() + " id: " + message.getAuthor().getId() + " : " + event.getMessage());
+//        System.out.println(event.getJDA().asBot().getShardManager().getGuilds().size());
+
         if(!handleStaticCommands(msgArr, channel, user) && !handleDynamicCommands(msgArr, channel, user, message, event)){
             String str = "Command not recognized: " + msgArr[0] + ". Type r!commands for list of commands.";
             sendDefaultEmbedMessage(user, str, messageHandler, channel);
@@ -110,7 +113,8 @@ public class CommandHandler {
             case "r!highscores":
             case "r!leaderboards":
             case "r!leaderboard":
-                highscore(channel, msgArr, user, event.getJDA());
+                HighscoreCommand.highscore(msgArr, channel, messageHandler, highscoreHandler, user, message.getGuild(), event.getJDA());
+                //highscore(channel, msgArr, user, event.getJDA());
                 break;
             case "r!crate":
             case"r!crates":
@@ -145,9 +149,9 @@ public class CommandHandler {
 //                playerDatabase.insertPlayer(player);
 
                 break;*/
-            case "r!collect":
+/*            case "r!collect":
                 CollectCommand.collect(user, playerDatabase, messageHandler, channel);
-                break;
+                break;*/
             default:
                 return false;
         }
@@ -155,7 +159,7 @@ public class CommandHandler {
         return true;
     }
 
-    private void inventory(MessageChannel channel, User user) {
+        private void inventory(MessageChannel channel, User user) {
         Player player = playerDatabase.grabPlayer(user.getId());
         channel.sendMessage(messageHandler.createEmbedInventory(user, player)).queue();
     }
@@ -267,7 +271,6 @@ public class CommandHandler {
                 channel.sendMessage(messageHandler.createEmbedFightMessage(user, monster.getName(), pvmResults)).queue();
 
             } catch(Exception e){
-                e.printStackTrace();
                 sendDefaultEmbedMessage(user, "Please type a valid number of times you wish to hunt that monster with. e.g. \"r!hunt slime 1\". \"r!monsters\" for list of monsters.", messageHandler, channel);
             }
         }
