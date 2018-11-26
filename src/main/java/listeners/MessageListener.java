@@ -37,13 +37,20 @@ public class MessageListener extends ListenerAdapter {
     }
 
     public boolean checkIsTestServer(MessageReceivedEvent event){
-        if((!event.getMessage().getChannelType().isGuild() ||
-                        !event.getGuild().getId().equals(ApplicationConstants.OFFICIAL_GUILD_ID) ||
-                        !event.getChannel().getId().equals("495015240124203019"))){
+        if((event.getMessage().getChannelType().isGuild() &&
+                        (event.getGuild().getId().equals(ApplicationConstants.OFFICIAL_GUILD_ID) && event.getChannel().getId().equals("495015240124203019")) ||
+                        event.getGuild().getId().equals(ApplicationConstants.TEST_GUILD_ID))){
+            System.out.println("official server channel. " + event.getAuthor().getName() + event.getAuthor().getDiscriminator()
+                    + " : " + event.getMessage().toString());
+            return true;
+        }
+/*        if((!event.getMessage().getChannelType().isGuild() ||
+                (!event.getGuild().getId().equals(ApplicationConstants.OFFICIAL_GUILD_ID) || !event.getChannel().getId().equals("495015240124203019")) ||
+                !event.getGuild().getId().equals(ApplicationConstants.TEST_GUILD_ID))){
             System.out.println("not official server channel. " + event.getAuthor().getName() + event.getAuthor().getDiscriminator()
                     + " : " + event.getMessage().toString());
             return false;
-        }
-        return true;
+        }*/
+        return false;
     }
 }

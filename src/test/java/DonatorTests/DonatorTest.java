@@ -192,4 +192,16 @@ public class DonatorTest {
         System.out.println(Donator.getDonatorTimeRemainingString(player));
         assertTrue(expected.equals(Donator.getDonatorTimeRemainingString(player)));
     }
+
+    @Test
+    public void donatorTimeRemainingStringTest5(){
+        Player player = new Player("Abc");
+        //player.setDonatorEndTime(1545849295311L);
+        player.setDonatorEndTime(1548535022028L);
+        String expected = "Days: 30 Hours: 23 Minutes: 58";
+// 3 23
+// 335
+        System.out.println(Donator.getDonatorTimeRemainingString(player));
+        assertTrue(expected.equals(Donator.getDonatorTimeRemainingString(player)));
+    }
 }
