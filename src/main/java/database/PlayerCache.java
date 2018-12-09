@@ -34,9 +34,7 @@ public class PlayerCache {
         playerMap = new HashMap<>();
 
         players.forEach( (player) -> {
-            if(player.getLevel() >= 10 && player.getTotalStats() >= 100){
                 playerMap.put(player.getId(), player);
-            }
         });
 
         lastUpdatedTime = System.currentTimeMillis();

@@ -25,7 +25,6 @@ public class HighscoreHandler {
     private ArrayList<Player> totalHighscore;
     private ArrayList<Player> goldHighscore;
 
-    private PlayerDatabase playerDatabase;
 
     private static final int HIGHSCORE_SIZE = 10;
     private static final long HIGHSCORE_REFRESH_TIME = TimeUtil.ONE_HOUR;
@@ -34,9 +33,7 @@ public class HighscoreHandler {
     private static Cache<String, ArrayList<Player>> guildTotalHighscores = CacheBuilder.newBuilder().expireAfterWrite(1, TimeUnit.HOURS).build();
 
     public HighscoreHandler() {
-        playerDatabase = new PlayerDatabase();
         this.timeSinceUpdated = 0L;
-
         initHighscoreArrays();
     }
 

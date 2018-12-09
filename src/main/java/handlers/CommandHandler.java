@@ -1,25 +1,15 @@
 package handlers;
 
-import com.google.common.cache.CacheBuilder;
-import com.google.common.cache.CacheLoader;
-import com.google.common.cache.LoadingCache;
 import commands.*;
-
 import config.ApplicationConstants;
-import database.PlayerCache;
 import database.PlayerDatabase;
 import models.*;
-import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.entities.*;
 import net.dv8tion.jda.core.events.Event;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import utils.CombatResult;
-import utils.Donator;
-
 import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
+
 
 public class CommandHandler {
 
@@ -37,9 +27,9 @@ public class CommandHandler {
     }
 
     public void handleCommand(MessageReceivedEvent event){
-        User user = event.getAuthor();                //The user that sent the message
-        Message message = event.getMessage();           //The message that was received.
-        MessageChannel channel = event.getChannel();    //This is the MessageChannel that the message was sent to.
+        User user = event.getAuthor();
+        Message message = event.getMessage();
+        MessageChannel channel = event.getChannel();
         String msg = message.getContentDisplay().toLowerCase();
         String[] msgArr = msg.split(" ");
 
@@ -145,9 +135,6 @@ public class CommandHandler {
                 System.out.println("Donator.getDonatorTimeDays(ok) = " + Donator.getDonatorTimeDays(player));
 //                playerDatabase.insertPlayer(player);
 
-                break;*/
-/*            case "r!collect":
-                CollectCommand.collect(user, playerDatabase, messageHandler, channel);
                 break;*/
             default:
                 return false;
@@ -281,48 +268,6 @@ public class CommandHandler {
         });
 
         channel.sendMessage(messageHandler.createDefaultEmbedMessage(user, "Messaged you the list of monsters within 100 levels.")).queue();
-    }
-
-    public void highscore(MessageChannel channel, String[] msgArr, User user, JDA jda){
-        String highscoreType = "";
-        ArrayList<Player> players;
-        if(msgArr.length < 2){
-            channel.sendMessage(messageHandler.createDefaultEmbedMessage(user, "Highscores update daily. Available highscores: Level, Power, Speed, Strength, Total, Gold. e.g r!highscore total")).queue();
-            return;
-        } else{
-            switch(msgArr[1]){
-                case "level":
-                    highscoreType = "Level";
-                    players = highscoreHandler.getLevelHighscore();
-                    break;
-                case "speed":
-                    players = highscoreHandler.getSpeedHighscore();
-                    highscoreType = "Speed";
-                    break;
-                case "power":
-                    players = highscoreHandler.getPowerHighscore();
-                    highscoreType = "Power";
-                    break;
-                case "strength":
-                    players = highscoreHandler.getStrengthHighscore();
-                    highscoreType = "Strength";
-                    break;
-                case "total":
-                    players = highscoreHandler.getTotalHighscore();
-                    highscoreType = "Total Stats";
-                    channel.sendMessage(messageHandler.createTotalHighscoreEmbedMessage(user, players, jda, highscoreType)).queue();
-                    return;
-                case "gold":
-                    players = highscoreHandler.getGoldHighscore();
-                    highscoreType = "Gold";
-                    channel.sendMessage(messageHandler.createGoldHighscoreEmbedMessage(user, players, jda, highscoreType)).queue();
-                    return;
-                default:
-                    channel.sendMessage(messageHandler.createDefaultEmbedMessage(user, "Available highscores: Level, Power, Speed, Strength, Total, Gold. e.g r!highscore total")).queue();
-                    return;
-            }
-        }
-        channel.sendMessage(messageHandler.createHighscoreEmbedMessage(user, players, jda, highscoreType)).queue();
     }
 
     public void sendDefaultEmbedMessage(User user, String description, MessageHandler messageHandler, MessageChannel channel){
