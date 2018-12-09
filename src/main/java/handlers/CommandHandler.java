@@ -45,9 +45,6 @@ public class CommandHandler {
         if(msgArr.length == 0 || !msgArr[0].startsWith(COMMAND_PREFIX))
             return;
 
-//        System.out.println(message.getAuthor().getName() + " id: " + message.getAuthor().getId() + " : " + event.getMessage());
-//
-//        System.out.println(event.getJDA().asBot().getShardManager().getGuilds().size());
 
         if(!handleStaticCommands(msgArr, channel, user) && !handleDynamicCommands(msgArr, channel, user, message, event)){
             String str = "Command not recognized: " + msgArr[0] + ". Type r!commands for list of commands.";

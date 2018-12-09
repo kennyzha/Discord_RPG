@@ -21,7 +21,6 @@ public class Donator {
                 player.setDonatorEndTime(System.currentTimeMillis() + milliseconds);
             }
         }
-
     }
 
     public static void applyDonatorPacks(Player player, int numDonatorPacks){

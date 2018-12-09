@@ -34,7 +34,6 @@ public class HighscoreHandler {
         if(levelHighscore.isEmpty() || isStale()){
             updateHighscores();
         }
-        levelHighscore.forEach((p) -> System.out.println(p.toString()));
 
         return levelHighscore;
     }
@@ -43,7 +42,6 @@ public class HighscoreHandler {
         if(speedHighscore.isEmpty() || isStale()){
             updateHighscores();
         }
-        speedHighscore.forEach((p) -> System.out.println(p.toString()));
 
         return speedHighscore;
     }
@@ -52,7 +50,6 @@ public class HighscoreHandler {
         if(powerHighscore.isEmpty() || isStale()){
             updateHighscores();
         }
-        powerHighscore.forEach((p) -> System.out.println(p.toString()));
         return powerHighscore;
     }
 
@@ -60,7 +57,6 @@ public class HighscoreHandler {
         if(strengthHighscore.isEmpty() || isStale()){
             updateHighscores();
         }
-        strengthHighscore.forEach((p) -> System.out.println(p.toString()));
 
         return strengthHighscore;
     }
@@ -69,7 +65,6 @@ public class HighscoreHandler {
         if(totalHighscore.isEmpty() || isStale()){
             updateHighscores();
         }
-        totalHighscore.forEach((p) -> System.out.println(p.toString()));
 
         return totalHighscore;
     }
@@ -104,6 +99,7 @@ public class HighscoreHandler {
         populateQueues(players, levelPq, powerPq, speedPq, strengthPq, totalPq, goldPq);
         populateHighscoreArrays(levelPq, powerPq, speedPq, strengthPq, totalPq, goldPq);
         reverseArrays();
+        System.gc();
     }
 
     public void populateQueues(List<Player> players, PriorityQueue<Player> levelPq, PriorityQueue<Player> powerPq, PriorityQueue<Player> speedPq, PriorityQueue<Player> strengthPq,
