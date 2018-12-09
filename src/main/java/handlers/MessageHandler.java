@@ -157,7 +157,6 @@ public class MessageHandler {
             User curUser = jda.asBot().getShardManager().getUserById(p.getId());
 
             if(curUser == null){
-                System.out.println(highscoreType + "this is null huh.");
                 continue;
             }
             
@@ -180,7 +179,6 @@ public class MessageHandler {
 //            User curUser = jda.getUserById(p.getId());
             User curUser = jda.asBot().getShardManager().getUserById(p.getId());
             if (curUser == null) {
-                System.out.println(highscoreType + "  total this is null huh.");
                 continue;
             }
 
@@ -204,7 +202,6 @@ public class MessageHandler {
             User curUser = jda.asBot().getShardManager().getUserById(p.getId());
 
             if (curUser == null) {
-                System.out.println(highscoreType + "  gold this is null huh.");
                 continue;
             }
 

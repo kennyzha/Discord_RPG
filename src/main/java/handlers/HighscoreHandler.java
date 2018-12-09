@@ -132,7 +132,7 @@ public class HighscoreHandler {
         if(powerHighscore.isEmpty() || isStale()){
             updateHighscores();
         }
-
+      
         return powerHighscore;
     }
 
@@ -182,6 +182,7 @@ public class HighscoreHandler {
         populateQueues(players, levelPq, powerPq, speedPq, strengthPq, totalPq, goldPq);
         populateHighscoreArrays(levelPq, powerPq, speedPq, strengthPq, totalPq, goldPq);
         reverseArrays();
+        System.gc();
     }
 
     public void populateQueues(List<Player> players, PriorityQueue<Player> levelPq, PriorityQueue<Player> powerPq, PriorityQueue<Player> speedPq, PriorityQueue<Player> strengthPq,
