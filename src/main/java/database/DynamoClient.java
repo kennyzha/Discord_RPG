@@ -14,17 +14,16 @@ public class DynamoClient {
     private AmazonDynamoDB amazonDynamoDB;
     private DynamoDB dynamoDb;
 
-    private String awsAcessKeyID = ApplicationConstants.AWS_ACCESS_KEY;
-    private String awsSecretKey = ApplicationConstants.AWS_SECRET_ACCESS_KEY;
+    private String awsAcessKeyID;
+    private String awsSecretKey;
 
-//    private String playerTableName = ApplicationConstants.PLAYER_TABLE_NAME;
-    private String playerTableName = ApplicationConstants.PLAYER_DEV_TABLE_NAME;
-
-    private String playerSpeedIndex = ApplicationConstants.PLAYER_SPEED_INDEX;
-    private String playerPowerIndex = ApplicationConstants.PLAYER_POWER_INDEX;
-    private String playerStrengthIndex = ApplicationConstants.PLAYER_STRENGTH_INDEX;
+    private String playerTableName;
 
     public DynamoClient(){
+        awsAcessKeyID = ApplicationConstants.AWS_ACCESS_KEY;
+        awsSecretKey  = ApplicationConstants.AWS_SECRET_ACCESS_KEY;
+        playerTableName = ApplicationConstants.TEST_SERVER ? ApplicationConstants.PLAYER_DEV_TABLE_NAME : ApplicationConstants.PLAYER_TABLE_NAME;
+
         awsCredentialsProvider = new AWSStaticCredentialsProvider(new AWSCredentials() {
             public String getAWSAccessKeyId() {
                 return awsAcessKeyID;
@@ -59,18 +58,4 @@ public class DynamoClient {
     public String getPlayerTableName(){
         return playerTableName;
     }
-
-    public String getPlayerSpeedIndex() {
-        return playerSpeedIndex;
-    }
-
-    public String getPlayerPowerIndex() {
-        return playerPowerIndex;
-    }
-
-    public String getPlayerStrengthIndex() {
-        return playerStrengthIndex;
-    }
-
-
 }

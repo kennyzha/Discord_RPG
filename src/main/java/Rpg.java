@@ -17,8 +17,10 @@ public class Rpg {
 
     public static ShardManager shardManager;
     public static void main(String[] args) throws LoginException, RateLimitedException, InterruptedException{
+        String token = (ApplicationConstants.TEST_SERVER) ? ApplicationConstants.TEST_TOKEN : ApplicationConstants.TOKEN;
+
         DefaultShardManagerBuilder builder = new DefaultShardManagerBuilder()
-                        .setToken(ApplicationConstants.TOKEN)
+                        .setToken(token)
                         .setDisabledCacheFlags(EnumSet.of(CacheFlag.GAME))
                         .addEventListeners(new MessageListener());
         shardManager = builder.build();

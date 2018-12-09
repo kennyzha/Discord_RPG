@@ -56,20 +56,8 @@ public class PlayerDatabase {
         if(player == null){
             Player newPlayer = new Player(id);
 
-//            if(ApplicationConstants.TEST_SERVER){
-//                newPlayer.setLevel(100);
-//                newPlayer.setHealth(13335);
-//                newPlayer.setGold(500000);
-//                newPlayer.setPower(4000);
-//                newPlayer.setSpeed(4000);
-//                newPlayer.setStrength(4000);
-//            }
-
             insertPlayer(newPlayer);
             player = newPlayer;
-
-//            Stamina stamina = new Stamina(id);
-//            insertPlayerStamina(stamina);
         }
 
         return player;
@@ -91,28 +79,6 @@ public class PlayerDatabase {
         }
         return player;
     }
-
-//    public Stamina retreivePlayerStamina(String id){
-//        Table staminaTable = dynamoDB.getTable(dynamoClient.getStaminaTableName());
-//        Item item = staminaTable.getItem(ApplicationConstants.STAMINA_PRIMARY_KEY, id);
-//
-//        if(item == null)
-//            return null;
-//
-//        Stamina stamina = gson.fromJson(item.toJSON(), Stamina.class);
-//
-//        if(stamina == null)
-//            return null;
-//
-//        stamina.updateStamina();
-//
-//        return stamina;
-//    }
-
-//    public void insertPlayerStamina(Stamina stamina){
-//        Table staminaTable = dynamoDB.getTable(dynamoClient.getStaminaTableName());
-//        staminaTable.putItem(Item.fromJSON(gson.toJson(stamina)));
-//    }
 
     public List<Player> retreiveAllPlayers(){
         ArrayList<Player> players = new ArrayList<>();

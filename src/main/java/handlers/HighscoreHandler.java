@@ -12,7 +12,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.PriorityQueue;
-import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
@@ -46,7 +45,7 @@ public class HighscoreHandler {
             return guildLevelHighscores.get(guildID, () -> {
                 System.out.println("updating level hs");
                 ArrayList<Player> players = PlayerCache.convertMembersToPlayers(members);
-                return getTopLevelsFromGuild(players);
+                return getTopLevelsFromPlayers(players);
             });
         } catch (ExecutionException e) {
             e.printStackTrace();
@@ -59,9 +58,7 @@ public class HighscoreHandler {
             return guildTotalHighscores.get(guildID, () -> {
                 System.out.println("updating total hs");
                 ArrayList<Player> players = PlayerCache.convertMembersToPlayers(members);
-                System.out.println("In guild total hs " + players.toString());
-                ArrayList<Player> topTotalsArr = getTopTotalsFromGuild(players);
-                System.out.println("topTotalsArr = " + topTotalsArr.size());
+                ArrayList<Player> topTotalsArr = getTopTotalsFromPlayers(players);
                 return topTotalsArr;
             });
         } catch (ExecutionException e) {
@@ -78,7 +75,7 @@ public class HighscoreHandler {
         return levelHighscore;
     }
 
-    public static ArrayList<Player> getTopLevelsFromGuild(ArrayList<Player> players){
+    public static ArrayList<Player> getTopLevelsFromPlayers(ArrayList<Player> players){
         PriorityQueue<Player> levelPq = new PriorityQueue<>((p1, p2) -> (p1.getLevel() - p2.getLevel()));
 
         for(Player p : players){
@@ -97,12 +94,11 @@ public class HighscoreHandler {
         return levelsHighscore;
     }
 
-    public static ArrayList<Player> getTopTotalsFromGuild(ArrayList<Player> players){
+    public static ArrayList<Player> getTopTotalsFromPlayers(ArrayList<Player> players){
         PriorityQueue<Player> totalPq = new PriorityQueue<>((p1, p2) -> (int) (p1.getTotalStats() - p2.getTotalStats()));
 
         for(Player p : players){
             totalPq.add(p);
-            System.out.println("Adding " + p);
             if(totalPq.size() > HIGHSCORE_SIZE){
                 totalPq.poll();
             }
@@ -113,10 +109,7 @@ public class HighscoreHandler {
             totalHighscore.add(totalPq.poll());
         }
 
-        System.out.println("totalHighscore = " + totalHighscore.size());
         Collections.reverse(totalHighscore);
-        System.out.println("totalHighscore = " + totalHighscore.size());
-
         return totalHighscore;
     }
 
