@@ -6,6 +6,7 @@ import com.google.common.cache.LoadingCache;
 import commands.*;
 
 import config.ApplicationConstants;
+import database.PlayerCache;
 import database.PlayerDatabase;
 import models.*;
 import net.dv8tion.jda.core.JDA;
@@ -44,7 +45,6 @@ public class CommandHandler {
 
         if(msgArr.length == 0 || !msgArr[0].startsWith(COMMAND_PREFIX))
             return;
-
 
         if(!handleStaticCommands(msgArr, channel, user) && !handleDynamicCommands(msgArr, channel, user, message, event)){
             String str = "Command not recognized: " + msgArr[0] + ". Type r!commands for list of commands.";
@@ -110,7 +110,8 @@ public class CommandHandler {
             case "r!highscores":
             case "r!leaderboards":
             case "r!leaderboard":
-                highscore(channel, msgArr, user, event.getJDA());
+                HighscoreCommand.highscore(msgArr, channel, messageHandler, highscoreHandler, user, message.getGuild(), event.getJDA());
+                //highscore(channel, msgArr, user, event.getJDA());
                 break;
             case "r!crate":
             case"r!crates":
