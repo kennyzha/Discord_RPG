@@ -16,10 +16,7 @@ import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.MessageChannel;
 import net.dv8tion.jda.core.entities.User;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class PlayerDatabase {
     private DynamoClient dynamoClient;
@@ -121,11 +118,22 @@ public class PlayerDatabase {
         ArrayList<Player> players = new ArrayList<>();
         AmazonDynamoDB amazonDynamoDB = dynamoClient.getAmazonDynamoDB();
 
+        Map<String, String> expressionAttributeNames = new HashMap<>();
+        expressionAttributeNames.put("#L", "level");
+        Map<String, AttributeValue> expressionAttributeValues =
+                new HashMap<>();
+        expressionAttributeValues.put(":val", new AttributeValue().withN("50"));
+
         Map<String, AttributeValue> lastEvaluatedKey = null;
 
         do{
-            ScanRequest scanRequest = new ScanRequest().withTableName(dynamoClient.getPlayerTableName()).withExclusiveStartKey(lastEvaluatedKey);
+            ScanRequest scanRequest = new ScanRequest().withTableName(dynamoClient.getPlayerTableName())
+                    .withExclusiveStartKey(lastEvaluatedKey)
+                    .withFilterExpression("#L > :val")
+                    .withExpressionAttributeNames(expressionAttributeNames)
+                    .withExpressionAttributeValues(expressionAttributeValues);
             ScanResult scanResult = amazonDynamoDB.scan(scanRequest);
+
             for (Map<String, AttributeValue> item : scanResult.getItems()){
                 try {
                     String id = item.get("id").getS();
