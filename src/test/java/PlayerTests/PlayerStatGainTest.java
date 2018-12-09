@@ -18,48 +18,76 @@ public class PlayerStatGainTest {
     public void level100StatGainTest(){
         player.setLevel(100);
 
-        assertEquals(player.calcStatGain(), .75);
+        assertEquals(.75, player.calcStatGain());
     }
 
     @Test
     public void level133StatGainTest(){
         player.setLevel(133);
 
-        assertEquals(player.calcStatGain(), .8325);
+        assertEquals(.8325, player.calcStatGain());
     }
 
     @Test
     public void level200StatGainTest(){
         player.setLevel(200);
 
-        assertEquals(player.calcStatGain(), 1.0);
+        assertEquals(1.0, player.calcStatGain());
     }
 
     @Test
     public void level300StatGainTest(){
         player.setLevel(300);
 
-        assertEquals(player.calcStatGain(), 1.5);
+        assertEquals(1.5, player.calcStatGain());
     }
 
     @Test
     public void level342StatGainTest(){
         player.setLevel(342);
 
-        assertEquals(player.calcStatGain(), 1.71);
+        assertEquals(1.71, player.calcStatGain());
+    }
+
+    @Test
+    public void level653StatGainTest(){
+        player.setLevel(653);
+
+        assertEquals(3.265, player.calcStatGain());
     }
 
     @Test
     public void level600StatGainTest(){
         player.setLevel(600);
 
-        assertEquals(player.calcStatGain(), 3.0);
+        assertEquals(3.0, player.calcStatGain());
     }
 
     @Test
     public void level800StatGainTest(){
         player.setLevel(800);
 
-        assertEquals(player.calcStatGain(), 5.0);
+        assertEquals(4.0, player.calcStatGain());
+    }
+
+    @Test
+    public void level850StatGainTest(){
+        player.setLevel(850);
+
+        assertEquals(4.25, player.calcStatGain());
+    }
+
+    @Test
+    public void level1100StatGainTest(){
+        player.setLevel(1100);
+
+        assertEquals(6.0, player.calcStatGain());
+    }
+
+    @Test
+    public void level1500StatGainTest(){
+        player.setLevel(1500);
+
+        assertEquals(10.0, player.calcStatGain());
     }
 }

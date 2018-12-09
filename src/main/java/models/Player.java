@@ -234,14 +234,14 @@ public class Player extends Entity{
 
         if(curLevel <= 200){
             multiplier = .0025;
-        } else if(curLevel <= 600){
+        } else if(curLevel <= 1000){
             baseGain = 1;
             multiplier = .005;
             curLevel -= 200;
         } else {
-            baseGain = 3;
+            baseGain = 5;
             multiplier = .01;
-            curLevel -= 600;
+            curLevel -= 1000;
         }
 
         double levelStatGain = curLevel * multiplier;
