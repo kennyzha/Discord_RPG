@@ -9,5 +9,8 @@ public class Guild {
     private ArrayList<String> members;
     private int gold;
     private HashMap<String, Integer> bank;
-    private int level;
+    private int headquarterLevel;
+    private int armoryLevel;
+    private int treasureLevel;
+    private int lodgeLevel;
 }

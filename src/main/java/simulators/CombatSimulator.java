@@ -69,11 +69,11 @@ public class CombatSimulator {
     }
 
     public CombatResult pvp(Player p1, Player p2){
-        return combatHandler.fightPlayer(p1, p2);
+        return combatHandler.playerFight(p1, p2);
     }
 
     public CombatResult pvm(Player p1, Monster m1, int numFights){
-        return combatHandler.fightMonster(p1, m1, numFights);
+        return combatHandler.monsterFight(p1, m1, numFights);
     }
 
     public int monstersNeededToLevel(Player p, Monster m, int initialLevel, int targetLevel){
