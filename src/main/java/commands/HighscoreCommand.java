@@ -52,6 +52,12 @@ public class HighscoreCommand {
                     channel.sendMessage(messageHandler.createGoldHighscoreEmbedMessage(user, players, jda, highscoreType)).queue();
                     return;
                 case "local":
+                    if(guild == null){
+                        String msg = "You can only get the local highscores in a Discord server.";
+                        channel.sendMessage(messageHandler.createDefaultEmbedMessage(user, msg)).queue();
+                        return;
+                    }
+
                     if(msgArr.length >= 3){
                         if(msgArr[2].equals("level") || msgArr[2].equals("levels")){
                             players = HighscoreHandler.getGuildLevelsHighscores(guild.getId(), guild.getMembers());
@@ -75,8 +81,6 @@ public class HighscoreCommand {
                     return;
             }
         }
-
-        System.out.println(players.toString() + " : " + players.size());
         channel.sendMessage(messageHandler.createHighscoreEmbedMessage(user, players, jda, highscoreType)).queue();
     }
 }

@@ -100,6 +100,7 @@ public class CommandHandler {
             case "r!highscores":
             case "r!leaderboards":
             case "r!leaderboard":
+                System.out.println(message.getContentDisplay());
                 HighscoreCommand.highscore(msgArr, channel, messageHandler, highscoreHandler, user, message.getGuild(), event.getJDA());
                 //highscore(channel, msgArr, user, event.getJDA());
                 break;
