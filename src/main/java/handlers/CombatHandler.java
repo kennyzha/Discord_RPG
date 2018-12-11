@@ -2,12 +2,12 @@ package handlers;
 
 import config.ApplicationConstants;
 import models.*;
-import net.dv8tion.jda.core.entities.MessageChannel;
 import utils.CombatStatistic;
 import utils.CombatResult;
 import utils.Donator;
 
 import java.text.DecimalFormat;
+import java.util.List;
 
 public class CombatHandler {
 
@@ -19,14 +19,14 @@ public class CombatHandler {
         this.format = new DecimalFormat("#,###.##");
     }
 
-    public CombatResult fightMonster(Player player, Monster monster, int numTimes){
+    public CombatResult monsterFight(Player player, Monster monster, int numTimes){
         int totalExpEarned = 0;
         int totalGoldEarned = 0;
         int donatorGoldEarned = 0;
         int numWins = 0;
 
         for(int i = 0; i < numTimes; i++){
-            simulateCombat(player, monster, null);
+            simulateCombat(player, monster);
 
             if(combatResult.isWinner()){
                 numWins++;
@@ -34,8 +34,6 @@ public class CombatHandler {
 
                 totalExpEarned += expEarned;
                 totalGoldEarned += monster.calcGoldDropped();
-
-                combatResult.setWinner(false);
             }
         }
 
@@ -51,12 +49,12 @@ public class CombatHandler {
         return combatResult;
     }
 
-    public CombatResult fightPlayer(Player player, Player enemyPlayer){
-        simulateCombat(player, enemyPlayer, null);
+    public CombatResult playerFight(Player player, Player enemyPlayer){
+        simulateCombat(player, enemyPlayer);
         return combatResult;
     }
 
-    public void simulateCombat(Entity p1, Entity p2, MessageChannel channel){
+    public void simulateCombat(Entity p1, Entity p2){
         int curHealth = p1.getHealth();
         int curHealth2 = p2.getHealth();
         double lowSpeed = calcLowSpeed(p1.getSpeed() + p1.getAccessory() / ApplicationConstants.ITEM_RATIO);
@@ -67,6 +65,8 @@ public class CombatHandler {
 
         for(int roundNumber = 1; roundNumber < 201; roundNumber++){
             if(isFightOver(curHealth, curHealth2, roundNumber - 1)){
+                entityOneStats.setHealthRemaining(curHealth);
+                entityTwoStats.setHealthRemaining(curHealth2);
                 break;
             }
 
@@ -92,8 +92,10 @@ public class CombatHandler {
         }
 
         if(curHealth > 0 && curHealth2 > 0){
+            entityOneStats.setHealthRemaining(curHealth);
+            entityTwoStats.setHealthRemaining(curHealth2);
             combatResult.appendToCombatResult(String.format("The fight ended with a draw because 200 rounds have gone by. You have %s health remaining while the enemy has %s health remaining.\n", format.format(curHealth), format.format(curHealth2)));
-            combatResult.setWinner(false);
+            combatResult.setResult(CombatResult.Result.DRAW);
         }
     }
 
@@ -117,11 +119,11 @@ public class CombatHandler {
     public boolean isFightOver(int health, int health2, int round){
         if(health <= 0){
             combatResult.appendToCombatResult(String.format("The enemy won the fight with %s health left on round %s.\n", format.format(health2), round));
-            combatResult.setWinner(false);
+            combatResult.setResult(CombatResult.Result.LOST);
             return true;
         } else if(health2 <= 0){
             combatResult.appendToCombatResult(String.format("You won the fight with %s health left on round %s.\n", format.format(health), round));
-            combatResult.setWinner(true);
+            combatResult.setResult(CombatResult.Result.WIN);
             return true;
         }
 

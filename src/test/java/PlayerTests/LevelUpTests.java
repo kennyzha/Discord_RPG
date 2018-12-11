@@ -39,7 +39,7 @@ public class LevelUpTests {
         int oldLevel = overPoweredPlayer.getLevel();
         int oldHealth = overPoweredPlayer.getHealth();
 
-        CombatResult combatResult = combatHandler.fightMonster(overPoweredPlayer, slime, 10);
+        CombatResult combatResult = combatHandler.monsterFight(overPoweredPlayer, slime, 10);
 
         int newLevel = overPoweredPlayer.getLevel();
         int newHealth = overPoweredPlayer.getHealth();
@@ -56,7 +56,7 @@ public class LevelUpTests {
         overPoweredPlayer.setLevel(20);
 
         int oldLevel = overPoweredPlayer.getLevel();
-        CombatResult combatResult = combatHandler.fightMonster(overPoweredPlayer, kobold, 100);
+        CombatResult combatResult = combatHandler.monsterFight(overPoweredPlayer, kobold, 100);
         int newLevel = overPoweredPlayer.getLevel();
 
         assertEquals(34, newLevel);
@@ -67,7 +67,7 @@ public class LevelUpTests {
         Monster kobold = MonsterConstants.KOBOLD;
         underPoweredPlayer.setLevel(20);
 
-        CombatResult combatResult = combatHandler.fightMonster(underPoweredPlayer, kobold, 20);
+        CombatResult combatResult = combatHandler.monsterFight(underPoweredPlayer, kobold, 20);
 
     }
 

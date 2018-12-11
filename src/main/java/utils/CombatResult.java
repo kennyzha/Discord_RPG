@@ -1,18 +1,20 @@
 package utils;
 
 public class CombatResult {
+
+    public enum Result{WIN, LOST, DRAW}
     private StringBuilder combatString;
     private StringBuilder combatResultString;
     private CombatStatistic entityOneStats;
     private CombatStatistic entityTwoStats;
-    private boolean winner;
+    private Result result;
 
     public CombatResult() {
         this.combatString = new StringBuilder();
         this.combatResultString = new StringBuilder();
         this.entityOneStats = new CombatStatistic();
         this.entityTwoStats = new CombatStatistic();
-        this.winner = false;
+        this.result = null;
     }
 
     public String getCombatString(){
@@ -39,10 +41,12 @@ public class CombatResult {
     }
 
     public boolean isWinner() {
-        return winner;
+        return this.result == Result.WIN;
     }
 
-    public void setWinner(boolean winner) {
-        this.winner = winner;
+    public void setResult(Result result) {
+        this.result = result;
     }
+
+    public Result getResult(){ return this.result; }
 }

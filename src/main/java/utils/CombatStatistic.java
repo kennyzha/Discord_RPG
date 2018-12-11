@@ -3,7 +3,7 @@ package utils;
 import java.text.DecimalFormat;
 
 public class CombatStatistic {
-    private int totalDamageDealt, minDmgDealt, maxDmgDealt, numHitsGiven, roundsPassed;
+    private int totalDamageDealt, minDmgDealt, maxDmgDealt, numHitsGiven, roundsPassed, healthRemaining;
     private DecimalFormat format;
 
     public CombatStatistic() {
@@ -12,6 +12,7 @@ public class CombatStatistic {
         this.roundsPassed = 0;
         this.minDmgDealt = Integer.MAX_VALUE;
         this.maxDmgDealt = 0;
+        this.healthRemaining = 0;
         this.format = new DecimalFormat("#,###.##");
     }
 
@@ -88,6 +89,14 @@ public class CombatStatistic {
         increNumHitsGiven();
         checkMinMaxDmgDealt(hitDmg);
         addToTotalDamage(hitDmg);
+    }
+
+    public int getHealthRemaining() {
+        return healthRemaining;
+    }
+
+    public void setHealthRemaining(int healthRemaining) {
+        this.healthRemaining = healthRemaining;
     }
 
     @Override

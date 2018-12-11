@@ -249,7 +249,7 @@ public class CommandHandler {
                 }
 
                 player.setStamina(player.getStamina() - numTimesToHunt);
-                CombatResult pvmResults = handler.fightMonster(player, monster, numTimesToHunt);
+                CombatResult pvmResults = handler.monsterFight(player, monster, numTimesToHunt);
 
                 playerDatabase.insertPlayer(player);
 

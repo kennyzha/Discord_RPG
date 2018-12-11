@@ -6,6 +6,7 @@ import MonsterTests.MonsterBuildTest;
 import MonsterTests.MonsterExpGivenTest;
 import PlayerTests.*;
 import models.DonatorTransaction;
+import models.Player;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
@@ -19,6 +20,7 @@ import org.junit.runners.Suite;
         MonsterExpGivenTest.class,
         PlayerStatsTest.class,
         PlayerStatGainTest.class,
+        PlayerCombatTests.class,
         HealthGainedTests.class,
         ItemTest.class,
         ItemRollTest.class,

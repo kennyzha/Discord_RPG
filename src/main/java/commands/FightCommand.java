@@ -23,7 +23,7 @@ public class FightCommand {
                 String enemyName = message.getMentionedUsers().get(0).getName();
 
                 Player player = playerDatabase.grabPlayer(user.getId());
-                CombatResult pvpResults = combatHandler.fightPlayer(player, mentionedPlayer);
+                CombatResult pvpResults = combatHandler.playerFight(player, mentionedPlayer);
 
                 channel.sendMessage(messageHandler.createEmbedFightMessage(user, enemyName, pvpResults)).queue();
             }
